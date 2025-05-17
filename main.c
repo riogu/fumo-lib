@@ -17,9 +17,13 @@ void autofree_impl(void* p) {
 int main() {
     Rectangle rect = {};
 
-    Any var = Any(rect);
+    auto var = Fumo$Variant(rect);
 
     printf("type_name: %s\n", type_name(var)); // type_name: Position
+    // NOTE: have to switch on the type_id to get the right call of
+    // var.value.Rectangle
+    // try using return expressions from GCC
+    typeof(var) epic = _GET_ANY_TYPE(var);
 
     IS_SAME_TYPE(Position, var) ? printf("true\n") : printf("false\n"); // false
     IS_SAME_TYPE(rect, var) ? printf("true\n") : printf("false\n"); // true
