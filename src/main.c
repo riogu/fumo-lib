@@ -4,37 +4,23 @@
 
 int main() {
     Rectangle rect = {.width = 123, .height = 1231};
-    struct fumo$variant variant = fumo$variant(rect);
+
+    struct fumo$variant variant = fumo$variant(rect); // making variant struct
 
     // taking the contents without any checks
-    auto var = fumo$get_if(Shape, variant) {}
+    auto var = fumo$get_if(Shape, variant) {} // else{} is optional
 
-    if ((({
-            int is_x_v =
-                _Generic(typeof((Shape) {}), fumo$variant: 1, default: 0);
-            int is_y_v = _Generic(typeof(variant), fumo$variant: 1, default: 0);
-            int is_same_t = (is_x_v && is_y_v)
-                ? ((*(fumo$variant*)&(Shape) {}).type_id
-                   == (*(fumo$variant*)&variant).type_id)
-                : (is_x_v && !is_y_v) ? ((*(fumo$variant*)&(Shape) {}).type_id
-                                         == (enum T_id) _Generic(typeof(variant),
-                                             Position: T_id_Position,
-                                             Shape: T_id_Shape,
-                                             Body: T_id_Body,
-                                             Rectangle: T_id_Rectangle,
-                                             default: -420))
-                : (!is_x_v && is_y_v) ? ((enum T_id) _Generic(typeof((Shape) {}),
-                                             Position: T_id_Position,
-                                             Shape: T_id_Shape,
-                                             Body: T_id_Body,
-                                             Rectangle: T_id_Rectangle,
-                                             default: -420)
-                                         == (*(fumo$variant*)&variant).type_id)
-                : (!is_x_v && !is_y_v)
-                ? (_Generic(typeof((Shape) {}), typeof(variant): 1, default: 0))
-                : 0;
-            is_same_t;
-        }))) {}
+    if (fumo$is_same_t((Shape) {}, variant)) {
+        // do stuff here
+    }
+
+    auto var2 = fumo$get_if(Shape, variant) {
+        printf("had: %d", var2->shape_id);
+    }
+    else {
+        printf("didnt have a Shape. stored type: %s.\n",
+               fumo$variant_type_name(variant));
+    }
 
     return 0;
 }
