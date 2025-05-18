@@ -1,4 +1,21 @@
-Example of how the implementation works:
+# Example of how the implementation works:
+Simple usage:
+```c
+int main() {
+    Rectangle rect = {.width = 123, .height = 1231};
+    fumo$variant variant = fumo$variant(rect);
+    // does nothing
+    let shape = fumo$get_if(Shape, variant) {
+        printf("my shape id: %d\n", shape->shape_id);
+        // you can write the code assuming you have the right type
+        // but its only ran if the stored type matches Shape
+
+    } // the else{} is optional
+
+    return 0;
+}
+```
+More detailed showcase of how you would use fumo$variant:
 ```c
 #include "fumo_variant/fumo_variant.h"
 #include "structs.h"
