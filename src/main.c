@@ -6,9 +6,12 @@ int main() {
     Rectangle rect = {.width = 123, .height = 1231};
     fumo$variant variant = fumo$variant(rect);
 
-    // if (fumo$is_same_t(variant, Rectangle)) {
-    //     printf("was same underlying type.\n");
-    // }
+    fumo$is_same_t((Position) {}, variant) ? printf("true\n") : printf("false\n");
+    // false
+    fumo$is_same_t(rect, variant) ? printf("true\n") : printf("false\n");
+    // true
+    fumo$is_same_t((Shape) {}, rect) ? printf("true\n") : printf("false\n");
+    // false
 
     auto result1 = fumo$get_if(Rectangle, variant) {
 
@@ -26,7 +29,7 @@ int main() {
 
     auto result2 = fumo$get_if(Shape, variant) {
         // is never reached
-        result2->somevar = 213;
+        result2->shape_id = 213;
     }
     else {
         // fails to get the value, result2 is NULL
@@ -34,17 +37,13 @@ int main() {
         printf("type in variant: %s\n", fumo$variant_type_name(variant));
     }
     return 0;
-
-    // *(volatile char*)0 = 0;
 }
 
 //
+// *(volatile char*)0 = 0;
 // if (fumo$is_same_t(Rectangle, var)) {
 //     auto rect = fumo$get(Rectangle, var);
 //     rect.width = 123;
 // }
 //
-// fumo$is_same_t(Position, var) ? printf("true\n") : printf("false\n"); // true
-// fumo$is_same_t(rect, var) ? printf("true\n") : printf("false\n"); // false
-// fumo$is_same_t(pos, var) ? printf("true\n") : printf("false\n"); // true
 //

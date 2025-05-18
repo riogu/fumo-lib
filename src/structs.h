@@ -15,7 +15,7 @@ typedef struct Circle {
 } Circle;
 
 typedef struct Shape {
-    int somevar;
+    int shape_id;
 } Shape;
 
 typedef struct Piece {
