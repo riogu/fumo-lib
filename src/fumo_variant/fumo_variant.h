@@ -67,6 +67,8 @@ static inline const char* fumo$variant_type_name(fumo$variant any) {
 //---------------------------------------------------------
 //---------------------------------------------------------
 
+#define _IS_SAME_TYPE(T, U) _Generic(typeof(T), typeof(U): 1, default: 0)
+
 #define fumo$is_same_t(X, Y) \
     (({ \
         int is_x_v = _Generic(typeof(X), fumo$variant: 1, default: 0); \
@@ -79,14 +81,13 @@ static inline const char* fumo$variant_type_name(fumo$variant any) {
             : (!is_x_v && is_y_v) \
             ? ( fumo$get_type_id(typeof(X)) == (*(fumo$variant*)&Y).type_id ) \
             : (!is_x_v && !is_y_v) \
-            ? ( fumo$get_type_id(typeof(X)) == fumo$get_type_id(typeof(Y)) ) \
+            ? ( _IS_SAME_TYPE(X, Y) ) \
             : 0; \
         is_same_t; \
     }))
 
 /*
 NOTE: code below isnt very useful
-#define IS_SAME_TYPE(T, U) _Generic(typeof(T), typeof(U): 1, default: 0)
 ---------------------------------------------------------
 #define GET_TYPE_INSTANCE(T) \
     static inline T instance_of_##T(T type) { \
