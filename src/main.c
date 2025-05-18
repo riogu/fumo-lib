@@ -39,7 +39,6 @@ int main() {
     }
 
     // does nothing
-    //
     auto shape = fumo$get_if(Shape, variant) {
         printf("my shape id: %d\n", shape->shape_id);
         // you can write the code assuming you have the right type
