@@ -1,27 +1,7 @@
 #pragma once
+#include "../structs.h"
 
-// #include "../structs.h"
 // random structs to test
-
-typedef struct Position {
-    int x;
-    int y;
-} Position;
-
-typedef struct Shape {
-    int shape_id;
-} Shape;
-
-typedef struct Body {
-    Position position;
-    float radius;
-} Body;
-
-typedef struct Rectangle {
-    int width;
-    int height;
-} Rectangle;
-
 #define ALL_VARIANT_TYPES(F) \
     F(Position) \
     F(Shape) \
@@ -34,13 +14,13 @@ typedef struct Rectangle {
     F(Body, Variant) \
     F(Rectangle, Variant)
 
+// clang-format off
+//---------------------------------------------------------
+//---------------------------------------------------------
 #define T_UNREGISTERED -420
 #define auto __auto_type
 #define let auto
 
-// clang-format off
-//---------------------------------------------------------
-//---------------------------------------------------------
 typedef struct fumo$variant { 
 
 #define XMACRO(Type) Type _##Type;
