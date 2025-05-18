@@ -2,24 +2,24 @@
 #include "structs.h"
 #include <stdio.h>
 
+// #define switch auto
+
 int main() {
     Rectangle rect = {.width = 123, .height = 1231};
-
     struct fumo$variant variant = fumo$variant(rect); // making variant struct
 
-    // taking the contents without any checks
-    auto var = fumo$get_if(Shape, variant) {} // else{} is optional
-
-    if (fumo$is_same_t((Shape) {}, variant)) {
-        // do stuff here
-    }
-
-    auto var2 = fumo$get_if(Shape, variant) {
-        printf("had: %d", var2->shape_id);
-    }
-    else {
-        printf("didnt have a Shape. stored type: %s.\n",
-               fumo$variant_type_name(variant));
+    fumo$match(variant) {
+        fumo$case(Shape) {
+            _Shape->shape_id = 123;
+        }
+        fumo$case(Rectangle) {
+            printf("old_height: %d\n", _Rectangle->height);
+            _Rectangle->height = 2131;
+            printf("new_height: %d\n", _Rectangle->height);
+        }
+        fumo$default {
+            printf("we dont get a value here");
+        }
     }
 
     return 0;

@@ -55,15 +55,30 @@ static inline const char* fumo$variant_type_name(fumo$variant any) {
 
 #define _UNDERLYING_VALUE(T, Variant) case T_id_##T: result = &Variant.value._##T; break;
 
-#define fumo$get_underlying(T, Variant) \
+#define _GET_UNDERLYING(T, Variant) \
     switch (Variant.type_id) {ALL_VARIANT_TYPES_V(_UNDERLYING_VALUE, Variant)}
 
 #define fumo$get_if(T, Variant) (T*) ({ \
     void* result = NULL; \
-    if ((fumo$get_type_id(*(T*)0) == Variant.type_id)) fumo$get_underlying(T, Variant); \
+    _GET_UNDERLYING(T, Variant); \
     result; \
 }); if ((fumo$get_type_id(*(T*)0) == Variant.type_id))
 
+
+#define _CASE_VAL_(T, Variant) case T_id_##T: result = &Variant.value._##T; break;
+
+#define fumo$case(T) break;}); case T_id_##T: ({ T* _##T = &____value____->_##T; 
+
+#define fumo$match(Variant) auto ____value____ = (union value_t *)({ \
+    auto result = NULL; \
+    switch (Variant.type_id) {ALL_VARIANT_TYPES_V(_CASE_VAL_, Variant)}\
+    result; \
+}); switch(Variant.type_id) {(
+
+#define fumo$default break;}); default:
+
+//---------------------------------------------------------
+//---------------------------------------------------------
 //---------------------------------------------------------
 //---------------------------------------------------------
 
@@ -85,6 +100,10 @@ static inline const char* fumo$variant_type_name(fumo$variant any) {
             : 0; \
         is_same_t; \
     }))
+
+
+
+
 
 /*
 NOTE: code below isnt very useful
