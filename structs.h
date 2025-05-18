@@ -5,6 +5,11 @@ typedef struct Position {
     int y;
 } Position;
 
+typedef struct Body {
+    Position position;
+    float radius;
+} Body;
+
 typedef struct Circle {
     float radius;
 } Circle;
@@ -13,11 +18,6 @@ typedef struct Shape {
     Circle circle;
 } Shape;
 
-typedef struct Body {
-    Position position;
-    float radius;
-} Body;
-
 typedef struct Piece {
 } Piece;
 
@@ -25,7 +25,8 @@ typedef struct Camera {
 } Camera;
 
 typedef struct Rectangle {
-    int epic;
+    int width;
+    int height;
 } Rectangle;
 
 typedef struct Board {

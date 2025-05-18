@@ -1,33 +1,29 @@
-#include "macrostuff.h"
-#include "structs.h"
+#include "fumo_variant/fumo_variant.h"
 #include <stdio.h>
-#include <stdlib.h>
-
-// Call it whatever you want, just for variables with type inference.
-#define auto __auto_type
-// Automatically frees a value at the end of scope.
-
-#define autofree __attribute__((__cleanup__(autofree_impl)))
-
-/* __cleanup__ gives void** not void* so can't pass free directly */
-void autofree_impl(void* p) {
-    free(*((void**)p));
-}
 
 int main() {
-    Rectangle rect = {};
+    Rectangle rect = {.width = 123, .height = 1231};
+    fumo$variant variant = fumo$variant(rect);
 
-    auto var = Fumo$Variant(rect);
-
-    printf("type_name: %s\n", type_name(var)); // type_name: Position
-    // NOTE: have to switch on the type_id to get the right call of
-    // var.value.Rectangle
-    // try using return expressions from GCC
-    typeof(var) epic = _GET_ANY_TYPE(var);
-
-    IS_SAME_TYPE(Position, var) ? printf("true\n") : printf("false\n"); // false
-    IS_SAME_TYPE(rect, var) ? printf("true\n") : printf("false\n"); // true
-    IS_SAME_TYPE(Rectangle, var) ? printf("true\n") : printf("false\n"); // true
-
+    auto result1 = fumo$if_get(Rectangle, variant) {
+        printf("width before: %d \n", result1->width);
+        result1->width = 213123;
+        printf("there was a rectangle, width: %d\n", result1->width);
+    }
+    else {
+        printf("didnt have a rectangle!\n");
+    }
+    printf("type_name: %s", fumo$variant_type_name(variant));
     return 0;
 }
+
+//
+// if (fumo$is_same_t(Rectangle, var)) {
+//     auto rect = fumo$get(Rectangle, var);
+//     rect.width = 123;
+// }
+//
+// fumo$is_same_t(Position, var) ? printf("true\n") : printf("false\n"); // true
+// fumo$is_same_t(rect, var) ? printf("true\n") : printf("false\n"); // false
+// fumo$is_same_t(pos, var) ? printf("true\n") : printf("false\n"); // true
+//
