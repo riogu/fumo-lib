@@ -14,6 +14,7 @@
     F(Rectangle, Variant)
 
 #define auto __auto_type
+#define let auto
 
 // clang-format off
 //---------------------------------------------------------
