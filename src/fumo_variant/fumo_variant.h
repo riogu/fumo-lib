@@ -69,12 +69,12 @@ static inline const char* fumo$variant_type_name(fumo$variant any) {
 //---------------------------------------------------------
 //---------------------------------------------------------
 
-#define fumo$is_same_t(X, Y) _INNER_IS_SAME_TYPE(STORED_TYPE(X), STORED_TYPE(Y))
-
-#define _INNER_IS_SAME_TYPE(T, U)\
-    _Generic(*(T*)0,\
-             typeof(U): 1, \
-             default: 0)
+// #define fumo$is_same_t(X, Y) _INNER_IS_SAME_TYPE(STORED_TYPE(X), STORED_TYPE(Y))
+//
+// #define _INNER_IS_SAME_TYPE(T, U)\
+//     _Generic(*(T*)0,\
+//              typeof(U): 1, \
+//              default: 0)
 //---------------------------------------------------------
 // NOTE: this one isnt very useful
 // #define GET_TYPE_INSTANCE(T) \
