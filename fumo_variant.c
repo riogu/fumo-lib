@@ -1,8 +1,3 @@
-#pragma once
-
-// #include "../structs.h"
-// random structs to test
-
 typedef struct Position {
     int x;
     int y;
@@ -89,9 +84,10 @@ static inline const char* fumo$variant_type_name(fumo$variant any) {
 
 #define fumo$is_same_t(X, Y) \
     (({ \
+        int is_same_t = 0; \
         int is_x_v = _Generic(typeof(X), fumo$variant: 1, default: 0); \
         int is_y_v = _Generic(typeof(Y), fumo$variant: 1, default: 0); \
-        int is_same_t =  \
+        is_same_t =  \
             (is_x_v && is_y_v) \
             ? ( (*(fumo$variant*)&X).type_id == (*(fumo$variant*)&Y).type_id ) \
             : (is_x_v && !is_y_v) \
@@ -104,46 +100,43 @@ static inline const char* fumo$variant_type_name(fumo$variant any) {
         is_same_t; \
     }))
 
-/*
-NOTE: code below isnt very useful
-#define IS_SAME_TYPE(T, U) _Generic(typeof(T), typeof(U): 1, default: 0)
----------------------------------------------------------
-#define GET_TYPE_INSTANCE(T) \
-    static inline T instance_of_##T(T type) { \
-        return (T) {}; \
+#include <stdio.h>
+
+typedef struct NewStruct {} NewStruct;
+
+int main() {
+    Rectangle rect = {.width = 123, .height = 1231};
+    fumo$variant variant = fumo$variant(rect);
+
+    fumo$is_same_t((Position) {}, variant) ? printf("true\n") : printf("false\n");
+    // false
+    fumo$is_same_t(rect, variant) ? printf("true\n") : printf("false\n");
+    // true
+    fumo$is_same_t((NewStruct) {}, rect) ? printf("true\n") : printf("false\n");
+    // false
+
+    auto result1 = fumo$get_if(Rectangle, variant) {
+
+        printf("width before: %d \n", result1->width);
+        result1->width = 213123;
+        printf("there was a rectangle, width: %d\n", result1->width);
+        printf("type_name: %s\n\n", fumo$variant_type_name(variant));
     }
-ALL_VARIANT_TYPES(GET_TYPE_INSTANCE)
-#define INSTANCE_OF(T) , T: instance_of_##T
-#define fumo$make_instance_of(var) \
-    (typeof(var))((_Generic(typeof(var) ALL_VARIANT_TYPES(INSTANCE_OF))(var)))
----------------------------------------------------------
+    else {
+        printf("didnt have a rectangle!\n");
+    }
 
-#define STATIC_IF(EXPR,THEN,ELSE)     \
-  _Generic( &(char[1 + !!(EXPR)]){0}, \
-    char (*)[2]: (THEN),              \
-    char (*)[1]: (ELSE)               \
-  )
+    Position pos = {.x = 69420};
+    variant = fumo$variant(pos);
 
-#define _CHECK_TYPE_SAFETY(T) , T : 1
-#define _TYPE_SAFE(T) \
-    _Generic( *(T*)0\
-             ALL_VARIANT_TYPES(_CHECK_TYPE_SAFETY),\
-             default: 0)
-
-#define fumo🔨get fumo$get
-
-#define autofree __attribute__((__cleanup__(autofree_impl)))
-static inline void autofree_impl(void* p) {
-    free(*((void**)p));
+    auto result2 = fumo$get_if(Shape, variant) {
+        // is never reached
+        result2->shape_id = 213;
+    }
+    else {
+        // fails to get the value, result2 is NULL
+        printf("couldn't get shape from variant.\n");
+        printf("type in variant: %s\n", fumo$variant_type_name(variant));
+    }
+    return 0;
 }
-
-#define _X_isnt_variant(X, Y)\
-    _Generic(typeof(Y),\
-            fumo$variant: (fumo$get_type_id(typeof(X)) == Y.type_id)),\
-            default: (typeof(X) == typeof(Y))
-
-#define _X_is_variant(X, Y) \
-    _Generic(typeof(Y),\
-            fumo$variant: (X.type_id == ((fumo$variant)Y).type_id), \
-            default: (X.type_id == fumo$get_type_id(typeof(Y))))
-*/

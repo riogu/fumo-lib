@@ -1,8 +1,8 @@
 #include "fumo_variant/fumo_variant.h"
-#include "structs.h"
 #include <stdio.h>
 
 int main() {
+
     Rectangle rect = {.width = 123, .height = 1231};
     fumo$variant variant = fumo$variant(rect);
 
