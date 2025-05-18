@@ -13,21 +13,19 @@
 #define fumo$get_underlying(T, Variant) \
     switch (Variant.type_id) {ALL_VARIANT_TYPES_V(_UNDERLYING_VALUE, Variant)}
 
-
-#define fumo$if_get(T, Variant) (T*) ({ \
+#define fumo$get(T, Variant) (T*) ({ \
     void* result = NULL; \
     if (_TYPE_SAFETY(T)) fumo$get_underlying(T, Variant); \
     result; \
-}); if (({ \
-    auto is_valid = 0; \
-    if (_TYPE_SAFETY(T)) is_valid = 1;\
-    is_valid; \
+}); if (({ _Generic(*(T*)0, T : 1, default: 0);\
 }))
 
-// #define $end_if })
+#define fumo🔨get fumo$get
 
-    // else result = NULL; \
-    // result; \
+// #define wow : : :
+
+// /D<Wow>{=|#}<Position>
+
 // clang-format off
 //---------------------------------------------------------
 #define fumo$is_same_t(X, Y) _INNER_IS_SAME_TYPE(STORED_TYPE(X), STORED_TYPE(Y))
