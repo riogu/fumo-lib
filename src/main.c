@@ -6,7 +6,11 @@ int main() {
     Rectangle rect = {.width = 123, .height = 1231};
     fumo$variant variant = fumo$variant(rect);
 
-    auto result1 = fumo$get(Rectangle, variant) {
+    // if (fumo$is_same_t(variant, Rectangle)) {
+    //     printf("was same underlying type.\n");
+    // }
+
+    auto result1 = fumo$get_if(Rectangle, variant) {
 
         printf("width before: %d \n", result1->width);
         result1->width = 213123;
@@ -20,7 +24,7 @@ int main() {
     Position pos = {.x = 69420};
     variant = fumo$variant(pos);
 
-    auto result2 = fumo$get(Shape, variant) {
+    auto result2 = fumo$get_if(Shape, variant) {
         // is never reached
         result2->somevar = 213;
     }
@@ -30,6 +34,8 @@ int main() {
         printf("type in variant: %s\n", fumo$variant_type_name(variant));
     }
     return 0;
+
+    // *(volatile char*)0 = 0;
 }
 
 //

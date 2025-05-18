@@ -60,7 +60,7 @@ static inline const char* fumo$variant_type_name(fumo$variant any) {
 #define fumo$get_underlying(T, Variant) \
     switch (Variant.type_id) {ALL_VARIANT_TYPES_V(_UNDERLYING_VALUE, Variant)}
 
-#define fumo$get(T, Variant) (T*) ({ \
+#define fumo$get_if(T, Variant) (T*) ({ \
     void* result = NULL; \
     if ((fumo$get_type_id(*(T*)0) == Variant.type_id)) fumo$get_underlying(T, Variant); \
     result; \
@@ -69,12 +69,25 @@ static inline const char* fumo$variant_type_name(fumo$variant any) {
 //---------------------------------------------------------
 //---------------------------------------------------------
 
-// #define fumo$is_same_t(X, Y) _INNER_IS_SAME_TYPE(STORED_TYPE(X), STORED_TYPE(Y))
+// int static inline both_are_variants(fumo$variant X, fumo$variant Y) {
+//     return (X.type_id == Y.type_id)
+// }
+
+// #define _X_isnt_variant(X, Y)\
+//     _Generic(typeof(Y),\
+//             fumo$variant: (fumo$get_type_id(typeof(X)) == Y.type_id)),\
+//             default: (typeof(X) == typeof(Y))
 //
-// #define _INNER_IS_SAME_TYPE(T, U)\
-//     _Generic(*(T*)0,\
-//              typeof(U): 1, \
-//              default: 0)
+// #define _X_is_variant(X, Y) \
+//     _Generic(typeof(Y),\
+//             fumo$variant: (X.type_id == ((fumo$variant)Y).type_id), \
+//             default: (X.type_id == fumo$get_type_id(typeof(Y))))
+
+#define fumo$is_same_t(X, Y) ({\
+})
+
+//
+// #define IS_SAME_TYPE(T, U) _Generic(typeof(T), typeof(U): 1, default: 0)
 //---------------------------------------------------------
 // NOTE: this one isnt very useful
 // #define GET_TYPE_INSTANCE(T) \
