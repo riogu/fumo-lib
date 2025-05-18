@@ -3,7 +3,7 @@
 #include "variant_and_typenames.h" // IWYU pragma: export
 
 #define _CHECK_TYPE_SAFETY(T) , T : 1
-#define _TYPE_SAFETY(T) \
+#define _TYPE_SAFE(T) \
     _Generic( *(T*)0\
              ALL_VARIANT_TYPES(_CHECK_TYPE_SAFETY),\
              default: 0)
@@ -15,16 +15,13 @@
 
 #define fumo$get(T, Variant) (T*) ({ \
     void* result = NULL; \
-    if (_TYPE_SAFETY(T)) fumo$get_underlying(T, Variant); \
+    if ((fumo$get_type_id(*(T*)0) == Variant.type_id)) fumo$get_underlying(T, Variant); \
     result; \
-}); if (({ _Generic(*(T*)0, T : 1, default: 0);\
-}))
+}); if ((fumo$get_type_id(*(T*)0) == Variant.type_id))
 
-#define fumo🔨get fumo$get
+// #define fumo🔨get fumo$get
 
 // #define wow : : :
-
-// /D<Wow>{=|#}<Position>
 
 // clang-format off
 //---------------------------------------------------------

@@ -36,7 +36,7 @@ typedef struct fumo$variant {
 #define fumo$get_type_id(var) \
     _Generic((var), \
              ALL_VARIANT_TYPES(XMACRO1)\
-            default: 0) 
+            default: -69) 
 
 #define fumo$variant(var) (fumo$variant) {\
     .type_id = fumo$get_type_id(var),\
