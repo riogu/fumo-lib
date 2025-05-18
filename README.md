@@ -14,8 +14,7 @@ int main() {
         result1->width = 213123;
         printf("there was a rectangle, width: %d\n", result1->width);
         printf("type_name: %s\n\n", fumo$variant_type_name(variant));
-    }
-    else { printf("didnt have a rectangle!\n"); }
+    } else { printf("didnt have a rectangle!\n"); }
 
     Position pos = {.x = 69420};
     variant = fumo$variant(pos);
