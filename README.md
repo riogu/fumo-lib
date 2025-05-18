@@ -3,14 +3,22 @@ Simple usage:
 ```c
 int main() {
     Rectangle rect = {.width = 123, .height = 1231};
-    fumo$variant variant = fumo$variant(rect);
-    // does nothing
-    auto shape = fumo$get_if(Shape, variant) {
-        printf("my shape id: %d\n", shape->shape_id);
-        // you can write the code assuming you have the right type
-        // but its only ran if the stored type matches Shape
 
-    } // the else{} is optional
+    struct fumo$variant variant = fumo$variant(rect); // making variant struct
+
+    // taking the contents without any checks
+    auto var = fumo$get_if(Shape, variant) {} // else{} is optional
+
+    if (fumo$is_same_t((Shape) {}, variant)) {
+        // do stuff here
+    }
+
+    auto var2 = fumo$get_if(Shape, variant) {
+        printf("had: %d", var2->shape_id);
+    } else {
+        printf("didnt have a Shape. stored type: %s.\n",
+               fumo$variant_type_name(variant));
+    }
 
     return 0;
 }
