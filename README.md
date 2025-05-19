@@ -22,43 +22,59 @@ More detailed showcase of how you would use fumo$variant:
 #include "fumo_variant/fumo_variant.h"
 #include "structs.h"
 #include <stdio.h>
+typedef struct NewStruct {} NewStruct;
 
 int main() {
     Rectangle rect = {.width = 123, .height = 1231};
-    fumo$variant variant = fumo$variant(rect);
+    _variant variant = _variant(rect);
 
-    fumo$is_same_t((Position) {}, variant) ? printf("true\n") : printf("false\n");
-    // false
-    fumo$is_same_t(rect, variant) ? printf("true\n") : printf("false\n");
-    // true
-    fumo$is_same_t((Shape) {}, rect) ? printf("true\n") : printf("false\n");
-    // false
+    
+    Shape shape = {.shape_id = 13};
+    _variant var = _variant(shape); // making variant struct
 
-    auto result1 = fumo$get_if(Rectangle, variant) {
+    // variables are only avaible inside the case label
+    match(var) {
+        case(Shape) _Shape->shape_id = 123; // goes here
+        case(Rectangle) {
+            _Rectangle->height = 222;
+        }
+        case (Position) //...etc (add more code)
+        _default printf("we dont get a value here");
+    }
+
+
+
+    is_same_t((Position) {}, variant) ? printf("true\n") : printf("false\n");
+    is_same_t(rect, variant) ? printf("true\n") : printf("false\n");
+    is_same_t((NewStruct) {}, rect) ? printf("true\n") : printf("false\n");
+
+    let result1 = get_if(Rectangle, variant) {
 
         printf("width before: %d \n", result1->width);
         result1->width = 213123;
         printf("there was a rectangle, width: %d\n", result1->width);
-        printf("type_name: %s\n\n", fumo$variant_type_name(variant));
-
-    } else {
+        printf("type_name: %s\n\n", variant_type_name(variant));
+    }
+    else {
         printf("didnt have a rectangle!\n");
     }
 
     Position pos = {.x = 69420};
-    variant = fumo$variant(pos);
+    variant = _variant(pos);
 
-    auto result2 = fumo$get_if(Shape, variant) {
+    auto result2 = get_if(Shape, variant) {
         // is never reached
         result2->shape_id = 213;
-
-    } else {
+    }
+    else {
         // fails to get the value, result2 is NULL
         printf("couldn't get shape from variant.\n");
-        printf("type in variant: %s\n", fumo$variant_type_name(variant));
+        printf("type in variant: %s\n", variant_type_name(variant));
     }
+
     return 0;
 }
+
 
 ```
 Output:
