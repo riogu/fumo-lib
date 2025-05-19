@@ -3,7 +3,7 @@ Simple usage:
 ```c
 int main() {
     Position pos = {.x = 69420};
-    variant = _variant(pos);
+    _variant variant = _variant(pos);
 
     auto result2 = get_if(Shape, variant) {
         // is never reached
