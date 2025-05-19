@@ -9,13 +9,6 @@
 
 int main() {
 
-    // optional_epic some = optional_epic((epic) {});
-
-    // int var = 13;
-    // optional_t opt = (optional_t) {.value = (typeof(1)*)&1};
-
-    // return 0;
-
     Rectangle rect = {.width = 123, .height = 1231};
     _variant var = _variant(rect); // making variant struct
 
@@ -23,14 +16,20 @@ int main() {
     is_same_t(rect, var) ? printf("true\n") : printf("false\n");
     is_same_t((Shape) {}, rect) ? printf("true\n") : printf("false\n");
 
-    let inner_value = get_if(Shape, var) {}
-
-    inner_value->shape_id = 123123;
+    let inner_value = get_if(Shape, var) {
+        inner_value->shape_id = 123123;
+    }
+    else {
+        printf("failed\n, type: %s\n", variant_type_name(var));
+    }
 
     if (is_same_t((Shape) {}, var)) {}
 
     match(var) {
         case(Shape) _Shape->shape_id = 123;
+        case(Rectangle) {
+            _Rectangle->height = 222;
+        }
         _default printf("we dont get a value here");
     }
     
