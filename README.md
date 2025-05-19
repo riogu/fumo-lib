@@ -14,6 +14,17 @@ int main() {
         printf("couldn't get shape from variant.\n");
         printf("type in variant: %s\n", variant_type_name(variant));
     }
+
+    Shape shape = {.shape_id = 13};
+    _variant var = _variant(shape); // making variant struct
+
+    // variables are only avaible inside the case label
+    match(var) {
+        case(Shape) _Shape->shape_id = 123; // goes here
+        case(Rectangle) //etc...
+        _default printf("we dont get a value here");
+    }
+
     return 0;
 }
 ```
