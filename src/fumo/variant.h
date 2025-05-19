@@ -21,7 +21,7 @@
 #define auto __auto_type
 #define let auto
 
-typedef struct fumo$variant { 
+typedef struct _variant { 
 
 #define XMACRO(Type) Type _##Type;
     union value_t { ALL_VARIANT_TYPES(XMACRO) } value;
@@ -31,7 +31,7 @@ typedef struct fumo$variant {
       enum T_id { ALL_VARIANT_TYPES(XMACRO) } type_id;
 #undef XMACRO
 
-} fumo$variant;
+} _variant;
 
 #define XMACRO1(Type) Type : T_id_##Type,
 #define fumo$get_type_id(var) (enum T_id)\
@@ -39,7 +39,7 @@ typedef struct fumo$variant {
              ALL_VARIANT_TYPES(XMACRO1)\
             default: T_UNREGISTERED) 
 
-#define fumo$variant(var) (fumo$variant) {\
+#define _variant(var) (_variant) {\
     .type_id = fumo$get_type_id(var),\
     .value = (union value_t) var\
 } 
@@ -49,7 +49,7 @@ typedef struct fumo$variant {
 static const char* all_type_names[] = {ALL_VARIANT_TYPES(TypeName)};
 #undef TypeName
 
-static inline const char* fumo$variant_type_name(fumo$variant any) {
+static inline const char* variant_type_name(_variant any) {
     return all_type_names[any.type_id];
 }
 
@@ -58,7 +58,7 @@ static inline const char* fumo$variant_type_name(fumo$variant any) {
 #define _GET_UNDERLYING(T, Variant) \
     switch (Variant.type_id) {ALL_VARIANT_TYPES_V(_UNDERLYING_VALUE, Variant)}
 
-#define fumo$get_if(T, Variant) (T*) ({ \
+#define get_if(T, Variant) (T*) ({ \
     void* result = NULL; \
     _GET_UNDERLYING(T, Variant); \
     result; \
@@ -67,15 +67,15 @@ static inline const char* fumo$variant_type_name(fumo$variant any) {
 
 #define _CASE_VAL_(T, Variant) case T_id_##T: result = &Variant.value._##T; break;
 
-#define fumo$case(T) break;}); case T_id_##T: ({ T* _##T = &____value____->_##T; 
+#define case(T) break;}); case T_id_##T: ({ T* _##T = &____value____->_##T; 
 
-#define fumo$match(Variant) auto ____value____ = (union value_t *)({ \
+#define match(Variant) auto ____value____ = (union value_t *)({ \
     auto result = NULL; \
     switch (Variant.type_id) {ALL_VARIANT_TYPES_V(_CASE_VAL_, Variant)}\
     result; \
 }); switch(Variant.type_id) {(
 
-#define fumo$default break;}); default:
+#define _default break;}); default:
 
 //---------------------------------------------------------
 //---------------------------------------------------------
@@ -86,15 +86,15 @@ static inline const char* fumo$variant_type_name(fumo$variant any) {
 
 #define fumo$is_same_t(X, Y) \
     (({ \
-        int is_x_v = _Generic(typeof(X), fumo$variant: 1, default: 0); \
-        int is_y_v = _Generic(typeof(Y), fumo$variant: 1, default: 0); \
+        int is_x_v = _Generic(typeof(X), _variant: 1, default: 0); \
+        int is_y_v = _Generic(typeof(Y), _variant: 1, default: 0); \
         int is_same_t =  \
             (is_x_v && is_y_v) \
-            ? ( (*(fumo$variant*)&X).type_id == (*(fumo$variant*)&Y).type_id ) \
+            ? ( (*(_variant*)&X).type_id == (*(_variant*)&Y).type_id ) \
             : (is_x_v && !is_y_v) \
-            ? ( (*(fumo$variant*)&X).type_id == fumo$get_type_id(typeof(Y)) ) \
+            ? ( (*(_variant*)&X).type_id == fumo$get_type_id(typeof(Y)) ) \
             : (!is_x_v && is_y_v) \
-            ? ( fumo$get_type_id(typeof(X)) == (*(fumo$variant*)&Y).type_id ) \
+            ? ( fumo$get_type_id(typeof(X)) == (*(_variant*)&Y).type_id ) \
             : (!is_x_v && !is_y_v) \
             ? ( _IS_SAME_TYPE(X, Y) ) \
             : 0; \
@@ -103,6 +103,10 @@ static inline const char* fumo$variant_type_name(fumo$variant any) {
 
 
 
+// #define autofree __attribute__((__cleanup__(autofree_impl)))
+// static inline void autofree_impl(void* p) {
+//     free(*((void**)p));
+// }
 
 
 /*
@@ -132,18 +136,14 @@ ALL_VARIANT_TYPES(GET_TYPE_INSTANCE)
 
 #define fumo🔨get fumo$get
 
-#define autofree __attribute__((__cleanup__(autofree_impl)))
-static inline void autofree_impl(void* p) {
-    free(*((void**)p));
-}
 
 #define _X_isnt_variant(X, Y)\
     _Generic(typeof(Y),\
-            fumo$variant: (fumo$get_type_id(typeof(X)) == Y.type_id)),\
+            variant: (fumo$get_type_id(typeof(X)) == Y.type_id)),\
             default: (typeof(X) == typeof(Y))
 
 #define _X_is_variant(X, Y) \
     _Generic(typeof(Y),\
-            fumo$variant: (X.type_id == ((fumo$variant)Y).type_id), \
+            variant: (X.type_id == ((variant)Y).type_id), \
             default: (X.type_id == fumo$get_type_id(typeof(Y))))
 */

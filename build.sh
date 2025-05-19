@@ -5,7 +5,7 @@ fi
 project_name="${PWD##*/}"
 EPIC="${project_name}"
 cd $DIR
-cmake .. -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=On -DCMAKE_BUILD_TYPE=Debug
+cmake .. -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_BUILD_TYPE=Debug
 
 BIN="${DIR}${project_name}"
 ninja && cd .. && ./$BIN
