@@ -1,27 +1,41 @@
+#include "fumo/optional_t.h"
 #include "fumo/variant.h"
 #include "structs.h"
+#include <inttypes.h>
 #include <stdio.h>
 
+// optional_t(float) opt_float;
+// const auto e = (optional_t) {.value = (typeof()*)&};
+
 int main() {
+
+    // optional_epic some = optional_epic((epic) {});
+
+    // int var = 13;
+    // optional_t opt = (optional_t) {.value = (typeof(1)*)&1};
+
+    // return 0;
+
     Rectangle rect = {.width = 123, .height = 1231};
     _variant var = _variant(rect); // making variant struct
 
-    let inner_value = get_if(Shape, var) {
-        inner_value->shape_id = 123123;
-    }
-    else {
-        printf("whoops didnt have a shape\n.");
-    }
+    is_same_t((Position) {}, var) ? printf("true\n") : printf("false\n");
+    is_same_t(rect, var) ? printf("true\n") : printf("false\n");
+    is_same_t((Shape) {}, rect) ? printf("true\n") : printf("false\n");
+
+    let inner_value = get_if(Shape, var) {}
+
+    inner_value->shape_id = 123123;
+
+    if (is_same_t((Shape) {}, var)) {}
 
     match(var) {
         case(Shape) _Shape->shape_id = 123;
-        case(Rectangle) {
-            printf("old_height: %d\n", _Rectangle->height);
-            _Rectangle->height = 2131;
-            printf("new_height: %d\n", _Rectangle->height);
-        }
         _default printf("we dont get a value here");
     }
+    
+
+
 
     return 0;
 }

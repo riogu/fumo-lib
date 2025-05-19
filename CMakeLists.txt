@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.6...4.0)
 cmake_path(GET CMAKE_CURRENT_SOURCE_DIR FILENAME ProjectName)   
 string(REPLACE " " "_" ProjectId ${ProjectName})
-project(${ProjectName} LANGUAGES C)
+project(${ProjectName} LANGUAGES C CXX)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 include(FetchContent)
 set(CMAKE_C_STANDARD 23)
@@ -15,7 +15,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 endif()
 
 file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS
-     "${CMAKE_CURRENT_LIST_DIR}/src/*.c")
+     "${CMAKE_CURRENT_LIST_DIR}/src/*.c*")
 
 set(PROJECT_INCLUDE "${CMAKE_CURRENT_LIST_DIR}/src/")
 

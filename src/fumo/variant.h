@@ -84,11 +84,11 @@ static inline const char* variant_type_name(_variant any) {
 
 #define _IS_SAME_TYPE(T, U) _Generic(typeof(T), typeof(U): 1, default: 0)
 
-#define fumo$is_same_t(X, Y) \
+#define is_same_t(X, Y) \
     (({ \
-        int is_x_v = _Generic(typeof(X), _variant: 1, default: 0); \
-        int is_y_v = _Generic(typeof(Y), _variant: 1, default: 0); \
-        int is_same_t =  \
+         let is_x_v = _Generic(typeof(X), _variant: 1, default: 0); \
+         let is_y_v = _Generic(typeof(Y), _variant: 1, default: 0); \
+         let is_same_t =  \
             (is_x_v && is_y_v) \
             ? ( (*(_variant*)&X).type_id == (*(_variant*)&Y).type_id ) \
             : (is_x_v && !is_y_v) \
