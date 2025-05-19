@@ -4,7 +4,7 @@
 
 2- to run the given example main function run:
 
-    `gcc fumo_variant.c && ./a.out`
+    gcc fumo_variant.c && ./a.out
 
 ...thats it!
 to use it yourself, simply copy the macros before main, and replace the example structs i provided with your own structs.
