@@ -2,24 +2,18 @@
 Simple usage:
 ```c
 int main() {
-    Rectangle rect = {.width = 123, .height = 1231};
+    Position pos = {.x = 69420};
+    variant = _variant(pos);
 
-    struct fumo$variant variant = fumo$variant(rect); // making variant struct
-
-    // taking the contents without any checks
-    auto var = fumo$get_if(Shape, variant) {} // else{} is optional
-
-    if (fumo$is_same_t((Shape) {}, variant)) {
-        // do stuff here
+    auto result2 = get_if(Shape, variant) {
+        // is never reached
+        result2->shape_id = 213;
     }
-
-    auto var2 = fumo$get_if(Shape, variant) {
-        printf("had: %d", var2->shape_id);
-    } else {
-        printf("didnt have a Shape. stored type: %s.\n",
-               fumo$variant_type_name(variant));
+    else {
+        // fails to get the value, result2 is NULL
+        printf("couldn't get shape from variant.\n");
+        printf("type in variant: %s\n", variant_type_name(variant));
     }
-
     return 0;
 }
 ```
