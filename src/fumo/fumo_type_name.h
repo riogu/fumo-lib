@@ -1,7 +1,7 @@
 #include "fumo/fumo_c_definitions.h"
 #include "fumo/fumo_data_structures.h"
 
-/// fumo type_name for any variable implementation
+/// fumo type_name implementation
 
 #define TypeName(Type) #Type,
 static const char* all_type_names[] = {ALL_VARIANT_TYPES(TypeName) //
@@ -20,8 +20,8 @@ static inline const char* ___result_type_name(Result result) {
     return all_type_names[result.type_id];
 }
 
-#define type_name(Var)                                  \
-    _Generic(typeof(*(Var*)0),                          \
-                _variant: __variant_type_name,          \
-                _result: __result_type_name,            \
-                default:)
+#define type_name(_v)                                  \
+    _Generic(typeof(*(_v*)0),                          \
+                Variant: __variant_type_name,          \
+                Result: __result_type_name            \
+                )(_v)

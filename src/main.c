@@ -1,6 +1,6 @@
-#include "fumo/fumo_c_definitions.h"
-#include "fumo/fumo_data_structures.h"
-#include <stdio.h>
+#include "fumo/fumo_type_name.h"
+Result get_input();
+
 int main() {
 
     Rectangle rect = {.width = 123, .height = 1231};
@@ -14,7 +14,7 @@ int main() {
         inner_value->shape_id = 123123;
     }
     else {
-        // printf("failed, type: %s\n", variant_type_name(var));
+        printf("failed, type: %s\n", type_name(var));
     }
 
     if (is_same_t((Shape) {}, var)) {}
@@ -27,15 +27,27 @@ int main() {
         _default printf("we dont get a value here");
     }
 
+    // match(get_input()) {
+    //     _Ok(var) {
+    //         printf("what happened", var);
+    //     }
+    //     _Err(errval) {
+    //         printf("what the hell %s", errval);
+    //     }
+    // }
     
     return 0;
 }
 
 Result get_input() {
 
+    Shape s = {.shape_id = 12};
+    Result res = Ok(s);
     int n = 10;
+
     if (scanf("%d", &n)) {
         return Ok(n);
     }
     return Err((Position) {.x = 213});
+
 }

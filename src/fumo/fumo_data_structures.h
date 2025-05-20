@@ -18,8 +18,8 @@ typedef enum T_id {
 #define XMACRO(Type) Type _##Type;
 
 typedef union value_t {
-    ALL_VARIANT_TYPES(XMACRO) //
-    ALL_DATA_TYPES_VARIABLE(, _, ;)
+    ALL_DATA_TYPES_VARIABLE(, _, ;) //
+    ALL_VARIANT_TYPES(XMACRO)
 } T_value;
 
 #undef XMACRO
@@ -38,7 +38,7 @@ typedef struct Variant {
 }
 
 //---------------------------------------------------------
-// fumo result type, like the Rust result type
+// fumo result type, inspired by the Rust result type
 
 typedef struct Result {
     T_value Ok;
@@ -49,8 +49,8 @@ typedef struct Result {
 
 } Result;
 
-#define Ok(_v) (Result) {.Ok = _v, .was_err = 0}
-#define Err(_v) (Result) {.Err = _v, .was_err = 1}
+#define Ok(_v) (Result) {.Ok = (union value_t) _v, .was_err = 0}
+#define Err(_v) (Result) {.Err =(union value_t) _v, .was_err = 1}
 
 #define _ 0
 #define _Ok(x)
