@@ -1,6 +1,6 @@
 // clang-format off
 #pragma  once
-#include <stdio.h>
+#include <stdio.h> // IWYU pragma: export
 #define PRINTF_FORMAT(T)        \
   _Generic( (T),                \
     _Bool             : "%d",   \

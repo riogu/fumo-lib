@@ -1,8 +1,5 @@
-#pragma once
-#include "../structs.h"
-#include <wchar.h>
-
 // clang-format off
+#pragma once
 #define __split(e) e
 #define ALL_DATA_TYPES_VARIABLE(E, F, ...)                            \
     _Bool              __split(E)F##_Bool               __VA_ARGS__   \

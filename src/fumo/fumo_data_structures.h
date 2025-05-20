@@ -1,7 +1,9 @@
 // clang-format off
 #pragma once
 #include "fumo_c_definitions.h" // IWYU pragma: export
+#include "structs.h" // IWYU pragma: export
 #include <stdbool.h>
+#include <wchar.h> // IWYU pragma: export
 
 //---------------------------------------------------------
 // fumo primitive data types for type safety
