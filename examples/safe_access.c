@@ -29,7 +29,6 @@ double calculate_value(Variant variant) {
     return result;
 }
 
-// Function demonstrating get_if for safe type access
 void process_geometry(Variant shape_var) {
     printf("Processing geometry of type: %s\n", ___variant_type_name(shape_var));
 
@@ -56,7 +55,6 @@ void process_geometry(Variant shape_var) {
 }
 
 int main() {
-    // Create structs first
     Rectangle rect = {.width = 10, .height = 20};
     Position pos = {.x = 30, .y = 40};
     Shape shape = {.shape_id = 5};
