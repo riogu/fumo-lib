@@ -1,14 +1,3 @@
-# How to use fumo_variant
-
-1- copy the file `fumo_variant.c`.
-
-2- to run the given example main function run:
-
-    gcc fumo_variant.c && ./a.out
-
-...thats it!
-to use it yourself, simply copy the macros before main, and replace the example structs i provided with your own structs.
-
 # Example of how the implementation works:
 Simple usage:
 ```c
