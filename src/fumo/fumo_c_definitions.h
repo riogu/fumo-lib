@@ -116,10 +116,10 @@
 
 #define XMACRO1(Type) Type : T_id_##Type,
 #define XMACRO1(Type) Type : T_id_##Type,
-#define fumo$get_type_id(var) (enum T_id)   \
-    _Generic(var,                           \
-             ALL_VARIANT_TYPES(XMACRO1)     \
-             ALL_DATA_TYPES_VARIABLE(:, T_id_, ,)     \
+#define fumo$get_type_id(var) (enum T_id)            \
+    _Generic(var,                                    \
+             ALL_VARIANT_TYPES(XMACRO1)              \
+             ALL_DATA_TYPES_VARIABLE(:, T_id_, ,)    \
             default: T_UNREGISTERED) 
 
 //---------------------------------------------------------
@@ -154,8 +154,6 @@
 
 //---------------------------------------------------------
 //---------------------------------------------------------
-//---------------------------------------------------------
-//---------------------------------------------------------
 // type comparison macro
 
 #define _IS_SAME_TYPE(T, U) _Generic(typeof(T), typeof(U): 1, default: 0)
@@ -177,15 +175,43 @@
         is_same_t; \
     }))
 
+//---------------------------------------------------------
 // #define autofree __attribute__((__cleanup__(autofree_impl)))
 // static inline void autofree_impl(void* p) {
 //     free(*((void**)p));
 // }
+#include <stdio.h> // IWYU pragma: export
+#define PRINTF_FORMAT(T)        \
+  _Generic( (T),                \
+    _Bool             : "%d",   \
+    char              : "%c",   \
+    signed char       : "%hhd", \
+    unsigned char     : "%hhu", \
+    short             : "%hd",  \
+    int               : "%d",   \
+    long              : "%ld",  \
+    long long         : "%lld", \
+    unsigned short    : "%hu",  \
+    unsigned int      : "%u",   \
+    unsigned long     : "%lu",  \
+    unsigned long long: "%llu", \
+    float             : "%f",   \
+    double            : "%f",   \
+    long double       : "%Lf",  \
+    char*             : "%s",   \
+    char const*       : "%s",   \
+    wchar_t*          : "%ls",  \
+    wchar_t const*    : "%ls",  \
+    void*             : "%p",   \
+    void const*       : "%p",    \
+    default           : "Type not defined. %p" \
+  )
 
+#define PRINTF(X)  printf( PRINTF_FORMAT( (X) ), (X) )
 
+//---------------------------------------------------------
 /*
 NOTE: code below isnt very useful
----------------------------------------------------------
 #define GET_TYPE_INSTANCE(T) \
     static inline T instance_of_##T(T type) { \
         return (T) {}; \
