@@ -1,17 +1,6 @@
 
 // clang-format off
 
-#define optional_t(T) typedef struct { T value; _Bool nullopt_t;}
-
-#define Some(_v) (optional_t) {.value = (typeof(_v)*)& _v}
-
-#define None(T)
-
-// #define dict() 1
-
-// typedef struct dict {
-// } dict;
-
 
 #define CONCAT_(left, counter) left##counter
 #define CONCAT(left, counter) CONCAT_(left, counter)
@@ -32,3 +21,24 @@
 #define MAC(A, B) MAC_IMPL(A, B, __COUNTER__)
 
 // __attribute__((alias( ___unique_name2_(T, U) ))) Result_##T##_##U ___unique_name_(____r_)() ;
+
+#define GET_TYPE_INSTANCE(T) \
+    static inline T instance_of_##T(T type) { \
+        return (T) {}; \
+    }
+
+#define INSTANCE_OF(T) , T: instance_of_##T
+#define fumo$make_instance_of(var) \
+    (typeof(var))((_Generic(typeof(var) ALL_VARIANT_TYPES(INSTANCE_OF))(var)))
+
+#define STATIC_IF(EXPR,THEN,ELSE)     \
+  _Generic( &(char[1 + !!(EXPR)]){0}, \
+    char (*)[2]: (THEN),              \
+    char (*)[1]: (ELSE)               \
+  )
+
+#define _CHECK_TYPE_SAFETY(T) , T : 1
+#define _TYPE_SAFE(T) \
+    _Generic( *(T*)0\
+             ALL_VARIANT_TYPES(_CHECK_TYPE_SAFETY),\
+             default: 0)
