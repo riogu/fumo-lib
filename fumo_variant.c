@@ -121,9 +121,9 @@ static inline const char* variant_type_name(_variant any) {
 typedef struct NewStruct {} NewStruct;
 
 int main() {
+
     Rectangle rect = {.width = 123, .height = 1231};
     _variant variant = _variant(rect);
-
     
     Shape shape = {.shape_id = 13};
     _variant var = _variant(shape); // making variant struct
@@ -131,10 +131,7 @@ int main() {
     // variables are only avaible inside the case label
     match(var) {
         case(Shape) _Shape->shape_id = 123; // goes here
-        case(Rectangle) {
-            _Rectangle->height = 222;
-        }
-        case (Position) //...etc (add more code)
+        case(Rectangle) //etc...
         _default printf("we dont get a value here");
     }
 

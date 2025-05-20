@@ -1,12 +1,6 @@
-#include "fumo/optional_t.h"
-#include "fumo/variant.h"
-#include "structs.h"
-#include <inttypes.h>
+#include "fumo/fumo_c_definitions.h"
+#include "fumo/fumo_data_structures.h"
 #include <stdio.h>
-
-// optional_t(float) opt_float;
-// const auto e = (optional_t) {.value = (typeof()*)&};
-
 int main() {
 
     Rectangle rect = {.width = 123, .height = 1231};
@@ -20,7 +14,7 @@ int main() {
         inner_value->shape_id = 123123;
     }
     else {
-        printf("failed\n, type: %s\n", variant_type_name(var));
+        // printf("failed, type: %s\n", variant_type_name(var));
     }
 
     if (is_same_t((Shape) {}, var)) {}
