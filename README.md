@@ -20,8 +20,8 @@ int main() {
 
     // variables are only avaible inside the case label
     match(var) {
-        case(Shape) _Shape->shape_id = 123; // goes here
-        case(Rectangle) //etc...
+        _case(Shape) _Shape->shape_id = 123; // goes here
+        _case(Rectangle) //etc...
         _default printf("we dont get a value here");
     }
 
