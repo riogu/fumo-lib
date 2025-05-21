@@ -32,14 +32,13 @@ typedef struct Variant {
     T_id type_id;
 } Variant;
 
-#define Variant(var) (Variant) {    \
-    .type_id = get_type_id(var), \
-    .value = (union value_t) var      \
+#define Variant(var) (Variant) {     \
+    .value = (union value_t) var,    \
+    .type_id = get_type_id(var)      \
 }
 
 //---------------------------------------------------------
 // fumo result type, inspired by the Rust result type
-
 typedef struct Result {
     T_value Ok;
     T_value Err;

@@ -1,5 +1,6 @@
 #pragma once
 #include <stdbool.h>
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
 #define __split(e) e

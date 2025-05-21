@@ -5,16 +5,26 @@ Result get_input();
 int main() {
 
     Rectangle rect = {.width = 123, .height = 1231};
-    Variant var = Variant(rect); // making variant struct
+    Variant var = Variant(rect);
 
     match(var) {
         _case(Shape) _Shape->shape_id = 123;
         _default printf("wasnt one of the stated types.\n");
     }
 
+    Shape s = {.shape_id = 123123};
+    Variant var1 = Variant(s);
+
     match(var) {
-        _case(Rectangle) printf("found Rectangle.\n");
-        _default printf("wasnt one of the stated types.\n");
+        _case(Shape) _Shape->shape_id = 213;
+        _default {
+            match(var1) {
+                _case(Shape) {
+                    printf("found shape %d.", _Shape->shape_id);
+                }
+                _default printf("found no shape\n.");
+            }
+        }
     }
 
     return 0;
