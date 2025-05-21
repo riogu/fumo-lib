@@ -13,7 +13,6 @@ int main() {
 
     Rectangle rect = {.width = 123, .height = 1231};
     Variant var = Variant(rect);
-    is_same_t((Rectangle) {}, var) ? printf("true\n") : printf("false\n");
 
     let inner_value = get_if(Shape, var) {
         inner_value->shape_id = 123123;
@@ -22,14 +21,16 @@ int main() {
         printf("failed, type: %s\n", type_name(var));
     }
 
+    is_same_t((Position) {}, var) ? printf("true\n") : printf("false\n");
+
     Shape s = {.shape_id = 123123};
     Variant var1 = Variant(s);
-    match(var1) {
-        case(Shape) _Shape->shape_id = 213;
+    match(var) {
+        case(Shape, var) var->shape_id = 213;
         _ {
             match(var1) {
-                case(Shape) 
-                    printf("found shape %d.", _Shape->shape_id);
+                case(Shape, shape) 
+                    printf("found shape %d.", shape->shape_id);
                 _ {
                 match(var) {
                     _ printf("%s this is valid syntax", "wow");
@@ -55,11 +56,11 @@ Result get_input() {
 
             // void func() {
             //     match(get_input()) {
-            //         _Ok(var) as(int) {
+            //         _Ok(int, var)  {
             //             printf("what happened %d", var);
             //         }
-            //         _Err(errval) as(char*) {
+            //         _Err(char*, var) {
             //             printf("what the hell %s", errval);
             //         }
-            //     }
+            //    }
             // }

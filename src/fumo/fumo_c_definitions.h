@@ -140,32 +140,29 @@ case T_id_##T:                                               \
     result = &val_##T;                                       \
     break;
 
-#define _GET_UNDERLYING(T, Variant)                 \
-    switch (Variant.type_id) {                      \
-    ALL_VARIANT_TYPES_V(_UNDERLYING_VALUE, Variant) \
-    ALL_DATA_TYPES_V(_UNDERLYING_VALUE, Variant)    \
-}
-
 #define get_if(T, Variant) (T*) ({                      \
-    void* result = NULL;                                \
-    _GET_UNDERLYING(T, Variant);                        \
+    auto result = NULL;                                 \
+    switch (Variant.type_id) {                          \
+        ALL_VARIANT_TYPES_V(_UNDERLYING_VALUE, Variant) \
+        ALL_DATA_TYPES_V(_UNDERLYING_VALUE, Variant)    \
+    }                                                   \
     result;                                             \
 }); if ((get_type_id(*(T*)0) == Variant.type_id))
 
 //---------------------------------------------------------
 
-#define case(T) break;}); case T_id_##T: ({ T* _##T = &____value____->_##T;
+#define case(T, varname) break;}); case T_id_##T: ({ T* varname = &____value____->_##T;
 
 #define match(Variant)                                              \
 ({                                                                  \
-    auto ____value____ = (union value_t *)({                        \
+    auto ____value____ = (union T_value *)({                        \
         auto result = NULL;                                         \
         switch (Variant.type_id) {                                  \
             ALL_VARIANT_TYPES_V(_UNDERLYING_VALUE, Variant)         \
             ALL_DATA_TYPES_V(_UNDERLYING_VALUE, Variant)            \
         }                                                           \
         result;                                                     \
-});                                                                 \
+    });                                                             \
     switch(Variant.type_id) {( /* switch gets closed by case labels later */
 
 #define _default                                    \
