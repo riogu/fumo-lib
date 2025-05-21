@@ -209,7 +209,7 @@ case T_id_##T:                                               \
 ({                                                                  \
     let __inner_ = Variant;                                         \
     let ____value____ = &__inner_;                                  \
-    switch(Variant.type_id) { /* switch gets closed by case labels later */
+    switch(__inner_.type_id) { /* switch gets closed by case labels later */
 
 #define _default                                    \
     });                                             \

@@ -7,12 +7,11 @@ Result get_input();
 
 int main() {
 
-    Result r = get_input();
-    match(r)({
+    match(get_input())({
         _Ok(int, var) printf("_Ok: %d.\n", *var);
 
         _Err(char_ptr, errval) {
-            printf("what the hell, %s", *errval);
+            printf("error message: %s", *errval);
         }
     });
 
@@ -43,8 +42,6 @@ int main() {
     return 0;
 }
 
-#define as
-#define end
 
 Result get_input() {
     int n = 0;
