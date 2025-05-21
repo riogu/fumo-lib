@@ -12,7 +12,7 @@ int main() {
     else {
         // fails to get the value, result2 is NULL
         printf("couldn't get shape from variant.\n");
-        printf("type in variant: %s\n", variant_type_name(variant));
+        printf("type in variant: %s\n", type_name(variant));
     }
 
     Shape shape = {.shape_id = 13};
