@@ -1,4 +1,5 @@
 #include "fumo/fumo_type_name.h"
+#include "structs.h"
 Result get_input();
 
 int main() {
@@ -6,48 +7,46 @@ int main() {
     Rectangle rect = {.width = 123, .height = 1231};
     Variant var = Variant(rect); // making variant struct
 
-    is_same_t((Position) {}, var) ? printf("true\n") : printf("false\n");
-    is_same_t(rect, var) ? printf("true\n") : printf("false\n");
-    is_same_t((Shape) {}, rect) ? printf("true\n") : printf("false\n");
-
-    let inner_value = get_if(Shape, var) {
-        inner_value->shape_id = 123123;
+    match(var) {
+        _case(Shape) _Shape->shape_id = 123;
+        _default printf("wasnt one of the stated types.\n");
     }
-    else {
-        printf("failed, type: %s\n", type_name(var));
-    }
-
-    if (is_same_t((Shape) {}, var)) {}
 
     match(var) {
-        case(Shape) _Shape->shape_id = 123;
-        case(Rectangle) {
-            _Rectangle->height = 222;
-        }
-        _default printf("we dont get a value here");
+        _case(Rectangle) printf("found Rectangle.\n");
+        _default printf("wasnt one of the stated types.\n");
     }
 
-    // match(get_input()) {
-    //     _Ok(var) {
-    //         printf("what happened", var);
-    //     }
-    //     _Err(errval) {
-    //         printf("what the hell %s", errval);
-    //     }
-    // }
-    
     return 0;
 }
 
-Result get_input() {
+// let inner_value = get_if(Shape, var) {
+//     inner_value->shape_id = 123123;
+// }
+// else {
+//     // printf("failed, type: %s\n", type_name((Position){});
+// }
+// is_same_t((Position) {}, var) ? printf("true\n") : printf("false\n");
 
-    Shape s = {.shape_id = 12};
-    Result res = Ok(s);
-    int n = 10;
+// Result get_input() {
+//     Shape s = {.shape_id = 12};
+//     Result res = Ok(s);
+//     int n = 0;
+//
+//     if (scanf("%d", &n)) {
+//         return Ok(n);
+//     }
+//     return Err("couldnt get input.\n");
+//
+// }
 
-    if (scanf("%d", &n)) {
-        return Ok(n);
-    }
-    return Err((Position) {.x = 213});
-
-}
+// void func() {
+//    match(get_input()) {
+//         _Ok(var) {
+//             printf("what happened %d", var);
+//         }
+//         _Err(errval) {
+//             printf("what the hell %s", errval);
+//         }
+//     }
+// }

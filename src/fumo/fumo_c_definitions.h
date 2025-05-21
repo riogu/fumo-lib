@@ -1,4 +1,5 @@
 #pragma once
+#include <stdbool.h>
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
 #define __split(e) e
@@ -111,12 +112,19 @@
 #define T_UNREGISTERED -420
 #define auto __auto_type
 #define let auto
+
+bool ___inner_fumo_cookie___ = false;
+
+static inline bool ___check_and_reset_cookie___() {
+    return !(!___inner_fumo_cookie___ || (___inner_fumo_cookie___ = false));
+}
+
 //---------------------------------------------------------
 //---------------------------------------------------------
 // NOTE: fumo_c syntax and useful operator definitions
 
 #define XMACRO1(Type) Type : T_id_##Type,
-#define fumo$get_type_id(var) (enum T_id)            \
+#define get_type_id(var) (enum T_id)            \
     _Generic(var,                                    \
              ALL_VARIANT_TYPES(XMACRO1)              \
              ALL_DATA_TYPES_VARIABLE(:, T_id_, ,)    \
@@ -136,24 +144,36 @@
     void* result = NULL;                                \
     _GET_UNDERLYING(T, Variant);                        \
     result;                                             \
-}); if ((fumo$get_type_id(*(T*)0) == Variant.type_id))
+}); if ((get_type_id(*(T*)0) == Variant.type_id))
 
 //---------------------------------------------------------
 
 #define _CASE_VAL_(T, Variant) case T_id_##T: result = &Variant.value._##T; break;
 
-#define case(T) break;}); case T_id_##T: ({ T* _##T = &____value____->_##T;
+#define _case(T) break;}); case T_id_##T: ({ T* _##T = &____value____->_##T;
 
-#define match(Variant) auto ____value____ = (union value_t *)({ \
-    auto result = NULL;                                         \
-    switch (Variant.type_id) {                                  \
-        ALL_VARIANT_TYPES_V(_CASE_VAL_, Variant)                \
-        ALL_DATA_TYPES_V(_CASE_VAL_, Variant)                   \
-    }                                                           \
-    result;                                                     \
-}); switch(Variant.type_id) {(
+#define match(Variant)                                              \
+({                                                                  \
+    auto ____value____ = (union value_t *)({                        \
+        auto result = NULL;                                         \
+        switch (Variant.type_id) {                                  \
+            ALL_VARIANT_TYPES_V(_CASE_VAL_, Variant)                \
+            ALL_DATA_TYPES_V(_CASE_VAL_, Variant)                   \
+        }                                                           \
+        result;                                                     \
+}); \
+    switch(Variant.type_id) {( /* switch gets closed by case labels later */
 
-#define _default break;}); default:
+#define _default                                    \
+        break;});                                   \
+        /*finish previous case statement*/          \
+        default: {                                  \
+            extern bool ___inner_fumo_cookie___;    \
+            ___inner_fumo_cookie___++;              \
+            break;                                  \
+        }                                           \
+    }                                               \
+}); if(___check_and_reset_cookie___()) { /* start user code block */
 
 //---------------------------------------------------------
 //---------------------------------------------------------
@@ -161,21 +181,21 @@
 
 #define _IS_SAME_TYPE(T, U) _Generic(typeof(T), typeof(U): 1, default: 0)
 
-#define is_same_t(X, Y) \
-    (({ \
-         let is_x_v = _Generic(typeof(X), Variant: 1, default: 0); \
-         let is_y_v = _Generic(typeof(Y), Variant: 1, default: 0); \
-         let is_same_t =  \
-            (is_x_v && is_y_v) \
-            ? ( (*(Variant*)&X).type_id == (*(Variant*)&Y).type_id ) \
-            : (is_x_v && !is_y_v) \
-            ? ( (*(Variant*)&X).type_id == fumo$get_type_id(typeof(Y)) ) \
-            : (!is_x_v && is_y_v) \
-            ? ( fumo$get_type_id(typeof(X)) == (*(Variant*)&Y).type_id ) \
-            : (!is_x_v && !is_y_v) \
-            ? ( _IS_SAME_TYPE(X, Y) ) \
-            : 0; \
-        is_same_t; \
+#define is_same_t(X, Y)                                                  \
+    (({                                                                  \
+         let is_x_v = _Generic(typeof(X), Variant: 1, default: 0);       \
+         let is_y_v = _Generic(typeof(Y), Variant: 1, default: 0);       \
+         let is_same_t =                                                 \
+            (is_x_v && is_y_v)                                           \
+            ? ( (*(Variant*)&X).type_id == (*(Variant*)&Y).type_id )     \
+            : (is_x_v && !is_y_v)                                        \
+            ? ( (*(Variant*)&X).type_id == get_type_id(typeof(Y)) )      \
+            : (!is_x_v && is_y_v)                                        \
+            ? ( get_type_id(typeof(X)) == (*(Variant*)&Y).type_id )      \
+            : (!is_x_v && !is_y_v)                                       \
+            ? ( _IS_SAME_TYPE(X, Y) )                                    \
+            : 0;                                                         \
+        is_same_t;                                                       \
     }))
 
 //---------------------------------------------------------
@@ -184,29 +204,29 @@
 //     free(*((void**)p));
 // }
 #include <stdio.h> // IWYU pragma: export
-#define PRINTF_FORMAT(T)        \
-  _Generic( (T),                \
-    _Bool             : "%d",   \
-    char              : "%c",   \
-    signed char       : "%hhd", \
-    unsigned char     : "%hhu", \
-    short             : "%hd",  \
-    int               : "%d",   \
-    long              : "%ld",  \
-    long long         : "%lld", \
-    unsigned short    : "%hu",  \
-    unsigned int      : "%u",   \
-    unsigned long     : "%lu",  \
-    unsigned long long: "%llu", \
-    float             : "%f",   \
-    double            : "%f",   \
-    long double       : "%Lf",  \
-    char*             : "%s",   \
-    char const*       : "%s",   \
-    wchar_t*          : "%ls",  \
-    wchar_t const*    : "%ls",  \
-    void*             : "%p",   \
-    void const*       : "%p",    \
+#define PRINTF_FORMAT(T)                       \
+  _Generic( (T),                               \
+    _Bool             : "%d",                  \
+    char              : "%c",                  \
+    signed char       : "%hhd",                \
+    unsigned char     : "%hhu",                \
+    short             : "%hd",                 \
+    int               : "%d",                  \
+    long              : "%ld",                 \
+    long long         : "%lld",                \
+    unsigned short    : "%hu",                 \
+    unsigned int      : "%u",                  \
+    unsigned long     : "%lu",                 \
+    unsigned long long: "%llu",                \
+    float             : "%f",                  \
+    double            : "%f",                  \
+    long double       : "%Lf",                 \
+    char*             : "%s",                  \
+    char const*       : "%s",                  \
+    wchar_t*          : "%ls",                 \
+    wchar_t const*    : "%ls",                 \
+    void*             : "%p",                  \
+    void const*       : "%p",                  \
     default           : "Type not defined. %p" \
   )
 

@@ -33,7 +33,7 @@ typedef struct Variant {
 } Variant;
 
 #define Variant(var) (Variant) {    \
-    .type_id = fumo$get_type_id(var), \
+    .type_id = get_type_id(var), \
     .value = (union value_t) var      \
 }
 
