@@ -222,6 +222,24 @@ case T_id_##T:                                               \
     }                                               \
     if(___check_and_reset_cookie___())  /* start user code block */
 
+#define _Ok(T, _varname)                                        \
+    });                                                         \
+    default:                                                    \
+        break;                                                  \
+    }                                                           \
+({                                                              \
+    T* _varname = &____value____->value._##T;                    \
+    if(!____value____->was_err                                  \
+            && (get_type_id(*(T*)0) == ____value____->type_id))
+
+#define _Err(T, _varname)                                       \
+});                                                             \
+    let _varname = &____value____->value._##T;                  \
+    if (____value____->was_err                                  \
+        && (get_type_id(*(T*)0) == ____value____->type_id))
+
+
+
 #define __valuething                                                \
     auto ____value____ = (union T_value *)({                        \
         auto result = NULL;                                         \

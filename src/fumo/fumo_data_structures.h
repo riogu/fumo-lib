@@ -30,7 +30,7 @@ typedef union T_value {
 typedef struct Variant {
     T_value value;
     T_id type_id;
-} __attribute__((packed)) Variant;
+} Variant;
 
 #define Variant(var) (Variant) {     \
     .value = (union T_value) var,    \
@@ -45,26 +45,10 @@ typedef struct Result {
 
     bool was_err;
 
-} __attribute__((packed)) Result;
+} Result;
 
 #define Ok(_v) (Result) {.value = (union T_value) _v, .type_id = get_type_id(_v), .was_err = 0}
 #define Err(_v) (Result) {.value =(union T_value) _v, .type_id = get_type_id(_v), .was_err = 1}
-
-#define _Ok(T, _varname)                                        \
-    });                                                         \
-    default:                                                    \
-        break;                                                  \
-    }                                                           \
-({                                                              \
-    T* _varname = &____value____->value._##T;                    \
-    if(!____value____->was_err                                  \
-            && (get_type_id(*(T*)0) == ____value____->type_id))
-
-#define _Err(T, _varname)                                       \
-});                                                             \
-    let _varname = &____value____->value._##T;                  \
-    if (____value____->was_err                                  \
-        && (get_type_id(*(T*)0) == ____value____->type_id))
 
 // #define optional_t(T) typedef struct { T value; _Bool nullopt_t;}
 //

@@ -7,14 +7,6 @@ Result get_input();
 
 int main() {
 
-    match(get_input())({
-        _Ok(int, var) printf("_Ok: %d.\n", *var);
-
-        _Err(char_ptr, errval) {
-            printf("error message: %s", *errval);
-        }
-    });
-
     Rectangle rect = {.width = 123, .height = 1231};
     Variant var = Variant(rect);
     let inner_value = get_if(Shape, var) {
@@ -37,16 +29,6 @@ int main() {
         _ {}
     });
 
-    int x = 123213;
 
     return 0;
-}
-
-
-Result get_input() {
-    int n = 0;
-    if (scanf("%d", &n)) {
-        return Ok(n);
-    }
-    return Err("scanf failed bruh.\n");
 }
