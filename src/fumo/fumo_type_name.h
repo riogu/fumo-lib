@@ -28,3 +28,5 @@ static inline const char* ___result_type_name(Result result) {
                 Variant: ___variant_type_name,          \
                 Result: ___result_type_name             \
                 )(_v)
+
+// NOTE: type_name isnt finished
