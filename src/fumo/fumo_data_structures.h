@@ -47,19 +47,24 @@ typedef struct Result {
 
 } __attribute__((packed)) Result;
 
-#define Ok(_v) (Result) {.value = (union T_value) _v, .was_err = 0}
-#define Err(_v) (Result) {.value =(union T_value) _v, .was_err = 1}
+#define Ok(_v) (Result) {.value = (union T_value) _v, .type_id = get_type_id(_v), .was_err = 0}
+#define Err(_v) (Result) {.value =(union T_value) _v, .type_id = get_type_id(_v), .was_err = 1}
 
-// #define _Ok(T)                              \
-// }); default: break;}                        \
-// T* _##T = &____value____->_##T;             \
-// }})
+#define _Ok(T, _varname)                                        \
+    });                                                         \
+    default:                                                    \
+        break;                                                  \
+    }                                                           \
+({                                                              \
+    T* _varname = &____value____->value._##T;                    \
+    if(!____value____->was_err                                  \
+            && (get_type_id(*(T*)0) == ____value____->type_id))
 
-#define _Ok(T, _varname)                           \
-});                                             \
- ({ auto _varname =
-
-#define _Err(T, varname) });
+#define _Err(T, _varname)                                       \
+});                                                             \
+    let _varname = &____value____->value._##T;                  \
+    if (____value____->was_err                                  \
+        && (get_type_id(*(T*)0) == ____value____->type_id))
 
 // #define optional_t(T) typedef struct { T value; _Bool nullopt_t;}
 //

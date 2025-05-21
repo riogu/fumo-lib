@@ -1,8 +1,12 @@
 #pragma once
 #include <stdbool.h>
+#include <wchar.h>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
+#pragma clang diagnostic ignored "-Waddress-of-packed-member"
+// NOTE: this might cause insanely hard to find undebuggable issues
+
 #define __split(e) e
 #define ALL_DATA_TYPES_VARIABLE(E, F, ...)                            \
     _Bool              __split(E)F##_Bool               __VA_ARGS__   \
@@ -97,6 +101,54 @@
     F(void_const_ptr    , Variant)
 // ----------------------------------------------------------------
 
+// clang-format off
+
+typedef    _Bool              __Bool             ; 
+typedef    char               _char              ; 
+typedef    signed char        _signed_char       ; 
+typedef    unsigned char      _unsigned_char     ; 
+typedef    short              _short             ; 
+typedef    int                _int               ; 
+typedef    long               _long              ; 
+typedef    long long          _long_long         ; 
+typedef    unsigned short     _unsigned_short    ; 
+typedef    unsigned int       _unsigned_int      ; 
+typedef    unsigned long      _unsigned_long     ; 
+typedef    unsigned long long _unsigned_long_long; 
+typedef    float              _float             ; 
+typedef    double             _double            ; 
+typedef    long double        _long_double       ; 
+typedef    char*              char_ptr          ; 
+typedef    char const*        char_const_ptr    ; 
+typedef    wchar_t*           wchar_t_ptr       ; 
+typedef    wchar_t const*     wchar_t_const_ptr ; 
+typedef    void*              void_ptr          ; 
+typedef    void const*        void_const_ptr    ;
+
+#define type_to_name(T)\
+_Generic(typeof(*(T*)0),\
+    _Bool             : __Bool               ,  \
+    char              : _char                ,  \
+    signed char       : _signed_char         ,  \
+    unsigned char     : _unsigned_char       ,  \
+    short             : _short               ,  \
+    int               : _int                 ,  \
+    long              : _long                ,  \
+    long long         : _long_long           ,  \
+    unsigned short    : _unsigned_short      ,  \
+    unsigned int      : _unsigned_int        ,  \
+    unsigned long     : _unsigned_long       ,  \
+    unsigned long long: _unsigned_long_long  ,  \
+    float             : _float               ,  \
+    double            : _double              ,  \
+    long double       : _long_double         ,  \
+    char*             : _char_ptr            ,  \
+    char const*       : _char_const_ptr      ,  \
+    wchar_t*          : _wchar_t_ptr         ,  \
+    wchar_t const*    : _wchar_t_const_ptr   ,  \
+    void*             : _void_ptr            ,  \
+    void const*       : _void_const_ptr)
+
 // random structs to test
 #define ALL_VARIANT_TYPES(F) \
     F(Position) \
@@ -151,19 +203,13 @@ case T_id_##T:                                               \
 
 //---------------------------------------------------------
 
-#define case(T, varname) break;}); case T_id_##T: ({ T* varname = &____value____->_##T;
+#define case(T, varname) break;}); case T_id_##T: ({ T* varname = &____value____->value._##T;
 
 #define match(Variant)                                              \
 ({                                                                  \
-    auto ____value____ = (union T_value *)({                        \
-        auto result = NULL;                                         \
-        switch (Variant.type_id) {                                  \
-            ALL_VARIANT_TYPES_V(_UNDERLYING_VALUE, Variant)         \
-            ALL_DATA_TYPES_V(_UNDERLYING_VALUE, Variant)            \
-        }                                                           \
-        result;                                                     \
-    });                                                             \
-    switch(Variant.type_id) {( /* switch gets closed by case labels later */
+    let __inner_ = Variant;                                         \
+    let ____value____ = &__inner_;                                  \
+    switch(Variant.type_id) { /* switch gets closed by case labels later */
 
 #define _default                                    \
     });                                             \
@@ -174,7 +220,17 @@ case T_id_##T:                                               \
             break;                                  \
         }                                           \
     }                                               \
-}); if(___check_and_reset_cookie___()) { /* start user code block */
+    if(___check_and_reset_cookie___())  /* start user code block */
+
+#define __valuething                                                \
+    auto ____value____ = (union T_value *)({                        \
+        auto result = NULL;                                         \
+        switch (Variant.type_id) {                                  \
+            ALL_VARIANT_TYPES_V(_UNDERLYING_VALUE, Variant)         \
+            ALL_DATA_TYPES_V(_UNDERLYING_VALUE, Variant)            \
+        }                                                           \
+        result;                                                     \
+    });
 
 //---------------------------------------------------------
 //---------------------------------------------------------

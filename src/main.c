@@ -1,19 +1,23 @@
+#include "fumo/fumo_c_definitions.h"
 #include "fumo/fumo_type_name.h"
-#include "structs.h"
-Result get_input();
 #define else else
 #define _ _default
 
-typedef union e {
-    Position pos;
-    Rectangle rect;
-} e;
+Result get_input();
 
 int main() {
 
+    Result r = get_input();
+    match(r)({
+        _Ok(int, var) printf("_Ok: %d.\n", *var);
+
+        _Err(char_ptr, errval) {
+            printf("what the hell, %s", *errval);
+        }
+    });
+
     Rectangle rect = {.width = 123, .height = 1231};
     Variant var = Variant(rect);
-
     let inner_value = get_if(Shape, var) {
         inner_value->shape_id = 123123;
     }
@@ -25,42 +29,27 @@ int main() {
 
     Shape s = {.shape_id = 123123};
     Variant var1 = Variant(s);
-    match(var) {
+
+    match(var) ({
         case(Shape, var) var->shape_id = 213;
-        _ {
-            match(var1) {
-                case(Shape, shape) 
-                    printf("found shape %d.", shape->shape_id);
-                _ {
-                match(var) {
-                    _ printf("%s this is valid syntax", "wow");
-                    }
-                }
-            }
+        case(Rectangle, rect) {
+            rect->height = 123;
         }
-    }
+        _ {}
+    });
+
+    int x = 123213;
 
     return 0;
 }
 
-Result get_input() {
-    Shape s = {.shape_id = 12};
-    Result res = Ok(s);
-    int n = 0;
+#define as
+#define end
 
+Result get_input() {
+    int n = 0;
     if (scanf("%d", &n)) {
         return Ok(n);
     }
-    return Err("couldnt get input.\n");
+    return Err("scanf failed bruh.\n");
 }
-
-            // void func() {
-            //     match(get_input()) {
-            //         _Ok(int, var)  {
-            //             printf("what happened %d", var);
-            //         }
-            //         _Err(char*, var) {
-            //             printf("what the hell %s", errval);
-            //         }
-            //    }
-            // }
