@@ -9,8 +9,8 @@
 #define XMACRO(Type) T_id_##Type,
 
 typedef enum T_id {
-    ALL_DATA_TYPE_NAMES(XMACRO) //
-    ALL_VARIANT_TYPES(XMACRO)
+    ALL_VARIANT_TYPES(XMACRO) //
+    ALL_DATA_TYPE_NAMES(XMACRO)
 } T_id;
 
 #undef XMACRO
@@ -18,8 +18,8 @@ typedef enum T_id {
 #define XMACRO(Type) Type _##Type;
 
 typedef union value_t {
-    ALL_DATA_TYPES_VARIABLE(, _, ;) //
-    ALL_VARIANT_TYPES(XMACRO)
+    ALL_VARIANT_TYPES(XMACRO) //
+    ALL_DATA_TYPES_VARIABLE(, _, ;)
 } T_value;
 
 #undef XMACRO
@@ -30,7 +30,7 @@ typedef union value_t {
 typedef struct Variant {
     T_value value;
     T_id type_id;
-} Variant;
+} __attribute__((packed)) Variant;
 
 #define Variant(var) (Variant) {     \
     .value = (union value_t) var,    \
@@ -45,14 +45,19 @@ typedef struct Result {
 
     bool was_err;
 
-} Result;
+} __attribute__((packed)) Result;
 
 #define Ok(_v) (Result) {.value = (union value_t) _v, .was_err = 0}
 #define Err(_v) (Result) {.value =(union value_t) _v, .was_err = 1}
 
-#define _ 0
-#define _Ok(x)
-#define _Err(x)
+#define _Ok(T)                              \
+}); default: break;}                        \
+T* _##T = &____value____->_##T;             \
+}})
+
+#define _Err(_v)
+
+#define as(T)
 
 // #define optional_t(T) typedef struct { T value; _Bool nullopt_t;}
 //

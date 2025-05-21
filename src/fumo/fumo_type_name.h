@@ -23,8 +23,8 @@ static inline const char* ___result_type_name(Result result) {
     return all_type_names[result.type_id];
 }
 
-#define type_name(_v)                                  \
-    _Generic(typeof(_v),                               \
+#define type_name(_v)                                   \
+    _Generic(typeof(_v),                                \
                 Variant: ___variant_type_name,          \
                 Result: ___result_type_name             \
                 )(_v)

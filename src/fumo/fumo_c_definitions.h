@@ -114,7 +114,7 @@
 #define auto __auto_type
 #define let auto
 
-bool ___inner_fumo_cookie___ = false;
+static bool ___inner_fumo_cookie___ = false;
 
 static inline bool ___check_and_reset_cookie___() {
     return !(!___inner_fumo_cookie___ || (___inner_fumo_cookie___ = false));
@@ -133,7 +133,12 @@ static inline bool ___check_and_reset_cookie___() {
 
 //---------------------------------------------------------
 
-#define _UNDERLYING_VALUE(T, Variant) case T_id_##T: result = &Variant.value._##T; break;
+#define _UNDERLYING_VALUE(T, Variant)                        \
+case T_id_##T:                                               \
+    (void)0;                                                 \
+    typeof(Variant.value._##T) val_##T = Variant.value._##T; \
+    result = &val_##T;                                       \
+    break;
 
 #define _GET_UNDERLYING(T, Variant)                 \
     switch (Variant.type_id) {                      \
@@ -149,24 +154,22 @@ static inline bool ___check_and_reset_cookie___() {
 
 //---------------------------------------------------------
 
-#define _CASE_VAL_(T, Variant) case T_id_##T: result = &Variant.value._##T; break;
-
-#define _case(T) break;}); case T_id_##T: ({ T* _##T = &____value____->_##T;
+#define case(T) break;}); case T_id_##T: ({ T* _##T = &____value____->_##T;
 
 #define match(Variant)                                              \
 ({                                                                  \
     auto ____value____ = (union value_t *)({                        \
         auto result = NULL;                                         \
         switch (Variant.type_id) {                                  \
-            ALL_VARIANT_TYPES_V(_CASE_VAL_, Variant)                \
-            ALL_DATA_TYPES_V(_CASE_VAL_, Variant)                   \
+            ALL_VARIANT_TYPES_V(_UNDERLYING_VALUE, Variant)         \
+            ALL_DATA_TYPES_V(_UNDERLYING_VALUE, Variant)            \
         }                                                           \
         result;                                                     \
-}); \
+});                                                                 \
     switch(Variant.type_id) {( /* switch gets closed by case labels later */
 
 #define _default                                    \
-        break;});                                   \
+    });                                             \
         /*finish previous case statement*/          \
         default: {                                  \
             extern bool ___inner_fumo_cookie___;    \
