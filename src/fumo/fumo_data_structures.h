@@ -40,16 +40,15 @@ typedef struct Variant {
 //---------------------------------------------------------
 // fumo result type, inspired by the Rust result type
 typedef struct Result {
-    T_value Ok;
-    T_value Err;
+    T_value value; // is Ok() or Err()
     T_id type_id;
 
     bool was_err;
 
 } Result;
 
-#define Ok(_v) (Result) {.Ok = (union value_t) _v, .was_err = 0}
-#define Err(_v) (Result) {.Err =(union value_t) _v, .was_err = 1}
+#define Ok(_v) (Result) {.value = (union value_t) _v, .was_err = 0}
+#define Err(_v) (Result) {.value =(union value_t) _v, .was_err = 1}
 
 #define _ 0
 #define _Ok(x)

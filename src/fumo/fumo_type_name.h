@@ -11,20 +11,20 @@ const char* all_type_names[] = {ALL_VARIANT_TYPES(TypeName) //
 
 #define ___each_type_name_(Type)
 
-inline const char* ___type_name(int type_id) {
+static inline const char* ___type_name(int type_id) {
     return all_type_names[type_id];
 }
 
-inline const char* ___variant_type_name(Variant variant) {
+static inline const char* ___variant_type_name(Variant variant) {
     return all_type_names[variant.type_id];
 }
 
-inline const char* ___result_type_name(Result result) {
+static inline const char* ___result_type_name(Result result) {
     return all_type_names[result.type_id];
 }
 
 #define type_name(_v)                                  \
     _Generic(typeof(_v),                               \
-                Variant: __variant_type_name,          \
-                Result: __result_type_name             \
+                Variant: ___variant_type_name,          \
+                Result: ___result_type_name             \
                 )(_v)
