@@ -16,14 +16,16 @@ int main() {
     }
 
     Shape shape = {.shape_id = 13};
-    _variant var = _variant(shape); // making variant struct
+    variant var = variant(shape); // making variant struct
 
     // variables are only avaible inside the case label
-    match(var) {
-        _case(Shape) _Shape->shape_id = 123; // goes here
-        _case(Rectangle) //etc...
-        _default printf("we dont get a value here");
-    }
+    match(var) ({
+        case(Shape) _Shape->shape_id = 123; // goes here
+        case(Rectangle) //etc...
+        _ {
+         printf("we dont get a value here");
+        }
+    });
 
     return 0;
 }
