@@ -1,25 +1,24 @@
 #pragma once
-#include "../structs.h" // IWYU pragma: export
 #include "fumo_c_definitions.h" // IWYU pragma: export
 #include <stdbool.h>
 #include <wchar.h> // IWYU pragma: export
 
 //---------------------------------------------------------
 // fumo primitive data types for type safety
-#define XMACRO(Type) T_id_##Type,
+#define XMACRO(Type, ...) T_id_##Type,
 
 typedef enum T_id {
-    ALL_VARIANT_TYPES(XMACRO) //
-    ALL_DATA_TYPE_NAMES(XMACRO)
+    all_user_types_v(XMACRO) //
+    all_data_types_v(XMACRO)
 } T_id;
 
 #undef XMACRO
 
-#define XMACRO(Type) Type _##Type;
+#define XMACRO(Type, ...) Type _##Type;
 
 typedef union T_value {
-    ALL_VARIANT_TYPES(XMACRO) //
-    ALL_DATA_TYPES_VARIABLE(, _, ;)
+    all_user_types_v(XMACRO) //
+        all_data_types_v(XMACRO, ...)
 } T_value;
 
 #undef XMACRO

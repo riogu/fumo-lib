@@ -7,8 +7,12 @@ Result get_input();
 
 int main() {
 
+    int x = 123;
+    PRINTF("this is x: ", x);
+
     Rectangle rect = {.width = 123, .height = 1231};
     Variant var = Variant(rect);
+
     let inner_value = get_if(Shape, var) {
         inner_value->shape_id = 123123;
     }
@@ -16,7 +20,7 @@ int main() {
         printf("failed, type: %s\n", type_name(var));
     }
 
-    is_same_t((Position) {}, var) ? printf("true\n") : printf("false\n");
+    // is_same_t((Position) {}, var) ? printf("true\n") : printf("false\n");
 
     Shape s = {.shape_id = 123123};
     Variant var1 = Variant(s);
@@ -26,8 +30,14 @@ int main() {
         case(Rectangle, rect) {
             rect->height = 123;
         }
-        _ {}
+        _ {
+            printf("unknown type.\n");
+        }
     });
+
+
+
+
 
 
     return 0;

@@ -1,171 +1,74 @@
 #pragma once
+#include "../structs.h" // IWYU pragma: export
+#include "for_each_macro.h"
 #include <stdbool.h>
 #include <wchar.h>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
-#pragma clang diagnostic ignored "-Waddress-of-packed-member"
+// #pragma clang diagnostic ignored "-Waddress-of-packed-member"
 // NOTE: this might cause insanely hard to find undebuggable issues
 
-#define __split(e) e
-#define ALL_DATA_TYPES_VARIABLE(E, F, ...)                            \
-    _Bool              __split(E)F##_Bool               __VA_ARGS__   \
-    char               __split(E)F##char                __VA_ARGS__   \
-    signed char        __split(E)F##signed_char         __VA_ARGS__   \
-    unsigned char      __split(E)F##unsigned_char       __VA_ARGS__   \
-    short              __split(E)F##short               __VA_ARGS__   \
-    int                __split(E)F##int                 __VA_ARGS__   \
-    long               __split(E)F##long                __VA_ARGS__   \
-    long long          __split(E)F##long_long           __VA_ARGS__   \
-    unsigned short     __split(E)F##unsigned_short      __VA_ARGS__   \
-    unsigned int       __split(E)F##unsigned_int        __VA_ARGS__   \
-    unsigned long      __split(E)F##unsigned_long       __VA_ARGS__   \
-    unsigned long long __split(E)F##unsigned_long_long  __VA_ARGS__   \
-    float              __split(E)F##float               __VA_ARGS__   \
-    double             __split(E)F##double              __VA_ARGS__   \
-    long double        __split(E)F##long_double         __VA_ARGS__   \
-    char*              __split(E)F##char_ptr            __VA_ARGS__   \
-    char const*        __split(E)F##char_const_ptr      __VA_ARGS__   \
-    wchar_t*           __split(E)F##wchar_t_ptr         __VA_ARGS__   \
-    wchar_t const*     __split(E)F##wchar_t_const_ptr   __VA_ARGS__   \
-    void*              __split(E)F##void_ptr            __VA_ARGS__   \
-    void const*        __split(E)F##void_const_ptr      __VA_ARGS__
-
-#define ALL_DATA_TYPES(F)    \
-    F(_Bool              )   \
-    F(char               )   \
-    F(signed char        )   \
-    F(unsigned char      )   \
-    F(short              )   \
-    F(int                )   \
-    F(long               )   \
-    F(long long          )   \
-    F(unsigned short     )   \
-    F(unsigned int       )   \
-    F(unsigned long      )   \
-    F(unsigned long long )   \
-    F(float              )   \
-    F(double             )   \
-    F(long double        )   \
-    F(char*              )   \
-    F(char const*        )   \
-    F(wchar_t*           )   \
-    F(wchar_t const*     )   \
-    F(void*              )   \
-    F(void const*        )
-
-#define ALL_DATA_TYPE_NAMES(F)   \
-    F(_Bool             )       \
-    F(char              )       \
-    F(signed_char       )       \
-    F(unsigned_char     )       \
-    F(short             )       \
-    F(int               )       \
-    F(long              )       \
-    F(long_long         )       \
-    F(unsigned_short    )       \
-    F(unsigned_int      )       \
-    F(unsigned_long     )       \
-    F(unsigned_long_long)       \
-    F(float             )       \
-    F(double            )       \
-    F(long_double       )       \
-    F(char_ptr          )       \
-    F(char_const_ptr    )       \
-    F(wchar_t_ptr       )       \
-    F(wchar_t_const_ptr )       \
-    F(void_ptr          )       \
-    F(void_const_ptr    )
-
-#define ALL_DATA_TYPES_V(F, Variant)  \
-    F(_Bool             , Variant)   \
-    F(char              , Variant)   \
-    F(signed_char       , Variant)   \
-    F(unsigned_char     , Variant)   \
-    F(short             , Variant)   \
-    F(int               , Variant)   \
-    F(long              , Variant)   \
-    F(long_long         , Variant)   \
-    F(unsigned_short    , Variant)   \
-    F(unsigned_int      , Variant)   \
-    F(unsigned_long     , Variant)   \
-    F(unsigned_long_long, Variant)   \
-    F(float             , Variant)   \
-    F(double            , Variant)   \
-    F(long_double       , Variant)   \
-    F(char_ptr          , Variant)   \
-    F(char_const_ptr    , Variant)   \
-    F(wchar_t_ptr       , Variant)   \
-    F(wchar_t_const_ptr , Variant)   \
-    F(void_ptr          , Variant)   \
-    F(void_const_ptr    , Variant)
-// ----------------------------------------------------------------
-
 // clang-format off
+typedef  signed char        signed_char        ;
+typedef  unsigned char      unsigned_char      ;
+typedef  long long          long_long          ; 
+typedef  unsigned short     unsigned_short     ; 
+typedef  unsigned int       unsigned_int       ; 
+typedef  unsigned long      unsigned_long      ; 
+typedef  unsigned long long unsigned_long_long ; 
+typedef  long double        long_double        ; 
+typedef  char*              char_ptr           ; 
+typedef  char const*        char_const_ptr     ; 
+typedef  wchar_t*           wchar_t_ptr        ; 
+typedef  wchar_t const*     wchar_t_const_ptr  ; 
+typedef  void*              void_ptr           ; 
+typedef  void const*        void_const_ptr     ;
+// clang-format on
 
-typedef    _Bool              __Bool             ; 
-typedef    char               _char              ; 
-typedef    signed char        _signed_char       ; 
-typedef    unsigned char      _unsigned_char     ; 
-typedef    short              _short             ; 
-typedef    int                _int               ; 
-typedef    long               _long              ; 
-typedef    long long          _long_long         ; 
-typedef    unsigned short     _unsigned_short    ; 
-typedef    unsigned int       _unsigned_int      ; 
-typedef    unsigned long      _unsigned_long     ; 
-typedef    unsigned long long _unsigned_long_long; 
-typedef    float              _float             ; 
-typedef    double             _double            ; 
-typedef    long double        _long_double       ; 
-typedef    char*              char_ptr          ; 
-typedef    char const*        char_const_ptr    ; 
-typedef    wchar_t*           wchar_t_ptr       ; 
-typedef    wchar_t const*     wchar_t_const_ptr ; 
-typedef    void*              void_ptr          ; 
-typedef    void const*        void_const_ptr    ;
+#define all_data_types_v(F, ...)         \
+    F(_Bool             , __VA_ARGS__)   \
+    F(char              , __VA_ARGS__)   \
+    F(signed_char       , __VA_ARGS__)   \
+    F(unsigned_char     , __VA_ARGS__)   \
+    F(short             , __VA_ARGS__)   \
+    F(int               , __VA_ARGS__)   \
+    F(long              , __VA_ARGS__)   \
+    F(long_long         , __VA_ARGS__)   \
+    F(unsigned_short    , __VA_ARGS__)   \
+    F(unsigned_int      , __VA_ARGS__)   \
+    F(unsigned_long     , __VA_ARGS__)   \
+    F(unsigned_long_long, __VA_ARGS__)   \
+    F(float             , __VA_ARGS__)   \
+    F(double            , __VA_ARGS__)   \
+    F(long_double       , __VA_ARGS__)   \
+    F(char_ptr          , __VA_ARGS__)   \
+    F(char_const_ptr    , __VA_ARGS__)   \
+    F(wchar_t_ptr       , __VA_ARGS__)   \
+    F(wchar_t_const_ptr , __VA_ARGS__)   \
+    F(void_ptr          , __VA_ARGS__)   \
+    F(void_const_ptr    , __VA_ARGS__)
+// ----------------------------------------------------------------
+#define typedefs_user_types_ptr(T, ...) typedef T* T##_ptr;
+#define typedefs_user_types_ptr_ptr(T, ...) typedef T** T##_ptr_ptr;
 
-#define type_to_name(T)\
-_Generic(typeof(*(T*)0),\
-    _Bool             : __Bool               ,  \
-    char              : _char                ,  \
-    signed char       : _signed_char         ,  \
-    unsigned char     : _unsigned_char       ,  \
-    short             : _short               ,  \
-    int               : _int                 ,  \
-    long              : _long                ,  \
-    long long         : _long_long           ,  \
-    unsigned short    : _unsigned_short      ,  \
-    unsigned int      : _unsigned_int        ,  \
-    unsigned long     : _unsigned_long       ,  \
-    unsigned long long: _unsigned_long_long  ,  \
-    float             : _float               ,  \
-    double            : _double              ,  \
-    long double       : _long_double         ,  \
-    char*             : _char_ptr            ,  \
-    char const*       : _char_const_ptr      ,  \
-    wchar_t*          : _wchar_t_ptr         ,  \
-    wchar_t const*    : _wchar_t_const_ptr   ,  \
-    void*             : _void_ptr            ,  \
-    void const*       : _void_const_ptr)
+#define all_types_with_v(F, ptr, ...)                    \
+    F(Position##ptr,             __VA_ARGS__)            \
+    F(Shape##ptr,                __VA_ARGS__)            \
+    F(Body##ptr,                 __VA_ARGS__)            \
+    F(Rectangle##ptr,            __VA_ARGS__)
 
-// random structs to test
-#define ALL_VARIANT_TYPES(F) \
-    F(Position) \
-    F(Shape) \
-    F(Body) \
-    F(Rectangle)
+#define all_user_types_v(F, ...)                     \
+    all_types_with_v(F,       ,   __VA_ARGS__)       \
+    all_types_with_v(F, _ptr,     __VA_ARGS__)       \
+    all_types_with_v(F, _ptr_ptr, __VA_ARGS__)
 
-#define ALL_VARIANT_TYPES_V(F, Variant) \
-    F(Position, Variant) \
-    F(Shape, Variant) \
-    F(Body, Variant) \
-    F(Rectangle, Variant)
+all_user_types_v(typedefs_user_types_ptr);
 
+//---------------------------------------------------------
 #define T_UNREGISTERED -420
 #define auto __auto_type
 #define let auto
-
 static bool ___inner_fumo_cookie___ = false;
 
 static inline bool ___check_and_reset_cookie___() {
@@ -173,15 +76,17 @@ static inline bool ___check_and_reset_cookie___() {
 }
 
 //---------------------------------------------------------
-//---------------------------------------------------------
 // NOTE: fumo_c syntax and useful operator definitions
 
-#define XMACRO1(Type) Type : T_id_##Type,
-#define get_type_id(var) (enum T_id)            \
-    _Generic(var,                                    \
-             ALL_VARIANT_TYPES(XMACRO1)              \
-             ALL_DATA_TYPES_VARIABLE(:, T_id_, ,)    \
-            default: T_UNREGISTERED)
+// #define XMACRO1(Type) Type : T_id_##Type,
+// #define get_type_id(var) (enum T_id)                 \
+//     _Generic(var,                                    \
+//              ALL_VARIANT_TYPES(XMACRO1)              \
+//              all_data_types_vARIABLE(:, T_id_, ,)    \
+//             default: T_UNREGISTERED)
+//
+//
+//
 
 //---------------------------------------------------------
 
@@ -195,11 +100,11 @@ case T_id_##T:                                               \
 #define get_if(T, Variant) (T*) ({                      \
     auto result = NULL;                                 \
     switch (Variant.type_id) {                          \
-        ALL_VARIANT_TYPES_V(_UNDERLYING_VALUE, Variant) \
-        ALL_DATA_TYPES_V(_UNDERLYING_VALUE, Variant)    \
+        all_user_types_v(_UNDERLYING_VALUE,Variant) \
+        all_data_types_v(_UNDERLYING_VALUE, Variant)   \
     }                                                   \
     result;                                             \
-}); if ((get_type_id(*(T*)0) == Variant.type_id))
+}); if ((get_type_id((T){}) == Variant.type_id))
 
 //---------------------------------------------------------
 
@@ -230,25 +135,13 @@ case T_id_##T:                                               \
 ({                                                              \
     T* _varname = &____value____->value._##T;                    \
     if(!____value____->was_err                                  \
-            && (get_type_id(*(T*)0) == ____value____->type_id))
+            && (get_type_id((T){}) == ____value____->type_id))
 
 #define _Err(T, _varname)                                       \
 });                                                             \
     let _varname = &____value____->value._##T;                  \
     if (____value____->was_err                                  \
-        && (get_type_id(*(T*)0) == ____value____->type_id))
-
-
-
-#define __valuething                                                \
-    auto ____value____ = (union T_value *)({                        \
-        auto result = NULL;                                         \
-        switch (Variant.type_id) {                                  \
-            ALL_VARIANT_TYPES_V(_UNDERLYING_VALUE, Variant)         \
-            ALL_DATA_TYPES_V(_UNDERLYING_VALUE, Variant)            \
-        }                                                           \
-        result;                                                     \
-    });
+        && (get_type_id((T){}) == ____value____->type_id))
 
 //---------------------------------------------------------
 //---------------------------------------------------------
@@ -280,7 +173,7 @@ case T_id_##T:                                               \
 // }
 #include <stdio.h> // IWYU pragma: export
 #define PRINTF_FORMAT(T)                       \
-  _Generic( (T),                               \
+  _Generic( T,                                 \
     _Bool             : "%d",                  \
     char              : "%c",                  \
     signed char       : "%hhd",                \
@@ -305,4 +198,17 @@ case T_id_##T:                                               \
     default           : "Type not defined. %p" \
   )
 
-#define PRINTF(X)  printf( PRINTF_FORMAT( (X) ), (X) )
+#define PRINTF(fmt, X)          \
+printf("%s", fmt);              \
+printf( PRINTF_FORMAT( X ), X );\
+printf("\n");
+
+// #define __valuething                                                \
+//     auto ____value____ = (union T_value *)({                        \
+//         auto result = NULL;                                         \
+//         switch (Variant.type_id) {                                  \
+//             all_user_types_v(_UNDERLYING_VALUE, Variant)         \
+//             all_data_types_v(_UNDERLYING_VALUE, Variant)            \
+//         }                                                           \
+//         result;                                                     \
+//     });
