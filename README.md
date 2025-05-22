@@ -38,6 +38,9 @@ All features added by fumo-lib.h are showcased here in this example:
 Result get_input();
 
 int main() {
+    // NOTE: all accesses to contents of Variant or Result
+    // must go through the match() or get_if() methods to be safe.
+    // the user isn't meant to ever directly access the members of these classes.
 
     int x = 123;
     PRINTF("this is x: ", x); // printf helpful utility
