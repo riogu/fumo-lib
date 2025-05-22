@@ -10,7 +10,7 @@ it also provides a match() and get_if() statement API to access the inner values
 - [x] get_if() statement for type safe access to contents of Variant.  
 
 
-## How to use fumo-lib
+## Usage 
 - download fumo_lib.h file.
 - write your user made structs here in the all_types_with_v macro found in fumo_lib.h, in this format:
 ```c
