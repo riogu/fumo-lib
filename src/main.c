@@ -20,7 +20,7 @@ int main() {
         printf("failed, type: %s\n", type_name(var));
     }
 
-    // is_same_t((Position) {}, var) ? printf("true\n") : printf("false\n");
+    is_same_t((Position) {}, var) ? printf("true\n") : printf("false\n");
 
     Shape s = {.shape_id = 123123};
     Variant var1 = Variant(s);
@@ -29,6 +29,12 @@ int main() {
         case(Shape, var) var->shape_id = 213;
         case(Rectangle, rect) {
             rect->height = 123;
+        }
+        case(Position, pos) {
+            pos->x = 123;
+            printf("%d sucessfully updated pos.\n", pos->x);
+            pos->y = 123;
+            printf("%d sucessfully updated pos.\n", pos->y);
         }
         _ {
             printf("unknown type.\n");
