@@ -1,7 +1,7 @@
+// clang-format off
 // ----------------------------------------------------------------
 // example structs for testing, unnecessary for usage
 // structs should be included before the macros.
-// clang-format off
 typedef struct Position {int x;int y;} Position;
 typedef struct Shape {int shape_id;} Shape;
 typedef struct Body {Position position;float radius;} Body;
@@ -11,7 +11,6 @@ typedef struct Piece {} Piece;
 typedef struct Camera {} Camera;
 typedef struct Board {} Board;
 // ----------------------------------------------------------------
-// clang-format on
 // write your user made structs here in the macro, in this format
 #define all_types_with_v(F, ptr, ...)                    \
     F(Position##ptr,             __VA_ARGS__)            \
@@ -42,7 +41,6 @@ typedef struct Board {} Board;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
 
-// clang-format off
 typedef  signed char        signed_char        ;
 typedef  unsigned char      unsigned_char      ;
 typedef  long long          long_long          ; 
@@ -57,7 +55,6 @@ typedef  wchar_t*           wchar_t_ptr        ;
 typedef  wchar_t const*     wchar_t_const_ptr  ; 
 typedef  void*              void_ptr           ; 
 typedef  void const*        void_const_ptr     ;
-// clang-format on
 
 #define all_data_types_v(F, ...)         \
     F(_Bool             , __VA_ARGS__)   \
@@ -185,7 +182,6 @@ case T_id_##T: {                                             \
         is_same_t;                                                       \
     }))
 
-// clang-format off
 //---------------------------------------------------------
 // fumo primitive data types for type safety
 #define XMACRO(Type, ...) T_id_##Type,
@@ -233,7 +229,6 @@ typedef struct Result {
 #define Err(_v) (Result) {.value =(union T_value) _v, .type_id = get_type_id(_v), .was_err = 1}
 
 /// fumo type_name implementation
-// clang-format off
 #define ALL_DATA_TYPES(F)    \
     F(_Bool              )   \
     F(char               )   \
@@ -258,7 +253,7 @@ typedef struct Result {
     F(void const*        )
 
 #define TypeName(Type, ...) #Type,
-const char* all_type_names[] = {all_user_types_v(TypeName) //
+static const char* all_type_names[] = {all_user_types_v(TypeName) //
                                 ALL_DATA_TYPES(TypeName)};
 #undef TypeName
 

@@ -112,3 +112,5 @@ Result get_input() {
     // Err type, stores a char*
     return Err("scanf failed. didn't recieve a number.\n");
 }
+const char *
+const char *
