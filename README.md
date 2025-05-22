@@ -1,7 +1,7 @@
 # fumo-lib
 ## Features
-- [x] compile-time typesafe unions
-- [x] compie-time safe Result types
+- [x] compile-time typesafe unions (like std::variant in C++)
+- [x] compie-time safe Result types (inspired by Rust's Result)
 
 
 ## How to use fumo-lib
