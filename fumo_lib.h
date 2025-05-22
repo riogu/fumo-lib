@@ -173,9 +173,9 @@ case T_id_##T: {                                             \
             (is_x_v && is_y_v)                                           \
             ? ( (*(Variant*)&X).type_id == (*(Variant*)&Y).type_id )     \
             : (is_x_v && !is_y_v)                                        \
-            ? ( (*(Variant*)&X).type_id == get_type_id_same(Y) ) \
+            ? ( (*(Variant*)&X).type_id == get_type_id_same(Y) )         \
             : (!is_x_v && is_y_v)                                        \
-            ? ( get_type_id_same(X) == (*(Variant*)&Y).type_id ) \
+            ? ( get_type_id_same(X) == (*(Variant*)&Y).type_id )         \
             : (!is_x_v && !is_y_v)                                       \
             ? ( _IS_SAME_TYPE(X, Y) )                                    \
             : 0;                                                         \
@@ -273,7 +273,7 @@ static inline const char* ___type_name_Result(Result result) {
     return all_type_names[result.type_id];
 }
 
-#define ___each_type_name_(T, ...)                    \
+#define ___each_type_name_(T, ...)               \
 static inline const char* ___type_name_##T(T t){ \
 return all_type_names[T_id_##T];                 \
 }
@@ -283,9 +283,9 @@ all_data_types_v(___each_type_name_)
 
 #undef ___each_type_name_
 
-#define ___each_type_id_(T, ...)              \
-static inline const T_id ___type_id_##T(T t){  \
-    return T_id_##T;                     \
+#define ___each_type_id_(T, ...)                \
+static inline const T_id ___type_id_##T(T t){   \
+    return T_id_##T;                            \
 }
 all_user_types_v(___each_type_id_) all_data_types_v(___each_type_id_)
 
@@ -306,7 +306,7 @@ static inline const T_id __type_unregistered_id(void) {return (T_id)T_UNREGISTER
 
 #define get_type_id(var) (enum T_id)                             \
     _Generic(var                                                 \
-             all_user_types_v(__get_function_of_type_id)        \
+             all_user_types_v(__get_function_of_type_id)         \
              all_data_types_v(__get_function_of_type_id))(var)
 
 //---------------------------------------------------------
