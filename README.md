@@ -1,25 +1,6 @@
 # Example of how the implementation works:
-compiling the main.c example.
-Output:
-```
-╰─ ❯❯ gcc main.c -o a && ./a
-this is x: 123
-failed, type: Rectangle
-false
-a // this is the user input given
-error message: scanf failed.
-had nothing.
 
-╰─ ❯❯ gcc main.c -o a && ./a
-this is x: 123
-failed, type: Rectangle
-false
-213123 // this is the user input given
-_Ok: stored position.x as: 213123.
-had nothing.
-
-```
-All features added by fumo-lib.h are showcases here in this example:
+All features added by fumo-lib.h are showcased here in this example:
 ```c
 #include "fumo_lib.h"
 
@@ -135,15 +116,23 @@ Result get_input() {
     return Err("scanf failed.\n");
 }
 ```
+compiling the main.c example.
 Output:
 ```
+╰─ ❯❯ gcc main.c -o a && ./a
+this is x: 123
+failed, type: Rectangle
 false
-true
-false
-width before: 123 
-there was a rectangle, width: 213123
-type_name: Rectangle
+a // this is the user input given
+error message: scanf failed.
+had nothing.
 
-couldn't get shape from variant.
-type in variant: Position
+╰─ ❯❯ gcc main.c -o a && ./a
+this is x: 123
+failed, type: Rectangle
+false
+213123 // this is the user input given
+_Ok: stored position.x as: 213123.
+had nothing.
+
 ```
