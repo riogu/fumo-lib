@@ -40,7 +40,8 @@ typedef struct Board {
     F(Position##ptr,             __VA_ARGS__)            \
     F(Shape##ptr,                __VA_ARGS__)            \
     F(Body##ptr,                 __VA_ARGS__)            \
-    F(Rectangle##ptr,            __VA_ARGS__)
+    F(Rectangle##ptr,            __VA_ARGS__)            \
+    F(Board##ptr,                __VA_ARGS__)
 
 // ----------------------------------------------------------------
 // ----------------------------------------------------------------
@@ -149,23 +150,29 @@ case T_id_##T: {                                             \
 
 //---------------------------------------------------------
 
-#define case(T, varname)                 \
-});                                      \
-let varname = (T*)&____value____->value; \
-if(get_type_id((T){}) == ____value____->type_id)
+#define match(Variant)                                          \
+({                                                              \
+    let __inner_ = Variant;                                     \
+    let ____value____ = &__inner_;                              \
+    ___inner_fumo_cookie___ = true;
 
-#define match(Variant)                                              \
-({                                                                  \
-    let __inner_ = Variant;                                         \
-    let ____value____ = &__inner_;
+#define case(T, varname)                                 \
+(void)0;});                                              \
+({                                                       \
+    let varname = (T*)&____value____->value;             \
+    bool temp = ___inner_fumo_cookie___;                 \
+    if(get_type_id((T){}) == ____value____->type_id) {   \
+        ___inner_fumo_cookie___ = true;\
+    }
 
-#define _ else
+#define _                                           \
+});
 
 #define _Ok(T, _varname)                                        \
 ({                                                              \
     let _varname = (T*) &____value____->value;                  \
-    if(!____value____->was_err                                  \
-            && (get_type_id((T){}) == ____value____->type_id))
+    if (!____value____->was_err                                 \
+        && (get_type_id((T){}) == ____value____->type_id))
 
 #define _Err(T, _varname)                                       \
 });                                                             \
@@ -178,9 +185,9 @@ if(get_type_id((T){}) == ____value____->type_id)
 // type comparison macro
 
 #define get_type_id_same(var) (enum T_id)                       \
-    _Generic(var,                                                 \
+    _Generic(var,                                               \
              Variant: ___type_id_Variant,                       \
-             Result: ___type_id_Result                         \
+             Result: ___type_id_Result                          \
              all_user_types_v(__get_function_of_type_id)        \
              all_data_types_v(__get_function_of_type_id))(var)
 
