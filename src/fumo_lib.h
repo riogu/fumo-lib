@@ -129,24 +129,30 @@ static inline bool ___check_and_reset_cookie___() {
 // NOTE: fumo_c syntax and useful operator definitions
 
 #define _UNDERLYING_VALUE(T, Variant)                        \
-case T_id_##T:                                               \
+case T_id_##T: {                                             \
     (void)0;                                                 \
-    T val_##T = (T) Variant.value; \
-    result = &val_##T;                                       \
-    break;
+    let _varname = (T*) &____value____->value;               \
+    result = &_varname;                                      \
+    break;                                                   \
+}
 
 #define get_if(T, Variant) (T*) ({                      \
-    auto result = NULL;                                 \
+    let result = NULL;                                  \
+    let __inner_ = Variant;                             \
+    let ____value____ = &__inner_;                      \
     switch (Variant.type_id) {                          \
-        all_user_types_v(_UNDERLYING_VALUE,Variant)     \
+        all_user_types_v(_UNDERLYING_VALUE, Variant)    \
         all_data_types_v(_UNDERLYING_VALUE, Variant)    \
     }                                                   \
-    result;                                             \
+    ____value____;                                      \
 }); if ((get_type_id((T){}) == Variant.type_id))
 
 //---------------------------------------------------------
 
-#define case(T, varname) break;}); case T_id_##T: ({ T* varname = &____value____->value._##T;
+#define case(T, varname)    \
+break;});                   \
+    case T_id_##T: ({ \
+        let varname = (T*) &____value____->value._##T;
 
 #define match(Variant)                                              \
 ({                                                                  \
