@@ -154,7 +154,7 @@ case T_id_##T: {                                             \
 ({                                                              \
     let __inner_ = Variant;                                     \
     let ____value____ = &__inner_;                              \
-    ___inner_fumo_cookie___ = true;
+    extern bool ___inner_fumo_cookie___;
 
 // NOTE: wont work with indented match statements
 // unless you store fumo cookie inside each variant
@@ -167,13 +167,14 @@ case T_id_##T: {                                             \
     if(get_type_id((T){}) == ____value____->type_id) {   \
         ___inner_fumo_cookie___ = true;                  \
     }\
-    if(!temp && ___inner_fumo_cookie___)
+    if (!temp && ___inner_fumo_cookie___)
 
 #define _                                           \
-});                         \
+});                                                 \
     if(!___inner_fumo_cookie___)
 
 #define _Ok(T, _varname)                                        \
+});                                                             \
 ({                                                              \
     let _varname = (T*) &____value____->value;                  \
     if (!____value____->was_err                                 \

@@ -39,29 +39,29 @@ int main() {
     // you can only make a case label if the type is registered.
     // failing to do so is a compile time error.
     // all type checking is done at compile time
-    // match(var) ({
-    //     case(Shape, var) {var->shape_id = 213;}
-    //     case(Rectangle, rect) {
-    //         // user specifies the name of the variable returned by the match
-    //         // the variable is always a pointer to the variable stored in
-    //         // the variant struct
-    //         rect->height = 123; // code will go here since its a Rectangle type
-    //     }
-    //     case(Position, pos) {
-    //         // all variables only exist on each label scope.
-    //         // that means you can only use "pos" inside of this label
-    //         // (to guarantee more type safety)
-    //         pos->x = 123;
-    //         printf("%d sucessfully updated pos.\n", pos->x);
-    //         pos->y = 123;
-    //         printf("%d sucessfully updated pos.\n", pos->y);
-    //     }
-    //     _ {
-    //         // this is the default case label.
-    //         // triggered if none of the types the user added was valid
-    //         printf("unknown type.\n");
-    //     }
-    // });
+    match(var) ({
+        case(Shape, var) {var->shape_id = 213;}
+        case(Rectangle, rect) {
+            // user specifies the name of the variable returned by the match
+            // the variable is always a pointer to the variable stored in
+            // the variant struct
+            rect->height = 123; // code will go here since its a Rectangle type
+        }
+        case(Position, pos) {
+            // all variables only exist on each label scope.
+            // that means you can only use "pos" inside of this label
+            // (to guarantee more type safety)
+            pos->x = 123;
+            printf("%d sucessfully updated pos.\n", pos->x);
+            pos->y = 123;
+            printf("%d sucessfully updated pos.\n", pos->y);
+        }
+        _ {
+            // this is the default case label.
+            // triggered if none of the types the user added was valid
+            printf("unknown type.\n");
+        }
+    });
 
     // match also supports Result type
     // result types are deduced at runtime (not proper compile time sadly)
@@ -69,17 +69,22 @@ int main() {
     // then the match wont go into _Ok() or _Err(),  but no warning is emitted.
     // (warnings can be added if necessary by changing the implementation).
 
-            // match(var1) ({
-            //     case(char*, str) {
-            //         // continue indenting....
-            //         printf("had a string %s", *str);
-            //     }
-            //     _ {} // you can do nothing on default
-            // });
-#define c case
+    match(var1) ({
+        case(char*, str) {
+            // continue indenting....
+            printf("had a string %s", *str);
+        }
+        _ {} // you can do nothing on default
+    });
     // matches must be scoped with ({}); for them to work
     match(var) ({
-        c(int, someint) {
+        case(int, someint) {
+        }
+        // you can indent as many match statements as you want
+        case(char*, char1) {
+            printf("%s had a string.\n", *char1);
+        }
+        case(char, char12) {
         }
         _ { printf("had nothing."); }
     });
