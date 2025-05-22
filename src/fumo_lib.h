@@ -149,34 +149,19 @@ case T_id_##T: {                                             \
 
 //---------------------------------------------------------
 
-#define case(T, varname)    \
-break;});                   \
-    case T_id_##T: ({ \
-        let varname = (T*) &____value____->value._##T;
+#define case(T, varname)                 \
+});                                      \
+let varname = (T*)&____value____->value; \
+if(get_type_id((T){}) == ____value____->type_id)
 
 #define match(Variant)                                              \
 ({                                                                  \
     let __inner_ = Variant;                                         \
-    let ____value____ = &__inner_;                                  \
-    switch(__inner_.type_id) { /* switch gets closed by case labels later */
+    let ____value____ = &__inner_;
 
-#define _default                                    \
-    });                                             \
-        /*finish previous case statement*/          \
-        default: {                                  \
-            extern bool ___inner_fumo_cookie___;    \
-            ___inner_fumo_cookie___++;              \
-            break;                                  \
-        }                                           \
-    }                                               \
-    if(___check_and_reset_cookie___())  /* start user code block */
-#define _ _default
+#define _ else
 
 #define _Ok(T, _varname)                                        \
-    });                                                         \
-    default:                                                    \
-        break;                                                  \
-    }                                                           \
 ({                                                              \
     let _varname = (T*) &____value____->value;                  \
     if(!____value____->was_err                                  \
@@ -322,12 +307,12 @@ all_data_types_v(___each_type_name_)
 #undef ___each_type_name_
 
 #define ___each_type_id_(T, ...)              \
-static inline T_id ___type_id_##T(T t){  \
+static inline const T_id ___type_id_##T(T t){  \
     return T_id_##T;                     \
 }
 all_user_types_v(___each_type_id_) all_data_types_v(___each_type_id_)
 
-static inline T_id __type_unregistered_id(void) {return T_UNREGISTERED;}
+static inline const T_id __type_unregistered_id(void) {return T_UNREGISTERED;}
 
 #undef ___each_type_id_
 
