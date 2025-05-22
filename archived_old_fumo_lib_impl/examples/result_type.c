@@ -1,5 +1,4 @@
-#include "fumo/fumo_data_structures.h"
-#include "fumo/fumo_type_name.h"
+#include "fumo_lib.h"
 
 Result divide(int a, int b) {
     if (b == 0) return Err("division by zero");

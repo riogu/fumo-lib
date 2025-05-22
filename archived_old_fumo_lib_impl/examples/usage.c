@@ -1,5 +1,4 @@
-#include "fumo/fumo_c_definitions.h"
-#include "fumo/fumo_type_name.h"
+#include "fumo_lib.h"
 
 // Basic usage
 int main() {
@@ -27,7 +26,7 @@ int main() {
         case(Rectangle, rect) {
             rect->height = 123;
         }
-        _default {
+        _ {
             printf("unknown type\n");
         }
     });
