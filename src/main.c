@@ -3,13 +3,6 @@
 Result get_input();
 
 int main() {
-    match(get_input())({
-        _Ok(int, var) printf("_Ok: %d.\n", *var);
-        _Err(char*, errval) {
-            // if scanf() fails, we go in here and get our string
-            printf("error message: %s", *errval);
-        }
-    });
 
     int x = 123;
     PRINTF("this is x: ", x); // printf helpful utility
@@ -30,7 +23,7 @@ int main() {
 
     // type comparison between any primitive data type or user defined struct
     // and also adds support for variant/result types against any type
-    // is_same_t((Position) {}, var) ? printf("true\n") : printf("false\n");
+    is_same_t((Position) {}, var) ? printf("true\n") : printf("false\n");
 
     Shape s = {.shape_id = 123123};
     Variant var1 = Variant(s);
@@ -41,21 +34,21 @@ int main() {
     // all type checking is done at compile time
     match(var) ({
         case(Shape, var) {var->shape_id = 213;}
-        case(Rectangle, rect) {
-            // user specifies the name of the variable returned by the match
-            // the variable is always a pointer to the variable stored in
-            // the variant struct
-            rect->height = 123; // code will go here since its a Rectangle type
-        }
-        case(Position, pos) {
-            // all variables only exist on each label scope.
-            // that means you can only use "pos" inside of this label
-            // (to guarantee more type safety)
-            pos->x = 123;
-            printf("%d sucessfully updated pos.\n", pos->x);
-            pos->y = 123;
-            printf("%d sucessfully updated pos.\n", pos->y);
-        }
+    //     case(Rectangle, rect) {
+    //         // user specifies the name of the variable returned by the match
+    //         // the variable is always a pointer to the variable stored in
+    //         // the variant struct
+    //         rect->height = 123; // code will go here since its a Rectangle type
+    //     }
+    //     case(Position, pos) {
+    //         // all variables only exist on each label scope.
+    //         // that means you can only use "pos" inside of this label
+    //         // (to guarantee more type safety)
+    //         pos->x = 123;
+    //         printf("%d sucessfully updated pos.\n", pos->x);
+    //         pos->y = 123;
+    //         printf("%d sucessfully updated pos.\n", pos->y);
+    //     }
         _ {
             // this is the default case label.
             // triggered if none of the types the user added was valid
@@ -68,28 +61,33 @@ int main() {
     // if the user doesnt specify the types they gave the Result they returned
     // then the match wont go into _Ok() or _Err(),  but no warning is emitted.
     // (warnings can be added if necessary by changing the implementation).
-
-    match(var1) ({
-        case(char*, str) {
-            // continue indenting....
-            printf("had a string %s", *str);
+    match(get_input())({
+        _Ok(int, var) printf("_Ok: %d.\n", *var);
+        _Err(char*, errval) {
+            // if scanf() fails, we go in here and get our string
+            printf("error message: %s", *errval);
         }
-        _ {} // you can do nothing on default
     });
+
     // matches must be scoped with ({}); for them to work
     match(var) ({
-        case(int, someint) {
-        }
-        // you can indent as many match statements as you want
+        case(int, someint) {(*someint)++;}
+            // you can indent as many match statements as you want
+            match(var1) ({
+                case(char*, str) {
+                // continue indenting....
+                    printf("had a string %s", *str);
+                }
+                _ {} // you can do nothing on default
+            });
         case(char*, char1) {
-            printf("%s had a string.\n", *char1);
         }
         case(char, char12) {
         }
         _ { printf("had nothing."); }
     });
 
-    return 0;
+return 0;
 }
 
 Result get_input() {
