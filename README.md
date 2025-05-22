@@ -11,6 +11,11 @@ it also provides a match() and get_if() statement API to access the inner values
 
 
 ## Usage 
+> [!WARNING]
+> requires C23 to compile with gcc or clang.
+> 
+> no extra flags required.
+
 - download fumo_lib.h file.
 - write your user made structs here in the all_types_with_v macro found in fumo_lib.h, in this format:
 ```c
@@ -23,8 +28,6 @@ it also provides a match() and get_if() statement API to access the inner values
     F(YourUserStruct##ptr,       __VA_ARGS__)
 //    ^^^^^^^^^^^^^^ add the name of your structs in this macro here.
 ```
-> [!WARNING]
-> requires C23 to compile with gcc or clang.
 
 ## Example main.c
 
