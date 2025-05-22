@@ -1,6 +1,5 @@
 #pragma once
 #include "../structs.h" // IWYU pragma: export
-#include "fumo/for_each_macro.h"
 #include <stdbool.h>
 #include <wchar.h>
 
