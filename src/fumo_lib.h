@@ -1,17 +1,4 @@
-#pragma once
-#define EXPAND1(...)      __VA_ARGS__
-#define EXPAND2(...)        EXPAND1(    EXPAND1(  EXPAND1 (EXPAND1 (__VA_ARGS__))))
-#define EXPAND3(...)        EXPAND2(    EXPAND2(  EXPAND2 (EXPAND2 (__VA_ARGS__))))
-#define EXPAND(...)        EXPAND3(    EXPAND3(  EXPAND3 (EXPAND3 (__VA_ARGS__))))
-// #define EXPAND(...)        EXPAND4(    EXPAND4(  EXPAND4 (EXPAND4 (__VA_ARGS__))))
-// #define EXPAND6(...)        EXPAND5(    EXPAND5(  EXPAND5 (EXPAND5 (__VA_ARGS__))))
-#define PARENS ()
-#define FOR_EACH(macro, ...)                                    \
-  __VA_OPT__(EXPAND(FOR_EACH_HELPER(macro, __VA_ARGS__)))
-#define FOR_EACH_HELPER(macro, a1, ...)                         \
-  macro(a1)                                                     \
-  __VA_OPT__(FOR_EACH_AGAIN PARENS (macro, __VA_ARGS__))
-#define FOR_EACH_AGAIN() FOR_EACH_HELPER
+
 
 // ----------------------------------------------------------------
 // ----------------------------------------------------------------
@@ -50,7 +37,21 @@ typedef struct Board {
 
 // ----------------------------------------------------------------
 // ----------------------------------------------------------------
-
+// for each macros
+#define EXPAND1(...)      __VA_ARGS__
+#define EXPAND2(...)        EXPAND1(    EXPAND1(  EXPAND1 (EXPAND1 (__VA_ARGS__))))
+#define EXPAND3(...)        EXPAND2(    EXPAND2(  EXPAND2 (EXPAND2 (__VA_ARGS__))))
+#define EXPAND(...)        EXPAND3(    EXPAND3(  EXPAND3 (EXPAND3 (__VA_ARGS__))))
+// #define EXPAND(...)        EXPAND4(    EXPAND4(  EXPAND4 (EXPAND4 (__VA_ARGS__))))
+#define PARENS ()
+#define FOR_EACH(macro, ...)                                    \
+  __VA_OPT__(EXPAND(FOR_EACH_HELPER(macro, __VA_ARGS__)))
+#define FOR_EACH_HELPER(macro, a1, ...)                         \
+  macro(a1)                                                     \
+  __VA_OPT__(FOR_EACH_AGAIN PARENS (macro, __VA_ARGS__))
+#define FOR_EACH_AGAIN() FOR_EACH_HELPER
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
 #include <stdbool.h>
 #include <wchar.h>
 
@@ -97,15 +98,6 @@ typedef  void const*        void_const_ptr     ;
     F(void_ptr          , __VA_ARGS__)   \
     F(void_const_ptr    , __VA_ARGS__)
 // ----------------------------------------------------------------
-
-// #define user_inputed_types Position, Shape, Body, Rectangle
-// #define map_types(T) F(T, __VA_ARGS__)
-
-// #define typesandyea(F, ptr, ...) \
-//     F(__VA_ARGS__##ptr)
-//
-// #define all_types_with_v(F, ptr, ...) \
-//     typesandyea(F, ptr, user_inputed_types)
 
 #define all_types_with_v(F, ptr, ...)                    \
     F(Position##ptr,             __VA_ARGS__)            \
