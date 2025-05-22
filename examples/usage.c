@@ -4,7 +4,7 @@
 // Basic usage
 int main() {
     int x = 123;
-    PRINTF("this is x: ", x);
+    PRINTF("safe print no specifier, this is x: ", x);
 
     Rectangle rect = {.width = 123, .height = 1231};
     Variant var = Variant(rect);
@@ -14,6 +14,13 @@ int main() {
     }
     else {
         printf("failed, type: %s\n", type_name(var));
+    }
+
+    if (is_same_t((Rectangle) {}, var)) {
+        printf("yes this is a rectangle\n");
+    }
+    else {
+        printf("no this is not a rectangle\n");
     }
 
     match(var) ({
