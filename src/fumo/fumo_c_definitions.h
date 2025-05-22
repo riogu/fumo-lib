@@ -78,18 +78,6 @@ static inline bool ___check_and_reset_cookie___() {
 //---------------------------------------------------------
 // NOTE: fumo_c syntax and useful operator definitions
 
-// #define XMACRO1(Type) Type : T_id_##Type,
-// #define get_type_id(var) (enum T_id)                 \
-//     _Generic(var,                                    \
-//              ALL_VARIANT_TYPES(XMACRO1)              \
-//              all_data_types_vARIABLE(:, T_id_, ,)    \
-//             default: T_UNREGISTERED)
-//
-//
-//
-
-//---------------------------------------------------------
-
 #define _UNDERLYING_VALUE(T, Variant)                        \
 case T_id_##T:                                               \
     (void)0;                                                 \
@@ -165,50 +153,3 @@ case T_id_##T:                                               \
             : 0;                                                         \
         is_same_t;                                                       \
     }))
-
-//---------------------------------------------------------
-// #define autofree __attribute__((__cleanup__(autofree_impl)))
-// static inline void autofree_impl(void* p) {
-//     free(*((void**)p));
-// }
-#include <stdio.h> // IWYU pragma: export
-#define PRINTF_FORMAT(T)                       \
-  _Generic( T,                                 \
-    _Bool             : "%d",                  \
-    char              : "%c",                  \
-    signed char       : "%hhd",                \
-    unsigned char     : "%hhu",                \
-    short             : "%hd",                 \
-    int               : "%d",                  \
-    long              : "%ld",                 \
-    long long         : "%lld",                \
-    unsigned short    : "%hu",                 \
-    unsigned int      : "%u",                  \
-    unsigned long     : "%lu",                 \
-    unsigned long long: "%llu",                \
-    float             : "%f",                  \
-    double            : "%f",                  \
-    long double       : "%Lf",                 \
-    char*             : "%s",                  \
-    char const*       : "%s",                  \
-    wchar_t*          : "%ls",                 \
-    wchar_t const*    : "%ls",                 \
-    void*             : "%p",                  \
-    void const*       : "%p",                  \
-    default           : "Type not defined. %p" \
-  )
-
-#define PRINTF(fmt, X)          \
-printf("%s", fmt);              \
-printf( PRINTF_FORMAT( X ), X );\
-printf("\n");
-
-// #define __valuething                                                \
-//     auto ____value____ = (union T_value *)({                        \
-//         auto result = NULL;                                         \
-//         switch (Variant.type_id) {                                  \
-//             all_user_types_v(_UNDERLYING_VALUE, Variant)         \
-//             all_data_types_v(_UNDERLYING_VALUE, Variant)            \
-//         }                                                           \
-//         result;                                                     \
-//     });

@@ -32,10 +32,6 @@ const char* all_type_names[] = {all_user_types_v(TypeName) //
                                 ALL_DATA_TYPES(TypeName)};
 #undef TypeName
 
-// static inline const char* ___type_name(int type_id) {
-//     return all_type_names[type_id];
-// }
-
 static inline T_id ___type_id_Variant(Variant variant) {
     return variant.type_id;
 }
@@ -87,3 +83,41 @@ static inline T_id __type_unregistered_id(void) {return T_UNREGISTERED;}
     _Generic(var                                                 \
              all_user_types_v(__get_function_of_type_id)        \
              all_data_types_v(__get_function_of_type_id))(var)
+
+//---------------------------------------------------------
+#include <stdio.h> // IWYU pragma: export
+#define PRINTF_FORMAT(T)                       \
+  _Generic( T,                                 \
+    _Bool             : "%d",                  \
+    char              : "%c",                  \
+    signed char       : "%hhd",                \
+    unsigned char     : "%hhu",                \
+    short             : "%hd",                 \
+    int               : "%d",                  \
+    long              : "%ld",                 \
+    long long         : "%lld",                \
+    unsigned short    : "%hu",                 \
+    unsigned int      : "%u",                  \
+    unsigned long     : "%lu",                 \
+    unsigned long long: "%llu",                \
+    float             : "%f",                  \
+    double            : "%f",                  \
+    long double       : "%Lf",                 \
+    char*             : "%s",                  \
+    char const*       : "%s",                  \
+    wchar_t*          : "%ls",                 \
+    wchar_t const*    : "%ls",                 \
+    void*             : "%p",                  \
+    void const*       : "%p",                  \
+    default           : "Type not defined. %p" \
+  )
+
+#define PRINTF(fmt, X)          \
+printf("%s", fmt);              \
+printf( PRINTF_FORMAT( X ), X );\
+printf("\n");
+
+// #define autofree __attribute__((__cleanup__(autofree_impl)))
+// static inline void autofree_impl(void* p) {
+//     free(*((void**)p));
+// }
