@@ -35,6 +35,13 @@ typedef struct Camera {
 typedef struct Board {
 } Board;
 
+// write your user made structs here in the macro, in this format
+#define all_types_with_v(F, ptr, ...)                    \
+    F(Position##ptr,             __VA_ARGS__)            \
+    F(Shape##ptr,                __VA_ARGS__)            \
+    F(Body##ptr,                 __VA_ARGS__)            \
+    F(Rectangle##ptr,            __VA_ARGS__)
+
 // ----------------------------------------------------------------
 // ----------------------------------------------------------------
 // for each macros
@@ -98,12 +105,6 @@ typedef  void const*        void_const_ptr     ;
     F(void_ptr          , __VA_ARGS__)   \
     F(void_const_ptr    , __VA_ARGS__)
 // ----------------------------------------------------------------
-
-#define all_types_with_v(F, ptr, ...)                    \
-    F(Position##ptr,             __VA_ARGS__)            \
-    F(Shape##ptr,                __VA_ARGS__)            \
-    F(Body##ptr,                 __VA_ARGS__)            \
-    F(Rectangle##ptr,            __VA_ARGS__)
 
 #define all_user_types_v(F, ...)                     \
     all_types_with_v(F,       ,   __VA_ARGS__)       \
