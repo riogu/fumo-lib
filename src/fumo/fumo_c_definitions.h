@@ -1,6 +1,6 @@
 #pragma once
 #include "../structs.h" // IWYU pragma: export
-#include "for_each_macro.h"
+#include "fumo/for_each_macro.h"
 #include <stdbool.h>
 #include <wchar.h>
 
@@ -49,9 +49,12 @@ typedef  void const*        void_const_ptr     ;
     F(void_ptr          , __VA_ARGS__)   \
     F(void_const_ptr    , __VA_ARGS__)
 // ----------------------------------------------------------------
-#define typedefs_user_types_ptr(T, ...) typedef T* T##_ptr;
-#define typedefs_user_types_ptr_ptr(T, ...) typedef T** T##_ptr_ptr;
 
+// #define user_inputed_types Position, Shape, Body, Rectangle
+// #define map_types(T) F(T, __VA_ARGS__)
+// #define all_types_with_v(F, ptr, ...)           \
+//     FOR_EACH(map_types, user_inputed_types)
+//
 #define all_types_with_v(F, ptr, ...)                    \
     F(Position##ptr,             __VA_ARGS__)            \
     F(Shape##ptr,                __VA_ARGS__)            \
@@ -63,7 +66,9 @@ typedef  void const*        void_const_ptr     ;
     all_types_with_v(F, _ptr,     __VA_ARGS__)       \
     all_types_with_v(F, _ptr_ptr, __VA_ARGS__)
 
+#define typedefs_user_types_ptr(T, ...) typedef T* T##_ptr;
 all_user_types_v(typedefs_user_types_ptr);
+#undef typedefs_user_types_ptr
 
 //---------------------------------------------------------
 #define T_UNREGISTERED -420
