@@ -1,5 +1,11 @@
-# Usage of fumo_lib.h:
-write your user made structs here in the all_types_with_v macro, in this format:
+# fumo-lib
+## Features
+- [x] compile-time typesafe unions
+- [x] compie-time safe Result types
+
+
+## How to use fumo-lib
+write your user made structs here in the all_types_with_v macro found in fumo_lib.h, in this format:
 ```c
 #define all_types_with_v(F, ptr, ...)                    \
     F(Position##ptr,             __VA_ARGS__)            \
@@ -8,12 +14,10 @@ write your user made structs here in the all_types_with_v macro, in this format:
     F(Rectangle##ptr,            __VA_ARGS__)            \
     F(Board##ptr,                __VA_ARGS__)            \
     F(YourUserStruct##ptr,       __VA_ARGS__)
-//    ^^^^^ add the name of your structs in this macro here.
+//    ^^^^^^^^^^^^^^ add the name of your structs in this macro here.
 ```
 
-
-
-# Example of how the implementation works:
+## Example main.c
 
 All features added by fumo-lib.h are showcased here in this example:
 ```c
