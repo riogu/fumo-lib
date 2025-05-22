@@ -96,10 +96,6 @@ all_user_types_v(typedefs_user_types_ptr);
 #define T_UNREGISTERED -420
 #define auto __auto_type
 #define let auto
-// static bool ___inner_fumo_cookie___ = false;
-// static inline bool ___check_and_reset_cookie___() {
-//     return !(!___inner_fumo_cookie___ || (___inner_fumo_cookie___ = false));
-// }
 
 //---------------------------------------------------------
 // NOTE: fumo_c syntax and useful operator definitions
