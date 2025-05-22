@@ -1,3 +1,4 @@
+// clang-format off
 #include "fumo_lib.h"
 
 Result get_input();
@@ -14,8 +15,8 @@ int main() {
         // only enters this scope if we held a Shape type
         // the type is checked at compile time and store in inner_value
         inner_value->shape_id = 123123;
-    }
-    else {
+    
+    } else {
         // default scope for failure
         // inner_value is set to NULL if Shape was not inside the variant.
         printf("failed, type: %s\n", type_name(var));

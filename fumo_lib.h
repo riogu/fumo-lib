@@ -25,7 +25,6 @@ typedef struct Board {} Board;
 #define EXPAND2(...)        EXPAND1(    EXPAND1(  EXPAND1 (EXPAND1 (__VA_ARGS__))))
 #define EXPAND3(...)        EXPAND2(    EXPAND2(  EXPAND2 (EXPAND2 (__VA_ARGS__))))
 #define EXPAND(...)        EXPAND3(    EXPAND3(  EXPAND3 (EXPAND3 (__VA_ARGS__))))
-// #define EXPAND(...)        EXPAND4(    EXPAND4(  EXPAND4 (EXPAND4 (__VA_ARGS__))))
 #define PARENS ()
 #define FOR_EACH(macro, ...)                                    \
   __VA_OPT__(EXPAND(FOR_EACH_HELPER(macro, __VA_ARGS__)))
@@ -97,12 +96,12 @@ all_user_types_v(typedefs_user_types_ptr);
 //---------------------------------------------------------
 // NOTE: fumo_c syntax and useful operator definitions
 
-#define _UNDERLYING_VALUE(T, Variant)                        \
-case T_id_##T: {                                             \
-    (void)0;                                                 \
-    let _varname = (T*) &____value____->value;               \
-    result = &_varname;                                      \
-    break;                                                   \
+#define _UNDERLYING_VALUE(T, Variant)                   \
+case T_id_##T: {                                        \
+    (void)0;                                            \
+    let _varname = (T*) &____value____->value;          \
+    result = &_varname;                                 \
+    break;                                              \
 }
 
 #define get_if(T, Variant) (T*) ({                      \
@@ -118,9 +117,9 @@ case T_id_##T: {                                             \
 
 //---------------------------------------------------------
 
-#define match(Variant)                                          \
-({                                                              \
-    let __inner_ = Variant;                                     \
+#define match(Variant)                                  \
+({                                                      \
+    let __inner_ = Variant;                             \
     let ____value____ = &__inner_;
 
 #define case(T, varname)                                 \
@@ -133,8 +132,8 @@ case T_id_##T: {                                             \
     }\
     if (!temp && ____value____->___inner_cookie___)
 
-#define _                                           \
-});                                                 \
+#define _                                                \
+});                                                      \
     if(!____value____->___inner_cookie___)
 
 #define _Ok(T, _varname)                                        \
