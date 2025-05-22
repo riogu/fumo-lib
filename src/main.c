@@ -92,12 +92,12 @@ int main() {
     return 0;
 }
 
-// Result get_input() {
-//     int n = 0;
-//     if (scanf("%d", &n)) {
-//         // Ok type, stores an int
-//         return Ok(n);
-//     }
-//     // Err type, stores a char*
-//     return Err("scanf failed.\n");
-// }
+Result get_input() {
+    int n = 0;
+    if (scanf("%d", &n)) {
+        // Ok type, stores an int
+        return Ok(n);
+    }
+    // Err type, stores a char*
+    return Err("scanf failed.\n");
+}
