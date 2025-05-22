@@ -1,11 +1,23 @@
 # fumo-lib
+fumo-lib is a small, single header file that explores new C23 features to add compile-time type safety around C's unions and enums.
+it provides a std::variant implementation and a result type implementation.
+it also provides a match() and get_if() statement API to access the inner values of Result and Variant.
+
 ## Features
-- [x] compile-time typesafe unions (like std::variant in C++)
-- [x] compie-time safe Result types (inspired by Rust's Result)
+- [x] compile-time type safe unions (like std::variant in C++)
+- [x] compile-time safe Result types (inspired by Rust's Result)
+- [x] match() statement syntax to access contents of Result and Variant in a type safe way.
+- [x] get_if() statement for type safe access to contents of Variant.  
 
 
-## How to use fumo-lib
-write your user made structs here in the all_types_with_v macro found in fumo_lib.h, in this format:
+## Usage 
+> [!WARNING]
+> requires C23 to compile with gcc or clang.
+> 
+> no extra flags required.
+
+- download fumo_lib.h file.
+- write your user made structs here in the all_types_with_v macro found in fumo_lib.h, in this format:
 ```c
 #define all_types_with_v(F, ptr, ...)                    \
     F(Position##ptr,             __VA_ARGS__)            \
@@ -26,6 +38,9 @@ All features added by fumo-lib.h are showcased here in this example:
 Result get_input();
 
 int main() {
+    // NOTE: all accesses to contents of Variant or Result
+    // must go through the match() or get_if() methods to be safe.
+    // the user isn't meant to ever directly access the members of these classes.
 
     int x = 123;
     PRINTF("this is x: ", x); // printf helpful utility
@@ -37,8 +52,7 @@ int main() {
         // only enters this scope if we held a Shape type
         // the type is checked at compile time and store in inner_value
         inner_value->shape_id = 123123;
-    }
-    else {
+    } else {
         // default scope for failure
         // inner_value is set to NULL if Shape was not inside the variant.
         printf("failed, type: %s\n", type_name(var));
@@ -81,9 +95,8 @@ int main() {
     });
 
     // match also supports Result type
-    // result types are deduced at runtime (not proper compile time sadly)
-    // if the user doesnt specify the types they gave the Result they returned
-    // then the match wont go into _Ok() or _Err(),  but no warning is emitted.
+    // if the user doesnt specify the types they gave the Result they returned,
+    // then the match wont trigger  _Ok() or _Err().
     // (warnings can be added if necessary by changing the implementation).
     match(get_input())({
         _Ok(Position, somepos) printf("_Ok: stored position.x as: %d.\n", somepos->x);
@@ -156,5 +169,4 @@ please input a value for position.x:
 213123
 _Ok: stored position.x as: 213123.
 had nothing.
-
 ```
