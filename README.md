@@ -1,15 +1,18 @@
 # fumo-lib
-fumo-lib is a small, single header file that explores new C23 features to add compile-time typesafety around C's unions and enums.
+fumo-lib is a small, single header file that explores new C23 features to add compile-time type safety around C's unions and enums.
 it provides a std::variant implementation and a result type implementation.
 it also provides a match() and get_if() statement API to access the inner values of Result and Variant.
 
 ## Features
-- [x] compile-time typesafe unions (like std::variant in C++)
-- [x] compie-time safe Result types (inspired by Rust's Result)
+- [x] compile-time type safe unions (like std::variant in C++)
+- [x] compile-time safe Result types (inspired by Rust's Result)
+- [x] match() statement syntax to access contents of Result and Variant in a type safe way.
+- [x] get_if() statement for type safe access to contents of Variant.  
 
 
 ## How to use fumo-lib
-write your user made structs here in the all_types_with_v macro found in fumo_lib.h, in this format:
+- download fumo_lib.h file.
+- write your user made structs here in the all_types_with_v macro found in fumo_lib.h, in this format:
 ```c
 #define all_types_with_v(F, ptr, ...)                    \
     F(Position##ptr,             __VA_ARGS__)            \
@@ -20,6 +23,8 @@ write your user made structs here in the all_types_with_v macro found in fumo_li
     F(YourUserStruct##ptr,       __VA_ARGS__)
 //    ^^^^^^^^^^^^^^ add the name of your structs in this macro here.
 ```
+> [!WARNING]
+> requires C23 to compile with gcc or clang.
 
 ## Example main.c
 
