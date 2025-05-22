@@ -19,7 +19,7 @@ _Ok: stored position.x as: 213123.
 had nothing.
 
 ```
-
+All features added by fumo-lib.h are showcases here in this example:
 ```c
 #include "fumo_lib.h"
 
