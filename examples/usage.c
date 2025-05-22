@@ -18,8 +18,7 @@ int main() {
 
     if (is_same_t((Rectangle) {}, var)) {
         printf("yes this is a rectangle\n");
-    }
-    else {
+    } else {
         printf("no this is not a rectangle\n");
     }
 
