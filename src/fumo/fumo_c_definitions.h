@@ -52,9 +52,13 @@ typedef  void const*        void_const_ptr     ;
 
 // #define user_inputed_types Position, Shape, Body, Rectangle
 // #define map_types(T) F(T, __VA_ARGS__)
-// #define all_types_with_v(F, ptr, ...)           \
-//     FOR_EACH(map_types, user_inputed_types)
+
+// #define typesandyea(F, ptr, ...) \
+//     F(__VA_ARGS__##ptr)
 //
+// #define all_types_with_v(F, ptr, ...) \
+//     typesandyea(F, ptr, user_inputed_types)
+
 #define all_types_with_v(F, ptr, ...)                    \
     F(Position##ptr,             __VA_ARGS__)            \
     F(Shape##ptr,                __VA_ARGS__)            \
@@ -140,6 +144,13 @@ case T_id_##T:                                               \
 //---------------------------------------------------------
 // type comparison macro
 
+#define get_type_id_same(var) (enum T_id)                       \
+    _Generic(var,                                                 \
+             Variant: ___type_id_Variant,                       \
+             Result: ___type_id_Result                         \
+             all_user_types_v(__get_function_of_type_id)        \
+             all_data_types_v(__get_function_of_type_id))(var)
+
 #define _IS_SAME_TYPE(T, U) _Generic(typeof(T), typeof(U): 1, default: 0)
 
 #define is_same_t(X, Y)                                                  \
@@ -150,9 +161,9 @@ case T_id_##T:                                               \
             (is_x_v && is_y_v)                                           \
             ? ( (*(Variant*)&X).type_id == (*(Variant*)&Y).type_id )     \
             : (is_x_v && !is_y_v)                                        \
-            ? ( (*(Variant*)&X).type_id == get_type_id(typeof(Y)) )      \
+            ? ( (*(Variant*)&X).type_id == get_type_id_same(Y) ) \
             : (!is_x_v && is_y_v)                                        \
-            ? ( get_type_id(typeof(X)) == (*(Variant*)&Y).type_id )      \
+            ? ( get_type_id_same(X) == (*(Variant*)&Y).type_id ) \
             : (!is_x_v && !is_y_v)                                       \
             ? ( _IS_SAME_TYPE(X, Y) )                                    \
             : 0;                                                         \
