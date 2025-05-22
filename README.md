@@ -3,7 +3,7 @@ Simple usage:
 ```c
 int main() {
     Position pos = {.x = 69420};
-    _variant variant = _variant(pos);
+    Variant variant = Variant(pos);
 
     auto result2 = get_if(Shape, variant) {
         // is never reached
@@ -12,11 +12,11 @@ int main() {
     else {
         // fails to get the value, result2 is NULL
         printf("couldn't get shape from variant.\n");
-        printf("type in variant: %s\n", variant_type_name(variant));
+        printf("type in variant: %s\n", type_name(variant));
     }
 
     Shape shape = {.shape_id = 13};
-    variant var = variant(shape); // making variant struct
+    Variant var = Variant(shape); // making variant struct
 
     // variables are only avaible inside the case label
     match(var) ({
