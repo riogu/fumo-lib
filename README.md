@@ -1,4 +1,15 @@
 # Example of how the implementation works:
+Ran with:
+```
+╰─ ❯❯ gcc main.c -o a && ./a
+this is x: 123
+failed, type: Rectangle
+false
+a // this is the user input given
+error message: scanf failed.
+had nothing.
+```
+
 ```c
 #include "fumo_lib.h"
 
