@@ -9,6 +9,15 @@ false
 a // this is the user input given
 error message: scanf failed.
 had nothing.
+
+╰─ ❯❯ gcc main.c -o a && ./a
+this is x: 123
+failed, type: Rectangle
+false
+213123 // this is the user input given
+_Ok: stored position.x as: 213123.
+had nothing.
+
 ```
 
 ```c
