@@ -9,6 +9,8 @@ set(CMAKE_C_STANDARD 23)
 option(USE_LIBASSERT "Use libassert" OFF)
 set(LIBRARIES ${PROJECT_NAME})
 
+option(BUILD_EXAMPLES "Build examples" ON)
+
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   set(CMAKE_CXX_EXTENSIONS OFF)
   set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -30,3 +32,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   target_link_libraries(${LIBRARIES})
 endif()
 
+if (BUILD_EXAMPLES)
+  add_subdirectory(examples)
+endif()
