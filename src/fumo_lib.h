@@ -211,12 +211,13 @@ case T_id_##T:                                               \
         is_same_t;                                                       \
     }))
 
+// clang-format off
 //---------------------------------------------------------
 // fumo primitive data types for type safety
 #define XMACRO(Type, ...) T_id_##Type,
 
 typedef enum T_id {
-    all_user_types_v(XMACRO) //
+    all_user_types_v(XMACRO)
     all_data_types_v(XMACRO)
 } T_id;
 
@@ -225,8 +226,8 @@ typedef enum T_id {
 #define XMACRO(Type, ...) Type _##Type;
 
 typedef union T_value {
-    all_user_types_v(XMACRO) //
-        all_data_types_v(XMACRO, ...)
+    all_user_types_v(XMACRO) 
+    all_data_types_v(XMACRO)
 } T_value;
 
 #undef XMACRO
