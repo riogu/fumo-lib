@@ -120,11 +120,11 @@ all_user_types_v(typedefs_user_types_ptr);
 #define T_UNREGISTERED -420
 #define auto __auto_type
 #define let auto
-static bool ___inner_fumo_cookie___ = false;
+// static bool ___inner_fumo_cookie___ = false;
 
-static inline bool ___check_and_reset_cookie___() {
-    return !(!___inner_fumo_cookie___ || (___inner_fumo_cookie___ = false));
-}
+// static inline bool ___check_and_reset_cookie___() {
+//     return !(!___inner_fumo_cookie___ || (___inner_fumo_cookie___ = false));
+// }
 
 //---------------------------------------------------------
 // NOTE: fumo_c syntax and useful operator definitions
@@ -153,8 +153,7 @@ case T_id_##T: {                                             \
 #define match(Variant)                                          \
 ({                                                              \
     let __inner_ = Variant;                                     \
-    let ____value____ = &__inner_;                              \
-    extern bool ___inner_fumo_cookie___;
+    let ____value____ = &__inner_;
 
 // NOTE: wont work with indented match statements
 // unless you store fumo cookie inside each variant
@@ -163,15 +162,15 @@ case T_id_##T: {                                             \
 (void)0;});                                              \
 ({                                                       \
     let varname = (T*)&____value____->value;             \
-    bool temp = ___inner_fumo_cookie___;                 \
+    bool temp = ____value____->___inner_cookie___;       \
     if(get_type_id((T){}) == ____value____->type_id) {   \
-        ___inner_fumo_cookie___ = true;                  \
+        ____value____->___inner_cookie___ = true;        \
     }\
-    if (!temp && ___inner_fumo_cookie___)
+    if (!temp && ____value____->___inner_cookie___)
 
 #define _                                           \
 });                                                 \
-    if(!___inner_fumo_cookie___)
+    if(!____value____->___inner_cookie___)
 
 #define _Ok(T, _varname)                                        \
 });                                                             \
@@ -243,6 +242,7 @@ typedef union T_value {
 typedef struct Variant {
     T_value value;
     T_id type_id;
+    bool ___inner_cookie___;
 } Variant;
 
 #define Variant(var) (Variant) {     \
@@ -255,7 +255,6 @@ typedef struct Variant {
 typedef struct Result {
     T_value value; // is Ok() or Err()
     T_id type_id;
-
     bool was_err;
 
 } Result;

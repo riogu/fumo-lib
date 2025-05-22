@@ -1,5 +1,5 @@
 #include "fumo_lib.h"
-// clang-format off
+
 Result get_input();
 
 int main() {
@@ -33,22 +33,23 @@ int main() {
     // failing to do so is a compile time error.
     // all type checking is done at compile time
     match(var) ({
-        case(Shape, var) {var->shape_id = 213;}
-    //     case(Rectangle, rect) {
-    //         // user specifies the name of the variable returned by the match
-    //         // the variable is always a pointer to the variable stored in
-    //         // the variant struct
-    //         rect->height = 123; // code will go here since its a Rectangle type
-    //     }
-    //     case(Position, pos) {
-    //         // all variables only exist on each label scope.
-    //         // that means you can only use "pos" inside of this label
-    //         // (to guarantee more type safety)
-    //         pos->x = 123;
-    //         printf("%d sucessfully updated pos.\n", pos->x);
-    //         pos->y = 123;
-    //         printf("%d sucessfully updated pos.\n", pos->y);
-    //     }
+        case(Shape, var) var->shape_id = 213;
+
+        case(Rectangle, rect) {
+            // user specifies the name of the variable returned by the match
+            // the variable is always a pointer to the variable stored in
+            // the variant struct
+            rect->height = 123; // code will go here since its a Rectangle type
+        }
+        case(Position, pos) {
+            // all variables only exist on each label scope.
+            // that means you can only use "pos" inside of this label
+            // (to guarantee more type safety)
+            pos->x = 123;
+            printf("%d sucessfully updated pos.\n", pos->x);
+            pos->y = 123;
+            printf("%d sucessfully updated pos.\n", pos->y);
+        }
         _ {
             // this is the default case label.
             // triggered if none of the types the user added was valid
@@ -81,13 +82,12 @@ int main() {
                 _ {} // you can do nothing on default
             });
         case(char*, char1) {
-        }
-        case(char, char12) {
+
         }
         _ { printf("had nothing."); }
     });
 
-return 0;
+    return 0;
 }
 
 Result get_input() {
