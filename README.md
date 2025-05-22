@@ -107,13 +107,14 @@ Result get_input() {
     let result = Ok(&pos); // valid code, stores Position*
     // can take any user type or standard type
 
+    printf("please input a value for position.x:\n");
     if (scanf("%d", &n)) {
         pos.x = n;
         // Ok type, stores an int
         return Ok(pos);
     }
     // Err type, stores a char*
-    return Err("scanf failed.\n");
+    return Err("scanf failed. didn't recieve a number.\n");
 }
 ```
 compiling the main.c example.
@@ -123,15 +124,17 @@ Output:
 this is x: 123
 failed, type: Rectangle
 false
-a // this is the user input given
-error message: scanf failed.
+please input a value for position.x:
+ads
+error message: scanf failed. didnt recieve a number.
 had nothing.
 
 ╰─ ❯❯ gcc main.c -o a && ./a
 this is x: 123
 failed, type: Rectangle
 false
-213123 // this is the user input given
+please input a value for position.x:
+213123
 _Ok: stored position.x as: 213123.
 had nothing.
 
