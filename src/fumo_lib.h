@@ -131,7 +131,7 @@ static inline bool ___check_and_reset_cookie___() {
 #define _UNDERLYING_VALUE(T, Variant)                        \
 case T_id_##T:                                               \
     (void)0;                                                 \
-    typeof(Variant.value._##T) val_##T = Variant.value._##T; \
+    T val_##T = (T) Variant.value; \
     result = &val_##T;                                       \
     break;
 
@@ -164,6 +164,7 @@ case T_id_##T:                                               \
         }                                           \
     }                                               \
     if(___check_and_reset_cookie___())  /* start user code block */
+#define _ _default
 
 #define _Ok(T, _varname)                                        \
     });                                                         \
