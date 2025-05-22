@@ -68,12 +68,14 @@ int main() {
         }
     });
 
+    // matches must be scoped with ({}); for them to work
     match(var) ({
         case(int, someint) {
             // you can indent as many match statements as you want
             match(var1) ({
                 case(char*, str) {
-
+                    // continue indenting....
+                    printf("had a string %s", str);
                 }
                 _ {}
             });
