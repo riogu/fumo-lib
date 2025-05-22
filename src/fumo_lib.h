@@ -156,17 +156,22 @@ case T_id_##T: {                                             \
     let ____value____ = &__inner_;                              \
     ___inner_fumo_cookie___ = true;
 
+// NOTE: wont work with indented match statements
+// unless you store fumo cookie inside each variant
+
 #define case(T, varname)                                 \
 (void)0;});                                              \
 ({                                                       \
     let varname = (T*)&____value____->value;             \
     bool temp = ___inner_fumo_cookie___;                 \
     if(get_type_id((T){}) == ____value____->type_id) {   \
-        ___inner_fumo_cookie___ = true;\
-    }
+        ___inner_fumo_cookie___ = true;                  \
+    }\
+    if(!temp && ___inner_fumo_cookie___)
 
 #define _                                           \
-});
+});                         \
+    if(!___inner_fumo_cookie___)
 
 #define _Ok(T, _varname)                                        \
 ({                                                              \
