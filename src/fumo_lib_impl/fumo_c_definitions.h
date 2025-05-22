@@ -1,5 +1,5 @@
 #pragma once
-#include "../structs.h" // IWYU pragma: export
+#include "structs.h" // IWYU pragma: export
 #include <stdbool.h>
 #include <wchar.h>
 
