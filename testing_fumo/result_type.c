@@ -1,10 +1,4 @@
-#include <boost/preprocessor.hpp>
-#include <stdbool.h>
-#include <stdio.h>
-
-#include "fumo/result_t.h"
-
-#define _else else
+#include "fumo/fumo_data_structures.h"
 
 Result get_input() {
 

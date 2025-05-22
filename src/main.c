@@ -1,41 +1,44 @@
 #include "fumo/fumo_c_definitions.h"
-#include "fumo/fumo_data_structures.h"
-#include <stdio.h>
+#include "fumo/fumo_type_name.h"
+#define else else
+#define _ _default
+
+Result get_input();
+
 int main() {
 
-    Rectangle rect = {.width = 123, .height = 1231};
-    Variant var = Variant(rect); // making variant struct
+    int x = 123;
+    PRINTF("this is x: ", x);
 
-    is_same_t((Position) {}, var) ? printf("true\n") : printf("false\n");
-    is_same_t(rect, var) ? printf("true\n") : printf("false\n");
-    is_same_t((Shape) {}, rect) ? printf("true\n") : printf("false\n");
+    Rectangle rect = {.width = 123, .height = 1231};
+    Variant var = Variant(rect);
 
     let inner_value = get_if(Shape, var) {
         inner_value->shape_id = 123123;
     }
     else {
-        // printf("failed, type: %s\n", variant_type_name(var));
+        printf("failed, type: %s\n", type_name(var));
     }
 
-    if (is_same_t((Shape) {}, var)) {}
+    // is_same_t((Position) {}, var) ? printf("true\n") : printf("false\n");
 
-    match(var) {
-        case(Shape) _Shape->shape_id = 123;
-        case(Rectangle) {
-            _Rectangle->height = 222;
+    Shape s = {.shape_id = 123123};
+    Variant var1 = Variant(s);
+
+    match(var) ({
+        case(Shape, var) var->shape_id = 213;
+        case(Rectangle, rect) {
+            rect->height = 123;
         }
-        _default printf("we dont get a value here");
-    }
+        _ {
+            printf("unknown type.\n");
+        }
+    });
 
-    
+
+
+
+
+
     return 0;
-}
-
-Result get_input() {
-
-    int n = 10;
-    if (scanf("%d", &n)) {
-        return Ok(n);
-    }
-    return Err((Position) {.x = 213});
 }

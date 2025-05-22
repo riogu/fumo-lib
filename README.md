@@ -1,20 +1,9 @@
-# How to use fumo_variant
-
-1- copy the file `fumo_variant.c`.
-
-2- to run the given example main function run:
-
-    gcc fumo_variant.c && ./a.out
-
-...thats it!
-to use it yourself, simply copy the macros before main, and replace the example structs i provided with your own structs.
-
 # Example of how the implementation works:
 Simple usage:
 ```c
 int main() {
     Position pos = {.x = 69420};
-    _variant variant = _variant(pos);
+    Variant variant = Variant(pos);
 
     auto result2 = get_if(Shape, variant) {
         // is never reached
@@ -23,18 +12,20 @@ int main() {
     else {
         // fails to get the value, result2 is NULL
         printf("couldn't get shape from variant.\n");
-        printf("type in variant: %s\n", variant_type_name(variant));
+        printf("type in variant: %s\n", type_name(variant));
     }
 
     Shape shape = {.shape_id = 13};
-    _variant var = _variant(shape); // making variant struct
+    Variant var = Variant(shape); // making variant struct
 
     // variables are only avaible inside the case label
-    match(var) {
+    match(var) ({
         case(Shape) _Shape->shape_id = 123; // goes here
         case(Rectangle) //etc...
-        _default printf("we dont get a value here");
-    }
+        _ {
+         printf("we dont get a value here");
+        }
+    });
 
     return 0;
 }
