@@ -12,8 +12,8 @@ Result get_input() {
 int main() {
 
     match(get_input())({
-        _Ok(int, var) printf("_Ok: %d.\n", *var);
-        _Err(char_ptr, errval) {
+        _Ok(char*, var) printf("_Ok: %s.\n", *var);
+        _Err(char*, errval) {
             printf("error message: %s", *errval);
         }
     });

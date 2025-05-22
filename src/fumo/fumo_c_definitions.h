@@ -96,8 +96,8 @@ case T_id_##T:                                               \
 #define get_if(T, Variant) (T*) ({                      \
     auto result = NULL;                                 \
     switch (Variant.type_id) {                          \
-        all_user_types_v(_UNDERLYING_VALUE,Variant) \
-        all_data_types_v(_UNDERLYING_VALUE, Variant)   \
+        all_user_types_v(_UNDERLYING_VALUE,Variant)     \
+        all_data_types_v(_UNDERLYING_VALUE, Variant)    \
     }                                                   \
     result;                                             \
 }); if ((get_type_id((T){}) == Variant.type_id))
@@ -129,13 +129,13 @@ case T_id_##T:                                               \
         break;                                                  \
     }                                                           \
 ({                                                              \
-    T* _varname = &____value____->value._##T;                    \
+    let _varname = (T*) &____value____->value;                  \
     if(!____value____->was_err                                  \
             && (get_type_id((T){}) == ____value____->type_id))
 
 #define _Err(T, _varname)                                       \
 });                                                             \
-    let _varname = &____value____->value._##T;                  \
+    let _varname = (T*) &____value____->value;                  \
     if (____value____->was_err                                  \
         && (get_type_id((T){}) == ____value____->type_id))
 
