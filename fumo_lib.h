@@ -97,7 +97,6 @@ all_user_types_v(typedefs_user_types_ptr);
 #define auto __auto_type
 #define let auto
 // static bool ___inner_fumo_cookie___ = false;
-
 // static inline bool ___check_and_reset_cookie___() {
 //     return !(!___inner_fumo_cookie___ || (___inner_fumo_cookie___ = false));
 // }
@@ -299,7 +298,7 @@ static inline const T_id ___type_id_##T(T t){  \
 }
 all_user_types_v(___each_type_id_) all_data_types_v(___each_type_id_)
 
-static inline const T_id __type_unregistered_id(void) {return T_UNREGISTERED;}
+static inline const T_id __type_unregistered_id(void) {return (T_id)T_UNREGISTERED;}
 
 #undef ___each_type_id_
 
