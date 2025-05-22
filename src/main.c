@@ -37,7 +37,7 @@ int main() {
 
         case(Rectangle, rect) {
             // user specifies the name of the variable returned by the match
-            // the variable is always a pointer to the variable stored in
+            // the variable is always a *pointer* to the variable stored in
             // the variant struct
             rect->height = 123; // code will go here since its a Rectangle type
         }
@@ -51,9 +51,9 @@ int main() {
             printf("%d sucessfully updated pos.\n", pos->y);
         }
         _ {
+            printf("unknown type.\n");
             // this is the default case label.
             // triggered if none of the types the user added was valid
-            printf("unknown type.\n");
         }
     });
 
@@ -63,7 +63,7 @@ int main() {
     // then the match wont go into _Ok() or _Err(),  but no warning is emitted.
     // (warnings can be added if necessary by changing the implementation).
     match(get_input())({
-        _Ok(int, var) printf("_Ok: %d.\n", *var);
+        _Ok(Position, somepos) printf("_Ok: stored position.x as: %d.\n", somepos->x);
         _Err(char*, errval) {
             // if scanf() fails, we go in here and get our string
             printf("error message: %s", *errval);
@@ -81,10 +81,15 @@ int main() {
                 }
                 _ {} // you can do nothing on default
             });
-        case(char*, char1) {
 
+        case(Position**, pos_ptr_ptr) {
+            // double pointers are automatically declared for you
+            // when you register a user type
+            // (more than this needs implementation changes)
+            // gets a Position***
+            printf("position's x: %d", (*(*pos_ptr_ptr))->x);
         }
-        _ { printf("had nothing."); }
+        _  printf("had nothing."); 
     });
 
     return 0;
@@ -92,9 +97,16 @@ int main() {
 
 Result get_input() {
     int n = 0;
+    
+    Position pos = {.x = 213, .y = 21312};
+
+    let result = Ok(&pos); // valid code, stores Position*
+    // can take any user type or standard type
+
     if (scanf("%d", &n)) {
+        pos.x = n;
         // Ok type, stores an int
-        return Ok(n);
+        return Ok(pos);
     }
     // Err type, stores a char*
     return Err("scanf failed.\n");

@@ -1,40 +1,17 @@
-
-
-// ----------------------------------------------------------------
 // ----------------------------------------------------------------
 // example structs for testing, unnecessary for usage
-typedef struct Position {
-    int x;
-    int y;
-} Position;
-
-typedef struct Shape {
-    int shape_id;
-} Shape;
-
-typedef struct Body {
-    Position position;
-    float radius;
-} Body;
-
-typedef struct Rectangle {
-    int width;
-    int height;
-} Rectangle;
-
-typedef struct Circle {
-    float radius;
-} Circle;
-
-typedef struct Piece {
-} Piece;
-
-typedef struct Camera {
-} Camera;
-
-typedef struct Board {
-} Board;
-
+// structs should be included before the macros.
+// clang-format off
+typedef struct Position {int x;int y;} Position;
+typedef struct Shape {int shape_id;} Shape;
+typedef struct Body {Position position;float radius;} Body;
+typedef struct Rectangle {int width;int height;} Rectangle;
+typedef struct Circle {float radius;} Circle;
+typedef struct Piece {} Piece;
+typedef struct Camera {} Camera;
+typedef struct Board {} Board;
+// ----------------------------------------------------------------
+// clang-format on
 // write your user made structs here in the macro, in this format
 #define all_types_with_v(F, ptr, ...)                    \
     F(Position##ptr,             __VA_ARGS__)            \
@@ -42,7 +19,6 @@ typedef struct Board {
     F(Body##ptr,                 __VA_ARGS__)            \
     F(Rectangle##ptr,            __VA_ARGS__)            \
     F(Board##ptr,                __VA_ARGS__)
-
 // ----------------------------------------------------------------
 // ----------------------------------------------------------------
 // for each macros
