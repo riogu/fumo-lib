@@ -1,5 +1,6 @@
 # Example of how the implementation works:
-Ran with:
+compiling the main.c example.
+Output:
 ```
 ╰─ ❯❯ gcc main.c -o a && ./a
 this is x: 123
