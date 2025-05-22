@@ -168,5 +168,4 @@ please input a value for position.x:
 213123
 _Ok: stored position.x as: 213123.
 had nothing.
-
 ```
