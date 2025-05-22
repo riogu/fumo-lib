@@ -131,9 +131,6 @@ case T_id_##T: {                                             \
     let __inner_ = Variant;                                     \
     let ____value____ = &__inner_;
 
-// NOTE: wont work with indented match statements
-// unless you store fumo cookie inside each variant
-
 #define case(T, varname)                                 \
 (void)0;});                                              \
 ({                                                       \
@@ -154,6 +151,8 @@ case T_id_##T: {                                             \
     let _varname = (T*) &____value____->value;                  \
     if (!____value____->was_err                                 \
         && (get_type_id((T){}) == ____value____->type_id))
+
+// FIXME: add error checking if the user gives wrong types on Result match
 
 #define _Err(T, _varname)                                       \
 });                                                             \
