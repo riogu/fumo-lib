@@ -16,6 +16,9 @@ typedef struct Board {} Board;
 // write your user made structs here in the macro, in this format
 #define user_types Position, Shape, Body, Rectangle
 
+
+
+// fumo_lib implementation starts here
 // ----------------------------------------------------------------
 #include "helper_macros/map_macro.h"
 // creating pointer typedefs for all user structs.
