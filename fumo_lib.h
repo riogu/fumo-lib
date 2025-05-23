@@ -99,7 +99,7 @@ all_user_types_v(typedefs_user_types_ptr);
 #define _UNDERLYING_VALUE(T, Variant)                   \
 case T_id_##T: {                                        \
     (void)0;                                            \
-    let _varname = (T*) &____value____->value;          \
+    let _varname = (T*) &_value_->value;          \
     result = &_varname;                                 \
     break;                                              \
 }
@@ -107,12 +107,12 @@ case T_id_##T: {                                        \
 #define get_if(T, Variant) (T*) ({                      \
     let result = NULL;                                  \
     let __inner_ = Variant;                             \
-    let ____value____ = &__inner_;                      \
+    let _value_ = &__inner_;                      \
     switch (Variant.type_id) {                          \
         all_user_types_v(_UNDERLYING_VALUE, Variant)    \
         all_data_types_v(_UNDERLYING_VALUE, Variant)    \
     }                                                   \
-    ____value____;                                      \
+    _value_;                                      \
 }); if ((get_type_id((T){}) == Variant.type_id))
 
 //---------------------------------------------------------
@@ -120,36 +120,36 @@ case T_id_##T: {                                        \
 #define match(Variant)                                  \
 ({                                                      \
     let __inner_ = Variant;                             \
-    let ____value____ = &__inner_;
+    let _value_ = &__inner_;
 
 #define case(T, varname)                                 \
 (void)0;});                                              \
 ({                                                       \
-    let varname = (T*)&____value____->value;             \
-    bool temp = ____value____->___inner_cookie___;       \
-    if(get_type_id((T){}) == ____value____->type_id) {   \
-        ____value____->___inner_cookie___ = true;        \
+    let varname = (T*)&_value_->value;             \
+    bool temp = _value_->___inner_cookie___;       \
+    if(get_type_id((T){}) == _value_->type_id) {   \
+        _value_->___inner_cookie___ = true;        \
     }\
-    if (!temp && ____value____->___inner_cookie___)
+    if (!temp && _value_->___inner_cookie___)
 
 #define _                                                \
 });                                                      \
-    if(!____value____->___inner_cookie___)
+    if(!_value_->___inner_cookie___)
 
 #define _Ok(T, _varname)                                        \
 });                                                             \
 ({                                                              \
-    let _varname = (T*) &____value____->value;                  \
-    if (!____value____->was_err                                 \
-        && (get_type_id((T){}) == ____value____->type_id))
+    let _varname = (T*) &_value_->value;                  \
+    if (!_value_->was_err                                 \
+        && (get_type_id((T){}) == _value_->type_id))
 
 // FIXME: add error checking if the user gives wrong types on Result match
 
 #define _Err(T, _varname)                                       \
 });                                                             \
-    let _varname = (T*) &____value____->value;                  \
-    if (____value____->was_err                                  \
-        && (get_type_id((T){}) == ____value____->type_id))
+    let _varname = (T*) &_value_->value;                  \
+    if (_value_->was_err                                  \
+        && (get_type_id((T){}) == _value_->type_id))
 
 //---------------------------------------------------------
 //---------------------------------------------------------
@@ -336,7 +336,7 @@ static inline const T_id __type_unregistered_id(void) {return (T_id)T_UNREGISTER
     default           : "Type not defined. %p" \
   )
 
-#define PRINTF(fmt, X)          \
+#define print(fmt, X)           \
 printf("%s", fmt);              \
 printf( PRINTF_FORMAT( X ), X );\
 printf("\n");

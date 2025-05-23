@@ -6,7 +6,7 @@ Result get_input();
 int main() {
 
     int x = 123;
-    PRINTF("this is x: ", x); // printf helpful utility
+    print("this is x: ", x); 
 
     Rectangle rect = {.width = 123, .height = 1231};
     Variant var = Variant(rect); // variant takes any registered type
@@ -15,7 +15,6 @@ int main() {
         // only enters this scope if we held a Shape type
         // the type is checked at compile time and store in inner_value
         inner_value->shape_id = 123123;
-    
     } else {
         // default scope for failure
         // inner_value is set to NULL if Shape was not inside the variant.
@@ -113,5 +112,3 @@ Result get_input() {
     // Err type, stores a char*
     return Err("scanf failed. didn't recieve a number.\n");
 }
-const char *
-const char *
