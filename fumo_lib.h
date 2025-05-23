@@ -16,16 +16,17 @@ typedef struct Board {} Board;
 // ----------------------------------------------------------------
 // write your user made structs here in the macro, in this format
 #define user_types Position, Shape, Body, Rectangle
-
+// ----------------------------------------------------------------
 
 
 // fumo_lib implementation starts here
 // ----------------------------------------------------------------
 #include "helper_macros/map_macro.h"
 #include "helper_macros/standard_c_definitions.h"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
 // creating pointer typedefs for all user structs.
 // also creates a single macro that all the code uses for getting the user types.
-
 #define make_ptr(T) T##_ptr
 #define make_ptr_ptr(T) T##_ptr_ptr
 // NOTE: __VA_ARGS__ is for potentially passing a variant.
@@ -41,15 +42,11 @@ typedef struct Board {} Board;
            )
 
 // ----------------------------------------------------------------
-// handle all the c data types
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
-
+// create all the pointers for all types
 
 #define typedefs_all_types_ptr(T, ...) typedef T* T##_ptr;
 map_to_all_types(typedefs_all_types_ptr)
 #undef typedefs_all_types_ptr
-
 
 //---------------------------------------------------------
 #define T_UNREGISTERED -420
