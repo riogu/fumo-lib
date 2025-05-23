@@ -56,7 +56,7 @@ map_to_all_types(typedefs_all_types_ptr)
 //---------------------------------------------------------
 // NOTE: fumo_c syntax and useful operator definitions
 
-#define UNDERLYING_VALUE(T, Variant)                   \
+#define UNDERLYING_VALUE(T, Variant)                    \
 case T_id_##T: {                                        \
     (void)0;                                            \
     let _varname = (T*) &_value_->value;                \
