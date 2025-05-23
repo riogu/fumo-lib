@@ -180,49 +180,13 @@ typedef struct Result {
 #define Ok(_v) (Result) {.value = (union T_value) _v, .type_id = get_type_id(_v), .was_err = 0}
 #define Err(_v) (Result) {.value =(union T_value) _v, .type_id = get_type_id(_v), .was_err = 1}
 
-/// fumo type_name implementation
-#define ALL_DATA_TYPES(F)    \
-    F(_Bool              )   \
-    F(char               )   \
-    F(signed char        )   \
-    F(unsigned char      )   \
-    F(short              )   \
-    F(int                )   \
-    F(long               )   \
-    F(long long          )   \
-    F(unsigned short     )   \
-    F(unsigned int       )   \
-    F(unsigned long      )   \
-    F(unsigned long long )   \
-    F(float              )   \
-    F(double             )   \
-    F(long double        )   \
-    F(char*              )   \
-    F(char const*        )   \
-    F(wchar_t*           )   \
-    F(wchar_t const*     )   \
-    F(void*              )   \
-    F(void const*        )
-
 #define TypeName(Type, ...) #Type,
 static const char* all_type_names[] = { map_to_all_types(TypeName) };
 #undef TypeName
-
-static inline T_id ___type_id_Variant(Variant variant) {
-    return variant.type_id;
-}
-
-static inline T_id ___type_id_Result(Result result) {
-    return result.type_id;
-}
-
-static inline const char* ___type_name_Variant(Variant variant) {
-    return all_type_names[variant.type_id];
-}
-
-static inline const char* ___type_name_Result(Result result) {
-    return all_type_names[result.type_id];
-}
+static inline T_id ___type_id_Variant(Variant variant) {return variant.type_id;}
+static inline T_id ___type_id_Result(Result result) {return result.type_id;}
+static inline const char* ___type_name_Variant(Variant variant) {return all_type_names[variant.type_id];}
+static inline const char* ___type_name_Result(Result result) {return all_type_names[result.type_id];}
 
 #define ___each_type_name_(T, ...)               \
 static inline const char* ___type_name_##T(T t){ \
