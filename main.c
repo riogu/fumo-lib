@@ -27,7 +27,7 @@ int main() {
 
     // type comparison between any primitive data type or user defined struct
     // and also adds support for variant/result types against any type
-    is_same_t((Position) {}, var) ? printf("true\n") : printf("false\n");
+    is_compatible_t((Position) {}, var) ? printf("true\n") : printf("false\n");
 
     Shape s = {.shape_id = 123123};
     Variant var1 = Variant(s);
@@ -68,12 +68,14 @@ int main() {
     match(get_input()) {
 
         _Ok(Position, somepos) printf("_Ok: stored position.x as: %d.\n", somepos->x);
+
         _Err(char*, errval) {
             // if scanf() fails, we go in here and get our string
             printf("error message: %s", *errval);
         }
     }
 
+    // matches must be scoped with ({}); for them to work
     match(var) {
         case(int, someint) {(*someint)++;}
             // you can indent as many match statements as you want

@@ -161,9 +161,9 @@ case T_id_##T: {                                        \
              all_user_types_v(__get_function_of_type_id)        \
              all_data_types_v(__get_function_of_type_id))(var)
 
-#define _IS_SAME_TYPE(T, U) _Generic(typeof(T), typeof(U): 1, default: 0)
+#define _IS_SAME_TYPE(T, U) _Generic((typeof(T)*)0, typeof(U)*: 1, default: 0)
 
-#define is_same_t(X, Y)                                                  \
+#define is_compatible_t(X, Y)                                            \
     (({                                                                  \
          let is_x_v = _Generic(typeof(X), Variant: 1, default: 0);       \
          let is_y_v = _Generic(typeof(Y), Variant: 1, default: 0);       \
