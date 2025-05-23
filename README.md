@@ -47,16 +47,9 @@ int main() {
 > no extra flags required.
 
 - download fumo_lib.h file.
-- write your user made structs here in the all_types_with_v macro found in fumo_lib.h, in this format:
+- write your user made structs here in the user_types macro found in fumo_lib.h, in this format:
 ```c
-#define all_types_with_v(F, ptr, ...)                    \
-    F(Position##ptr,             __VA_ARGS__)            \
-    F(Shape##ptr,                __VA_ARGS__)            \
-    F(Body##ptr,                 __VA_ARGS__)            \
-    F(Rectangle##ptr,            __VA_ARGS__)            \
-    F(Board##ptr,                __VA_ARGS__)            \
-    F(YourUserStruct##ptr,       __VA_ARGS__)
-//    ^^^^^^^^^^^^^^ add the name of your structs in this macro here.
+#define user_types Position, Shape, Body, Rectangle, YourUserStruct, etc....
 ```
 > [!NOTE]
 > hasnt been implemented yet, but the idea is to add a macro for users to register their own variants, so you can have different variants using the same macro like:
