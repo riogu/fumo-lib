@@ -34,8 +34,8 @@ typedef struct Board {} Board;
 // NOTE: __VA_ARGS__ is for potentially passing a variant.
 // its used by get_if() macro to pass recursively more than one argument
 
-#define map_to_all_types(F, ...)                        \
-    MAP_UD(F, __VA_ARGS__,                              \
+#define map_to_all_types(macro, ...)                    \
+    MAP_UD(macro, __VA_ARGS__,                          \
            user_types,                                  \
            MAP_LIST(make_ptr, user_types),              \
            MAP_LIST(make_ptr_ptr, user_types),          \
