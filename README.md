@@ -21,7 +21,7 @@ int main() {
         printf("failed, type: %s\n", type_name(var));
     }
 
-    is_same_t((Position) {}, var) ? printf("true\n") : printf("false\n");
+    is_compatible_t((Position) {}, var) ? printf("true\n") : printf("false\n");
 
     match(get_input()) {
         _Ok(Position, somepos) print("_Ok: stored position.x as: ", somepos->x);
@@ -95,7 +95,7 @@ int main() {
 
     // type comparison between any primitive data type or user defined struct
     // and also adds support for variant/result types against any type
-    is_same_t((Position) {}, var) ? printf("true\n") : printf("false\n");
+    is_compatible_t((Position) {}, var) ? printf("true\n") : printf("false\n");
 
     Shape s = {.shape_id = 123123};
     Variant var1 = Variant(s);
