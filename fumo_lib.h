@@ -107,28 +107,28 @@ case T_id_##T: {                                        \
 #define get_if(T, Variant) (T*) ({                      \
     let result = NULL;                                  \
     let __inner_ = Variant;                             \
-    let _value_ = &__inner_;                      \
+    let _value_ = &__inner_;                            \
     switch (Variant.type_id) {                          \
         all_user_types_v(_UNDERLYING_VALUE, Variant)    \
         all_data_types_v(_UNDERLYING_VALUE, Variant)    \
     }                                                   \
-    _value_;                                      \
+    _value_;                                            \
 }); if ((get_type_id((T){}) == Variant.type_id))
 
 //---------------------------------------------------------
 
 #define match(Variant)                                  \
-{                                                      \
+{                                                       \
     let __inner_ = Variant;                             \
     let _value_ = &__inner_;
 
-#define case(T, varname)                                 \
-}                                              \
+#define case(T, varname)                                \
+}                                                       \
 {                                                       \
-    let varname = (T*)&_value_->value;             \
-    bool temp = _value_->___inner_cookie___;       \
-    if(get_type_id((T){}) == _value_->type_id) {   \
-        _value_->___inner_cookie___ = true;        \
+    let varname = (T*)&_value_->value;                  \
+    bool temp = _value_->___inner_cookie___;            \
+    if(get_type_id((T){}) == _value_->type_id) {        \
+        _value_->___inner_cookie___ = true;             \
     }\
     if (!temp && _value_->___inner_cookie___)
 
