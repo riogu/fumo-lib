@@ -258,6 +258,7 @@ static inline const T_id __type_unregistered_id(void) {return (T_id)T_UNREGISTER
              map_to_all_types(__get_function_of_type_id))(var)
 
 //---------------------------------------------------------
+// extra generic printf just because why not 
 #include <stdio.h> // IWYU pragma: export
 #define PRINTF_FORMAT(T)                       \
   _Generic( T,                                 \
