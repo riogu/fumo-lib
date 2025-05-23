@@ -27,12 +27,13 @@ typedef struct Board {} Board;
 #define make_ptr_ptr(T) T##_ptr_ptr
 // NOTE: __VA_ARGS__ is for potentially passing a variant
 // its used by get_if() macro to pass recursively
-#define map_to_all_user_types(F, ...)             \
-    MAP_UD(F, __VA_ARGS__,                        \
-           user_types,                            \
-           MAP_LIST(make_ptr, user_types),        \
-           MAP_LIST(make_ptr_ptr, user_types),    \
-           MAP_LIST(make_ptr, standard_c_types)   \
+#define map_to_all_user_types(F, ...)                   \
+    MAP_UD(F, __VA_ARGS__,                              \
+           user_types,                                  \
+           MAP_LIST(make_ptr, user_types),              \
+           MAP_LIST(make_ptr_ptr, user_types),          \
+           standard_c_types,                            \
+           MAP_LIST(make_ptr_ptr, standard_c_types)     \
            )
 
 // ----------------------------------------------------------------
@@ -42,44 +43,38 @@ typedef struct Board {} Board;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
 
-#define standard_c_types            \
-    _Bool             ,             \
-    char              ,             \
-    signed_char       ,             \
-    unsigned_char     ,             \
-    short             ,             \
-    int               ,             \
-    long              ,             \
-    long_long         ,             \
-    unsigned_short    ,             \
-    unsigned_int      ,             \
-    unsigned_long     ,             \
-    unsigned_long_long,             \
-    float             ,             \
-    double            ,             \
-    long_double       ,             \
-    char_ptr          ,             \
-    char_const_ptr    ,             \
-    wchar_t_ptr       ,             \
-    wchar_t_const_ptr ,             \
-    void_ptr          ,             \
-    void_const_ptr    ,             \
-    bool_ptr          ,             \
-    signed_char_ptr   ,             \
-    unsigned_char_ptr ,             \
-    short_ptr         ,             \
-    int_ptr           ,             \
-    long_ptr                       
+#define standard_c_types                \
+    _Bool                  ,            \
+    char                   ,            \
+    signed_char            ,            \
+    unsigned_char          ,            \
+    short                  ,            \
+    int                    ,            \
+    long                   ,            \
+    long_long              ,            \
+    unsigned_short         ,            \
+    unsigned_int           ,            \
+    unsigned_long          ,            \
+    unsigned_long_long     ,            \
+    float                  ,            \
+    double                 ,            \
+    long_double            ,            \
+    char_const_ptr         ,            \
+    wchar_t_ptr            ,            \
+    wchar_t_const_ptr      ,            \
+    void_ptr               ,            \
+    void_const_ptr                     
 
 
-typedef  signed char        signed_char             ;
-typedef  unsigned char      unsigned_char           ;
-typedef  long long          long_long               ; 
-typedef  unsigned short     unsigned_short          ; 
-typedef  unsigned int       unsigned_int            ; 
-typedef  unsigned long      unsigned_long           ; 
-typedef  unsigned long long unsigned_long_long      ; 
-typedef  long double        long_double             ; 
+
+typedef  signed char         signed_char            ;
+typedef  unsigned char       unsigned_char          ;
+typedef  long long           long_long              ; 
+typedef  unsigned short      unsigned_short         ; 
+typedef  unsigned int        unsigned_int           ; 
+typedef  unsigned long       unsigned_long          ; 
+typedef  unsigned long long  unsigned_long_long     ; 
+typedef  long double         long_double            ; 
 
 typedef  _Bool              *bool_ptr               ; 
 typedef  signed_char        *signed_char_ptr        ; 
@@ -92,10 +87,10 @@ typedef  unsigned_short     *unsigned_short_ptr     ;
 typedef  unsigned_int       *unsigned_int_ptr       ;
 typedef  unsigned_long      *unsigned_long_ptr      ;
 typedef  unsigned_long_long *unsigned_long_long_ptr ;
-typedef  long_double        *long_double_ptr ;
-typedef  float              *float_ptr;
-typedef  double             *double_ptr;
-typedef  long_double        *long_double_ptr;
+typedef  long_double        *long_double_ptr        ;
+typedef  float              *float_ptr              ;
+typedef  double             *double_ptr             ;
+typedef  long_double        *long_double_ptr        ;
 
 typedef  char*              char_ptr                ; 
 typedef  char const*        char_const_ptr          ; 
@@ -104,36 +99,12 @@ typedef  wchar_t const*     wchar_t_const_ptr       ;
 typedef  void*              void_ptr                ; 
 typedef  void const*        void_const_ptr          ;
 
-// clang-format on
 #define typedefs_user_types_ptr(T, ...) typedef T* T##_ptr;
 
 map_to_all_user_types(typedefs_user_types_ptr)
 
 #undef typedefs_user_types_ptr
 
-#define map_to_all_data_types(F, ...)    \
-    F(_Bool             , __VA_ARGS__)   \
-    F(char              , __VA_ARGS__)   \
-    F(signed_char       , __VA_ARGS__)   \
-    F(unsigned_char     , __VA_ARGS__)   \
-    F(short             , __VA_ARGS__)   \
-    F(int               , __VA_ARGS__)   \
-    F(long              , __VA_ARGS__)   \
-    F(long_long         , __VA_ARGS__)   \
-    F(unsigned_short    , __VA_ARGS__)   \
-    F(unsigned_int      , __VA_ARGS__)   \
-    F(unsigned_long     , __VA_ARGS__)   \
-    F(unsigned_long_long, __VA_ARGS__)   \
-    F(float             , __VA_ARGS__)   \
-    F(double            , __VA_ARGS__)   \
-    F(long_double       , __VA_ARGS__)   \
-    F(char_ptr          , __VA_ARGS__)   \
-    F(char_const_ptr    , __VA_ARGS__)   \
-    F(wchar_t_ptr       , __VA_ARGS__)   \
-    F(wchar_t_const_ptr , __VA_ARGS__)   \
-    F(void_ptr          , __VA_ARGS__)   \
-    F(void_const_ptr    , __VA_ARGS__)
-// ----------------------------------------------------------------
 
 //---------------------------------------------------------
 #define T_UNREGISTERED -420
@@ -226,20 +197,19 @@ case T_id_##T: {                                        \
         is_same_t;                                                       \
     }))
 
-//---------------------------------------------------------
 // fumo primitive data types for type safety
 #define XMACRO(Type, ...) T_id_##Type,
 
-    typedef enum T_id {
-        map_to_all_user_types(XMACRO) map_to_all_data_types(XMACRO)
-    } T_id;
+typedef enum T_id {
+    map_to_all_user_types(XMACRO)
+} T_id;
 
 #undef XMACRO
 
 #define XMACRO(Type, ...) Type _##Type;
 
 typedef union T_value {
-    map_to_all_user_types(XMACRO) map_to_all_data_types(XMACRO)
+    map_to_all_user_types(XMACRO) 
 } T_value;
 
 #undef XMACRO
@@ -295,8 +265,7 @@ typedef struct Result {
     F(void const*        )
 
 #define TypeName(Type, ...) #Type,
-static const char* all_type_names[] = {map_to_all_user_types(TypeName) //
-                                       ALL_DATA_TYPES(TypeName)};
+static const char* all_type_names[] = {map_to_all_user_types(TypeName)}
 #undef TypeName
 
 static inline T_id ___type_id_Variant(Variant variant) {
@@ -319,10 +288,9 @@ static inline const char* ___type_name_Result(Result result) {
 static inline const char* ___type_name_##T(T t){ \
 return all_type_names[T_id_##T];                 \
 }
-
 map_to_all_user_types(___each_type_name_)
 
-    map_to_all_data_types(___each_type_name_)
+map_to_all_data_types(___each_type_name_)
 
 #undef ___each_type_name_
 
@@ -330,12 +298,9 @@ map_to_all_user_types(___each_type_name_)
 static inline const T_id ___type_id_##T(T t){   \
     return T_id_##T;                            \
 }
-        map_to_all_user_types(___each_type_id_)
-            map_to_all_data_types(___each_type_id_)
+map_to_all_user_types(___each_type_id_) map_to_all_data_types(___each_type_id_)
 
-                static inline const T_id __type_unregistered_id(void) {
-    return (T_id)T_UNREGISTERED;
-}
+static inline const T_id __type_unregistered_id(void) {return (T_id)T_UNREGISTERED;}
 
 #undef ___each_type_id_
 
