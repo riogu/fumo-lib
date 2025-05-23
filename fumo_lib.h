@@ -38,8 +38,6 @@ typedef struct Board {} Board;
            MAP_LIST(make_ptr, standard_c_types)         \
            )
 
-
-
 // ----------------------------------------------------------------
 // handle all the c data types
 #include <stdbool.h>
