@@ -52,8 +52,7 @@ map_to_all_types(typedefs_all_types_ptr)
 
 //---------------------------------------------------------
 #define T_UNREGISTERED -420
-#define auto __auto_type
-#define let auto
+#define let __auto_type
 
 //---------------------------------------------------------
 // NOTE: fumo_c syntax and useful operator definitions
