@@ -62,8 +62,6 @@ typedef struct Board {} Board;
     void_ptr               ,            \
     void_const_ptr                     
 
-
-
 typedef  signed char         signed_char            ;
 typedef  unsigned char       unsigned_char          ;
 typedef  long long           long_long              ; 
@@ -96,11 +94,9 @@ typedef  wchar_t const*     wchar_t_const_ptr       ;
 typedef  void*              void_ptr                ; 
 typedef  void const*        void_const_ptr          ;
 
-#define typedefs_user_types_ptr(T, ...) typedef T* T##_ptr;
-
-map_to_all_types(typedefs_user_types_ptr)
-
-#undef typedefs_user_types_ptr
+#define typedefs_all_types_ptr(T, ...) typedef T* T##_ptr;
+map_to_all_types(typedefs_all_types_ptr)
+#undef typedefs_all_types_ptr
 
 
 //---------------------------------------------------------
@@ -281,10 +277,10 @@ static inline const char* ___type_name_Result(Result result) {
 
 #define ___each_type_name_(T, ...)               \
 static inline const char* ___type_name_##T(T t){ \
-return all_type_names[T_id_##T];                 \
+    return all_type_names[T_id_##T];             \
 }
-map_to_all_types(___each_type_name_)
 
+map_to_all_types(___each_type_name_)
 
 #undef ___each_type_name_
 
