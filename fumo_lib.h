@@ -26,7 +26,8 @@ typedef struct Board {} Board;
 #define make_ptr_ptr(T) T##_ptr_ptr
 // NOTE: __VA_ARGS__ is for potentially passing a variant
 // its used by get_if() macro to pass recursively
-#define map_to_all_user_types(F, ...)                   \
+
+#define map_to_all_types(F, ...)                   \
     MAP_UD(F, __VA_ARGS__,                              \
            user_types,                                  \
            MAP_LIST(make_ptr, user_types),              \
@@ -98,7 +99,7 @@ typedef  void const*        void_const_ptr          ;
 
 #define typedefs_user_types_ptr(T, ...) typedef T* T##_ptr;
 
-map_to_all_user_types(typedefs_user_types_ptr)
+map_to_all_types(typedefs_user_types_ptr)
 
 #undef typedefs_user_types_ptr
 
@@ -124,7 +125,7 @@ case T_id_##T: {                                        \
     let __inner_ = Variant;                             \
     let _value_ = &__inner_;                            \
     switch (Variant.type_id) {                          \
-        map_to_all_user_types(UNDERLYING_VALUE, Variant)\
+        map_to_all_types(UNDERLYING_VALUE, Variant)\
     }                                                   \
     _value_;                                            \
 }); if ((get_type_id((T){}) == Variant.type_id))
@@ -171,7 +172,7 @@ case T_id_##T: {                                        \
     _Generic(var,                                                   \
              Variant: ___type_id_Variant,                           \
              Result: ___type_id_Result                              \
-             map_to_all_user_types(__get_function_of_type_id))(var) \
+             map_to_all_types(__get_function_of_type_id))(var) \
 
 #define _IS_SAME_TYPE(T, U) _Generic((typeof(T)*)0, typeof(U)*: 1, default: 0)
 
@@ -196,7 +197,7 @@ case T_id_##T: {                                        \
 #define XMACRO(Type, ...) T_id_##Type,
 
 typedef enum T_id {
-    map_to_all_user_types(XMACRO)
+    map_to_all_types(XMACRO)
 } T_id;
 
 #undef XMACRO
@@ -204,7 +205,7 @@ typedef enum T_id {
 #define XMACRO(Type, ...) Type _##Type;
 
 typedef union T_value {
-    map_to_all_user_types(XMACRO) 
+    map_to_all_types(XMACRO) 
 } T_value;
 
 #undef XMACRO
@@ -260,7 +261,7 @@ typedef struct Result {
     F(void const*        )
 
 #define TypeName(Type, ...) #Type,
-static const char* all_type_names[] = { map_to_all_user_types(TypeName) };
+static const char* all_type_names[] = { map_to_all_types(TypeName) };
 #undef TypeName
 
 static inline T_id ___type_id_Variant(Variant variant) {
@@ -283,7 +284,7 @@ static inline const char* ___type_name_Result(Result result) {
 static inline const char* ___type_name_##T(T t){ \
 return all_type_names[T_id_##T];                 \
 }
-map_to_all_user_types(___each_type_name_)
+map_to_all_types(___each_type_name_)
 
 
 #undef ___each_type_name_
@@ -292,7 +293,7 @@ map_to_all_user_types(___each_type_name_)
 static inline const T_id ___type_id_##T(T t){   \
     return T_id_##T;                            \
 }
-map_to_all_user_types(___each_type_id_) 
+map_to_all_types(___each_type_id_) 
 
 static inline const T_id __type_unregistered_id(void) {return (T_id)T_UNREGISTERED;}
 
@@ -304,13 +305,13 @@ static inline const T_id __type_unregistered_id(void) {return (T_id)T_UNREGISTER
     _Generic(typeof(_v),                                            \
                 Variant: ___type_name_Variant,                      \
                 Result: ___type_name_Result                         \
-                map_to_all_user_types(__get_function_of_type_name))(_v)
+                map_to_all_types(__get_function_of_type_name))(_v)
 
 #define __get_function_of_type_id(T, ...), T : ___type_id_##T
 
 #define get_type_id(var) (enum T_id)                             \
     _Generic(var                                                 \
-             map_to_all_user_types(__get_function_of_type_id))(var)
+             map_to_all_types(__get_function_of_type_id))(var)
 
 //---------------------------------------------------------
 #include <stdio.h> // IWYU pragma: export
