@@ -2,6 +2,7 @@
 fumo-lib is a small, single header file that explores new C23 features to add compile-time type safety around C's unions and enums.
 it provides a std::variant implementation and a result type implementation.
 it also provides a match() and get_if() statement API to access the inner values of Result and Variant.
+the goal is to experiment around what kind of typesafety you can obtain with modern C features.
 
 ## Features
 - [x] compile-time type safe unions (like std::variant in C++)
