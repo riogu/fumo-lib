@@ -2,6 +2,9 @@
 #pragma once
 #include <stdbool.h>
 #include <wchar.h>
+// standard c types manual definintions
+// we need these because c has types with more than one identifier,
+// like "long long". so to make it generic, we typedef it to long_long, and so on.
 
 #define standard_c_types                \
     _Bool                  ,            \
