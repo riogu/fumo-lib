@@ -60,7 +60,7 @@ typedef  void const*        void_const_ptr          ;
 
 
 //---------------------------------------------------------
-// extra generic printf just because why not 
+// extra generic printf also provided
 #include <stdio.h> // IWYU pragma: export
 #define PRINTF_FORMAT(T)                       \
   _Generic( T,                                 \
