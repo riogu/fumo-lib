@@ -1,4 +1,4 @@
-#include "map_macro.h"
+#include "helper_macros/map_macro.h"
 
 // clang-format off
 // ----------------------------------------------------------------
@@ -12,10 +12,12 @@ typedef struct Circle {float radius;} Circle;
 typedef struct Piece {} Piece;
 typedef struct Camera {} Camera;
 typedef struct Board {} Board;
+
 // ----------------------------------------------------------------
 // write your user made structs here in the macro, in this format
-
 #define user_types Position, Shape, Body, Rectangle
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
 
 #define make_ptr(T) T##_ptr
 #define make_ptr_ptr(T) T##_ptr_ptr
@@ -28,37 +30,12 @@ typedef struct Board {} Board;
            MAP_LIST(make_ptr_ptr, user_types)     \
            )
 
-// #define map_to_all_user_types(F, ...)                   \
-//     user_types_all(F,       ,   __VA_ARGS__)       \
-//     user_types_all(F, _ptr,     __VA_ARGS__)       \
-//     user_types_all(F, _ptr_ptr, __VA_ARGS__)
+#define typedefs_user_types_ptr(T, ...) typedef T* T##_ptr;
+map_to_all_user_types(typedefs_user_types_ptr);
+#undef typedefs_user_types_ptr
 
-// ----------------------------------------------------------------
-// ----------------------------------------------------------------
-// for each macros
-#define EXPAND1(...)      __VA_ARGS__
-#define EXPAND2(...)        EXPAND1(    EXPAND1(  EXPAND1 (EXPAND1 (__VA_ARGS__))))
-#define EXPAND3(...)        EXPAND2(    EXPAND2(  EXPAND2 (EXPAND2 (__VA_ARGS__))))
-#define EXPAND(...)        EXPAND3(    EXPAND3(  EXPAND3 (EXPAND3 (__VA_ARGS__))))
-#define PARENS ()
-#define FOR_EACH(macro, ...)                                    \
-  __VA_OPT__(EXPAND(FOR_EACH_HELPER(macro, __VA_ARGS__)))
-#define FOR_EACH_HELPER(macro, a1, ...)                         \
-  macro(a1)                                                     \
-  __VA_OPT__(FOR_EACH_AGAIN PARENS (macro, __VA_ARGS__))
-#define FOR_EACH_AGAIN() FOR_EACH_HELPER
-
-// ----------------------------------------------------------------
-// ----------------------------------------------------------------
 #include <stdbool.h>
 #include <wchar.h>
-// #define all_types_with_v(F, ptr, ...)                    \
-//     F(Position##ptr,             __VA_ARGS__)            \
-//     F(Shape##ptr,                __VA_ARGS__)            \
-//     F(Body##ptr,                 __VA_ARGS__)            \
-//     F(Rectangle##ptr,            __VA_ARGS__)            \
-//     F(Board##ptr,                __VA_ARGS__)
-
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
@@ -102,14 +79,6 @@ typedef  void const*        void_const_ptr     ;
     F(void_const_ptr    , __VA_ARGS__)
 // ----------------------------------------------------------------
 
-// #define map_to_all_user_types(F, ...)                     \
-//     all_types_with_v(F,       ,   __VA_ARGS__)       \
-//     all_types_with_v(F, _ptr,     __VA_ARGS__)       \
-//     all_types_with_v(F, _ptr_ptr, __VA_ARGS__)
-
-#define typedefs_user_types_ptr(T, ...) typedef T* T##_ptr;
-map_to_all_user_types(typedefs_user_types_ptr);
-#undef typedefs_user_types_ptr
 
 //---------------------------------------------------------
 #define T_UNREGISTERED -420
