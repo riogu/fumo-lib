@@ -1,4 +1,8 @@
 // clang-format off
+
+// map-macro implementation is from:
+// https://github.com/swansontec/map-macro
+
 /*
  * map-macro by William R Swanson is marked with CC0 1.0 Universal.
  *

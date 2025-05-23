@@ -14,32 +14,24 @@ typedef struct Camera {} Camera;
 typedef struct Board {} Board;
 // ----------------------------------------------------------------
 // write your user made structs here in the macro, in this format
-#define all_types_with_v(F, ptr, ...)                    \
-    F(Position##ptr,             __VA_ARGS__)            \
-    F(Shape##ptr,                __VA_ARGS__)            \
-    F(Body##ptr,                 __VA_ARGS__)            \
-    F(Rectangle##ptr,            __VA_ARGS__)            \
-    F(Board##ptr,                __VA_ARGS__)
 
-#define usertypes Position, Shape, Body, Rectangle
+#define user_types Position, Shape, Body, Rectangle
 
-#define register_variant(...) __VA_ARGS__
-// register_variant(Position Shape Body Rectangle)
+#define make_ptr(T) T##_ptr
+#define make_ptr_ptr(T) T##_ptr_ptr
+// NOTE: __VA_ARGS__ is for potentially passing a variant
+// its used by get_if() macro to pass recursively
+#define map_to_all_user_types(F, ...)             \
+    MAP_UD(F, __VA_ARGS__,                        \
+           user_types,                            \
+           MAP_LIST(make_ptr, user_types),        \
+           MAP_LIST(make_ptr_ptr, user_types)     \
+           )
 
-#define make_ptr(T, pointer) T##pointer,
-#define user_types_all(F, ptr, ...) \
-    FOR_EACH(F, MAP_UD(make_ptr, ptr, usertypes))
-
-#define all_user_types_v(F, ...)                   \
-    user_types_all(F,       ,   __VA_ARGS__)       \
-    user_types_all(F, _ptr,     __VA_ARGS__)       \
-    user_types_all(F, _ptr_ptr, __VA_ARGS__)
-
-// #define XMACRO(Type, ...) Type _##Type;
-// typedef union T_value {
-//     all_user_types_all(XMACRO) 
-// } T_value;
-// #undef XMACRO
+// #define map_to_all_user_types(F, ...)                   \
+//     user_types_all(F,       ,   __VA_ARGS__)       \
+//     user_types_all(F, _ptr,     __VA_ARGS__)       \
+//     user_types_all(F, _ptr_ptr, __VA_ARGS__)
 
 // ----------------------------------------------------------------
 // ----------------------------------------------------------------
@@ -55,10 +47,17 @@ typedef struct Board {} Board;
   macro(a1)                                                     \
   __VA_OPT__(FOR_EACH_AGAIN PARENS (macro, __VA_ARGS__))
 #define FOR_EACH_AGAIN() FOR_EACH_HELPER
+
 // ----------------------------------------------------------------
 // ----------------------------------------------------------------
 #include <stdbool.h>
 #include <wchar.h>
+// #define all_types_with_v(F, ptr, ...)                    \
+//     F(Position##ptr,             __VA_ARGS__)            \
+//     F(Shape##ptr,                __VA_ARGS__)            \
+//     F(Body##ptr,                 __VA_ARGS__)            \
+//     F(Rectangle##ptr,            __VA_ARGS__)            \
+//     F(Board##ptr,                __VA_ARGS__)
 
 
 #pragma clang diagnostic push
@@ -79,7 +78,7 @@ typedef  wchar_t const*     wchar_t_const_ptr  ;
 typedef  void*              void_ptr           ; 
 typedef  void const*        void_const_ptr     ;
 
-#define all_data_types_v(F, ...)         \
+#define map_to_all_data_types(F, ...)         \
     F(_Bool             , __VA_ARGS__)   \
     F(char              , __VA_ARGS__)   \
     F(signed_char       , __VA_ARGS__)   \
@@ -103,13 +102,13 @@ typedef  void const*        void_const_ptr     ;
     F(void_const_ptr    , __VA_ARGS__)
 // ----------------------------------------------------------------
 
-// #define all_user_types_v(F, ...)                     \
+// #define map_to_all_user_types(F, ...)                     \
 //     all_types_with_v(F,       ,   __VA_ARGS__)       \
 //     all_types_with_v(F, _ptr,     __VA_ARGS__)       \
 //     all_types_with_v(F, _ptr_ptr, __VA_ARGS__)
 
 #define typedefs_user_types_ptr(T, ...) typedef T* T##_ptr;
-all_user_types_v(typedefs_user_types_ptr);
+map_to_all_user_types(typedefs_user_types_ptr);
 #undef typedefs_user_types_ptr
 
 //---------------------------------------------------------
@@ -133,8 +132,8 @@ case T_id_##T: {                                        \
     let __inner_ = Variant;                             \
     let _value_ = &__inner_;                            \
     switch (Variant.type_id) {                          \
-        all_user_types_v(_UNDERLYING_VALUE, Variant)    \
-        all_data_types_v(_UNDERLYING_VALUE, Variant)    \
+        map_to_all_user_types(_UNDERLYING_VALUE, Variant)    \
+        map_to_all_data_types(_UNDERLYING_VALUE, Variant)    \
     }                                                   \
     _value_;                                            \
 }); if ((get_type_id((T){}) == Variant.type_id))
@@ -182,8 +181,8 @@ case T_id_##T: {                                        \
     _Generic(var,                                               \
              Variant: ___type_id_Variant,                       \
              Result: ___type_id_Result                          \
-             all_user_types_v(__get_function_of_type_id)        \
-             all_data_types_v(__get_function_of_type_id))(var)
+             map_to_all_user_types(__get_function_of_type_id)        \
+             map_to_all_data_types(__get_function_of_type_id))(var)
 
 #define _IS_SAME_TYPE(T, U) _Generic((typeof(T)*)0, typeof(U)*: 1, default: 0)
 
@@ -209,8 +208,8 @@ case T_id_##T: {                                        \
 #define XMACRO(Type, ...) T_id_##Type,
 
 typedef enum T_id {
-    all_user_types_v(XMACRO)
-    all_data_types_v(XMACRO)
+    map_to_all_user_types(XMACRO)
+    map_to_all_data_types(XMACRO)
 } T_id;
 
 #undef XMACRO
@@ -218,8 +217,8 @@ typedef enum T_id {
 #define XMACRO(Type, ...) Type _##Type;
 
 typedef union T_value {
-    all_user_types_v(XMACRO) 
-    all_data_types_v(XMACRO)
+    map_to_all_user_types(XMACRO) 
+    map_to_all_data_types(XMACRO)
 } T_value;
 
 #undef XMACRO
@@ -275,7 +274,7 @@ typedef struct Result {
     F(void const*        )
 
 #define TypeName(Type, ...) #Type,
-static const char* all_type_names[] = {all_user_types_v(TypeName) //
+static const char* all_type_names[] = {map_to_all_user_types(TypeName) //
                                        ALL_DATA_TYPES(TypeName)};
 #undef TypeName
 
@@ -299,9 +298,9 @@ static inline const char* ___type_name_Result(Result result) {
 static inline const char* ___type_name_##T(T t){ \
 return all_type_names[T_id_##T];                 \
 }
-all_user_types_v(___each_type_name_)
+map_to_all_user_types(___each_type_name_)
 
-all_data_types_v(___each_type_name_)
+map_to_all_data_types(___each_type_name_)
 
 #undef ___each_type_name_
 
@@ -309,7 +308,7 @@ all_data_types_v(___each_type_name_)
 static inline const T_id ___type_id_##T(T t){   \
     return T_id_##T;                            \
 }
-all_user_types_v(___each_type_id_) all_data_types_v(___each_type_id_)
+map_to_all_user_types(___each_type_id_) map_to_all_data_types(___each_type_id_)
 
 static inline const T_id __type_unregistered_id(void) {return (T_id)T_UNREGISTERED;}
 
@@ -321,15 +320,15 @@ static inline const T_id __type_unregistered_id(void) {return (T_id)T_UNREGISTER
     _Generic(typeof(_v),                                            \
                 Variant: ___type_name_Variant,                      \
                 Result: ___type_name_Result                         \
-                all_data_types_v(__get_function_of_type_name)       \
-                all_user_types_v(__get_function_of_type_name))(_v)
+                map_to_all_data_types(__get_function_of_type_name)       \
+                map_to_all_user_types(__get_function_of_type_name))(_v)
 
 #define __get_function_of_type_id(T, ...), T : ___type_id_##T
 
 #define get_type_id(var) (enum T_id)                             \
     _Generic(var                                                 \
-             all_user_types_v(__get_function_of_type_id)         \
-             all_data_types_v(__get_function_of_type_id))(var)
+             map_to_all_user_types(__get_function_of_type_id)         \
+             map_to_all_data_types(__get_function_of_type_id))(var)
 
 //---------------------------------------------------------
 #include <stdio.h> // IWYU pragma: export
