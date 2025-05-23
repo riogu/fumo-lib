@@ -13,11 +13,13 @@ typedef struct Piece {} Piece;
 typedef struct Camera {} Camera;
 typedef struct Board {} Board;
 
+// NOTE: structs should be typedef'd. we want them in the normal namespace for this lib.
+// implementation can be changed to allow for using the struct keyword too.
+
 // ----------------------------------------------------------------
 // write your user made structs here in the macro, in this format
 #define user_types Position, Shape, Body, Rectangle
 // ----------------------------------------------------------------
-
 
 // fumo_lib implementation starts here
 // ----------------------------------------------------------------
