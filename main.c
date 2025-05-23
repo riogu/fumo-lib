@@ -58,9 +58,8 @@ int main() {
     });
 
     // match also supports Result type
-    // result types are deduced at runtime (not proper compile time sadly)
-    // if the user doesnt specify the types they gave the Result they returned
-    // then the match wont go into _Ok() or _Err(),  but no warning is emitted.
+    // if the user doesnt specify the types they gave the Result they returned,
+    // then the match wont go into _Ok() or _Err()
     // (warnings can be added if necessary by changing the implementation).
     match(get_input())({
         _Ok(Position, somepos) printf("_Ok: stored position.x as: %d.\n", somepos->x);
