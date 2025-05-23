@@ -52,7 +52,10 @@ int main() {
 > 
 > no extra flags required.
 
-- download fumo_lib.h and the helper_macro directory. (its split up for convenience)
+- download fumo_lib.h and the helper_macro directory.
+> helper macros are separated for convenience.
+> if you want to use fumo-lib as a single header dependency, simply copy both files into 
+> where they are included in fumo_lib.h
 - write your user made structs here in the user_types macro found in fumo_lib.h, in this format:
 ```c
 #define user_types Position, Shape, Body, Rectangle, YourUserStruct, etc....
