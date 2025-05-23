@@ -1,3 +1,5 @@
+#include "map_macro.h"
+
 // clang-format off
 // ----------------------------------------------------------------
 // example structs for testing, unnecessary for usage
@@ -18,6 +20,27 @@ typedef struct Board {} Board;
     F(Body##ptr,                 __VA_ARGS__)            \
     F(Rectangle##ptr,            __VA_ARGS__)            \
     F(Board##ptr,                __VA_ARGS__)
+
+#define usertypes Position, Shape, Body, Rectangle
+
+#define register_variant(...) __VA_ARGS__
+// register_variant(Position Shape Body Rectangle)
+
+#define make_ptr(T, pointer) T##pointer,
+#define user_types_all(F, ptr, ...) \
+    FOR_EACH(F, MAP_UD(make_ptr, ptr, usertypes))
+
+#define all_user_types_v(F, ...)                   \
+    user_types_all(F,       ,   __VA_ARGS__)       \
+    user_types_all(F, _ptr,     __VA_ARGS__)       \
+    user_types_all(F, _ptr_ptr, __VA_ARGS__)
+
+// #define XMACRO(Type, ...) Type _##Type;
+// typedef union T_value {
+//     all_user_types_all(XMACRO) 
+// } T_value;
+// #undef XMACRO
+
 // ----------------------------------------------------------------
 // ----------------------------------------------------------------
 // for each macros
@@ -36,6 +59,7 @@ typedef struct Board {} Board;
 // ----------------------------------------------------------------
 #include <stdbool.h>
 #include <wchar.h>
+
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
@@ -79,10 +103,10 @@ typedef  void const*        void_const_ptr     ;
     F(void_const_ptr    , __VA_ARGS__)
 // ----------------------------------------------------------------
 
-#define all_user_types_v(F, ...)                     \
-    all_types_with_v(F,       ,   __VA_ARGS__)       \
-    all_types_with_v(F, _ptr,     __VA_ARGS__)       \
-    all_types_with_v(F, _ptr_ptr, __VA_ARGS__)
+// #define all_user_types_v(F, ...)                     \
+//     all_types_with_v(F,       ,   __VA_ARGS__)       \
+//     all_types_with_v(F, _ptr,     __VA_ARGS__)       \
+//     all_types_with_v(F, _ptr_ptr, __VA_ARGS__)
 
 #define typedefs_user_types_ptr(T, ...) typedef T* T##_ptr;
 all_user_types_v(typedefs_user_types_ptr);
@@ -252,7 +276,7 @@ typedef struct Result {
 
 #define TypeName(Type, ...) #Type,
 static const char* all_type_names[] = {all_user_types_v(TypeName) //
-                                ALL_DATA_TYPES(TypeName)};
+                                       ALL_DATA_TYPES(TypeName)};
 #undef TypeName
 
 static inline T_id ___type_id_Variant(Variant variant) {
