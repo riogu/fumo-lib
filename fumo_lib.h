@@ -1,4 +1,3 @@
-#include "helper_macros/map_macro.h"
 
 // clang-format off
 // ----------------------------------------------------------------
@@ -18,16 +17,16 @@ typedef struct Board {} Board;
 #define user_types Position, Shape, Body, Rectangle
 
 // ----------------------------------------------------------------
-// ----------------------------------------------------------------
+#include "helper_macros/map_macro.h"
 // creating pointer typedefs for all user structs.
 // also creates a single macro that all the code uses for getting the user types.
 
 #define make_ptr(T) T##_ptr
 #define make_ptr_ptr(T) T##_ptr_ptr
-// NOTE: __VA_ARGS__ is for potentially passing a variant
-// its used by get_if() macro to pass recursively
+// NOTE: __VA_ARGS__ is for potentially passing a variant.
+// its used by get_if() macro to pass recursively more than one argument
 
-#define map_to_all_types(F, ...)                   \
+#define map_to_all_types(F, ...)                        \
     MAP_UD(F, __VA_ARGS__,                              \
            user_types,                                  \
            MAP_LIST(make_ptr, user_types),              \
