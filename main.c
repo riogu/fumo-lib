@@ -75,7 +75,6 @@ int main() {
         }
     }
 
-    // matches must be scoped with ({}); for them to work
     match(var) {
         case(int, someint) {(*someint)++;}
             // you can indent as many match statements as you want

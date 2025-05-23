@@ -1,19 +1,19 @@
 # fumo-lib
-## Goal
-the goal of fumo-lib is to experiment around what kind of typesafety you can obtain with modern C features.
-
-fumo-lib is a small, single header file that explores new C23 features to add compile-time type safety around C's unions and enums.
+fumo-lib is a small, single header library that explores new C23 features to add compile-time type safety around C's unions and enums.
 it provides a std::variant implementation and a result type implementation.
-it also provides a match() and get_if() statement API to access the inner values of Result and Variant.
+it also provides a match() and get_if() construct API to access the inner values of Result and Variant.
 
 fumo-lib makes use of some macro techniques to get close to the kind of generic code you would write in modern languages like C++.
 it is limited in its usecase but is very powerful, and cover many common usecases of generics.
 
+## Goal
+the goal of fumo-lib is to experiment around what kind of typesafety you can obtain with modern C features.
+
 ## Features
 - [x] compile-time type safe unions (like std::variant in C++)
 - [x] compile-time safe Result types (inspired by Rust's Result)
-- [x] match() statement syntax to access contents of Result and Variant in a type safe way.
-- [x] get_if() statement for type safe access to contents of Variant.
+- [x] match() construct syntax to access contents of Result and Variant in a type safe way.
+- [x] get_if() construct for type safe access to contents of Variant.
 - [x] macro system that resembles generics from other languages (like C++) 
 ## Quick example
 ```c
@@ -56,11 +56,6 @@ int main() {
 - write your user made structs here in the user_types macro found in fumo_lib.h, in this format:
 ```c
 #define user_types Position, Shape, Body, Rectangle, YourUserStruct, etc....
-```
-> [!NOTE]
-> hasnt been implemented yet, but the idea is to add a macro for users to register their own variants, so you can have different variants using the same macro like:
-```c
-register_variant(NewVariantTypeName, Position, Rectangle, SomeStruct, ...etc) // generates all relevant code
 ```
 
 ## Example main.c

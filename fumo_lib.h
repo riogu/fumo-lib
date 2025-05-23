@@ -13,7 +13,7 @@ typedef struct Piece {} Piece;
 typedef struct Camera {} Camera;
 typedef struct Board {} Board;
 
-// NOTE: structs should be typedef'd. we want them in the normal namespace for this lib.
+// NOTE: structs should be typedef'd. we want them in the global namespace for this lib.
 // implementation can be changed to allow for using the struct keyword too.
 
 // ----------------------------------------------------------------
@@ -58,7 +58,7 @@ map_to_all_types(typedefs_all_types_ptr)
 //---------------------------------------------------------
 // NOTE: fumo_c syntax and useful operator definitions
 
-#define UNDERLYING_VALUE(T, Variant)                   \
+#define UNDERLYING_VALUE(T, Variant)                    \
 case T_id_##T: {                                        \
     (void)0;                                            \
     let _varname = (T*) &_value_->value;                \
@@ -71,7 +71,7 @@ case T_id_##T: {                                        \
     let __inner_ = Variant;                             \
     let _value_ = &__inner_;                            \
     switch (Variant.type_id) {                          \
-        map_to_all_types(UNDERLYING_VALUE, Variant)\
+        map_to_all_types(UNDERLYING_VALUE, Variant)     \
     }                                                   \
     _value_;                                            \
 }); if ((get_type_id((T){}) == Variant.type_id))
@@ -118,7 +118,7 @@ case T_id_##T: {                                        \
     _Generic(var,                                                   \
              Variant: ___type_id_Variant,                           \
              Result: ___type_id_Result                              \
-             map_to_all_types(__get_function_of_type_id))(var) \
+             map_to_all_types(__get_function_of_type_id))(var)      \
 
 #define _IS_SAME_TYPE(T, U) _Generic((typeof(T)*)0, typeof(U)*: 1, default: 0)
 
@@ -139,22 +139,19 @@ case T_id_##T: {                                        \
         is_same_t;                                                       \
     }))
 
+//---------------------------------------------------------
 // fumo primitive data types for type safety
-#define XMACRO(Type, ...) T_id_##Type,
-
+#define make_t_ids(Type, ...) T_id_##Type,
 typedef enum T_id {
-    map_to_all_types(XMACRO)
+    map_to_all_types(make_t_ids)
 } T_id;
+#undef make_t_ids
 
-#undef XMACRO
-
-#define XMACRO(Type, ...) Type _##Type;
-
+#define make_t_values(Type, ...) Type _##Type;
 typedef union T_value {
-    map_to_all_types(XMACRO) 
+    map_to_all_types(make_t_values) 
 } T_value;
-
-#undef XMACRO
+#undef make_t_values
 
 //---------------------------------------------------------
 // fumo Variant implementation
@@ -162,7 +159,8 @@ typedef union T_value {
 typedef struct Variant {
     T_value value;
     T_id type_id;
-    bool ___inner_cookie___;
+    bool ___inner_cookie___; // not needed
+    // only used in the case of changing the type the variant held inside of a case label while matching on that variant.
 } Variant;
 
 #define Variant(var) (Variant) {     \
@@ -182,112 +180,46 @@ typedef struct Result {
 #define Ok(_v) (Result) {.value = (union T_value) _v, .type_id = get_type_id(_v), .was_err = 0}
 #define Err(_v) (Result) {.value =(union T_value) _v, .type_id = get_type_id(_v), .was_err = 1}
 
+//---------------------------------------------------------
 /// fumo type_name implementation
-#define ALL_DATA_TYPES(F)    \
-    F(_Bool              )   \
-    F(char               )   \
-    F(signed char        )   \
-    F(unsigned char      )   \
-    F(short              )   \
-    F(int                )   \
-    F(long               )   \
-    F(long long          )   \
-    F(unsigned short     )   \
-    F(unsigned int       )   \
-    F(unsigned long      )   \
-    F(unsigned long long )   \
-    F(float              )   \
-    F(double             )   \
-    F(long double        )   \
-    F(char*              )   \
-    F(char const*        )   \
-    F(wchar_t*           )   \
-    F(wchar_t const*     )   \
-    F(void*              )   \
-    F(void const*        )
 
 #define TypeName(Type, ...) #Type,
 static const char* all_type_names[] = { map_to_all_types(TypeName) };
+// similar to how __FUNCTION__ provides the function name as a variable, fumo-lib provides type names as a variable too.
 #undef TypeName
-
-static inline T_id ___type_id_Variant(Variant variant) {
-    return variant.type_id;
-}
-
-static inline T_id ___type_id_Result(Result result) {
-    return result.type_id;
-}
-
-static inline const char* ___type_name_Variant(Variant variant) {
-    return all_type_names[variant.type_id];
-}
-
-static inline const char* ___type_name_Result(Result result) {
-    return all_type_names[result.type_id];
-}
+// separate cases for the Variant and Result types
+static inline T_id ___type_id_Variant(Variant variant) {return variant.type_id;}
+static inline T_id ___type_id_Result(Result result) {return result.type_id;}
+static inline const char* ___type_name_Variant(Variant variant) {return all_type_names[variant.type_id];}
+static inline const char* ___type_name_Result(Result result) {return all_type_names[result.type_id];}
+static inline const T_id ___type_unregistered_id(void) {return (T_id)T_UNREGISTERED;} // not used
+// this is mainly for if the user wants error handling on unknown types to the fumo type system
 
 #define ___each_type_name_(T, ...)               \
 static inline const char* ___type_name_##T(T t){ \
     return all_type_names[T_id_##T];             \
 }
-
 map_to_all_types(___each_type_name_)
-
 #undef ___each_type_name_
 
-#define ___each_type_id_(T, ...)                \
-static inline const T_id ___type_id_##T(T t){   \
-    return T_id_##T;                            \
-}
-map_to_all_types(___each_type_id_) 
-
-static inline const T_id __type_unregistered_id(void) {return (T_id)T_UNREGISTERED;}
-
-#undef ___each_type_id_
-
 #define __get_function_of_type_name(T, ...), T : ___type_name_##T
-
 #define type_name(_v)                                               \
     _Generic(typeof(_v),                                            \
                 Variant: ___type_name_Variant,                      \
                 Result: ___type_name_Result                         \
                 map_to_all_types(__get_function_of_type_name))(_v)
 
-#define __get_function_of_type_id(T, ...), T : ___type_id_##T
+//---------------------------------------------------------
+// fumo type_id implementation
+#define ___each_type_id_(T, ...)                \
+static inline const T_id ___type_id_##T(T t){   \
+    return T_id_##T;                            \
+}
+map_to_all_types(___each_type_id_) 
+#undef ___each_type_id_
 
+#define __get_function_of_type_id(T, ...), T : ___type_id_##T
 #define get_type_id(var) (enum T_id)                             \
     _Generic(var                                                 \
              map_to_all_types(__get_function_of_type_id))(var)
 
-//---------------------------------------------------------
-#include <stdio.h> // IWYU pragma: export
-#define PRINTF_FORMAT(T)                       \
-  _Generic( T,                                 \
-    _Bool             : "%d",                  \
-    char              : "%c",                  \
-    signed char       : "%hhd",                \
-    unsigned char     : "%hhu",                \
-    short             : "%hd",                 \
-    int               : "%d",                  \
-    long              : "%ld",                 \
-    long long         : "%lld",                \
-    unsigned short    : "%hu",                 \
-    unsigned int      : "%u",                  \
-    unsigned long     : "%lu",                 \
-    unsigned long long: "%llu",                \
-    float             : "%f",                  \
-    double            : "%f",                  \
-    long double       : "%Lf",                 \
-    char*             : "%s",                  \
-    char const*       : "%s",                  \
-    wchar_t*          : "%ls",                 \
-    wchar_t const*    : "%ls",                 \
-    void*             : "%p",                  \
-    void const*       : "%p",                  \
-    default           : "Type not defined. %p" \
-  )
-
-#define print(fmt, X)           \
-printf("%s", fmt);              \
-printf( PRINTF_FORMAT( X ), X );\
-printf("\n");
