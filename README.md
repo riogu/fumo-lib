@@ -8,8 +8,37 @@ it also provides a match() and get_if() statement API to access the inner values
 - [x] compile-time safe Result types (inspired by Rust's Result)
 - [x] match() statement syntax to access contents of Result and Variant in a type safe way.
 - [x] get_if() statement for type safe access to contents of Variant.  
+## Quick example
+```c
+Result get_input();
+int main() {
+    Rectangle rect = (Rectangle) {.width = 123, .height = 1231};
+    Variant var = Variant(rect);
 
+    let inner_value = get_if(Shape, var) {
+        inner_value->shape_id = 123123;
+    } else {
+        printf("failed, type: %s\n", type_name(var));
+    }
 
+    is_same_t((Position) {}, var) ? printf("true\n") : printf("false\n");
+
+    match(get_input()) {
+        _Ok(Position, somepos) printf("_Ok: stored position.x as: %d.\n", somepos->x);
+        _Err(char*, errval) printf("error message: %s", *errval);
+    }
+
+    match(var) {
+        case(Shape, var) var->shape_id = 213;
+
+        case(Rectangle, rect) {
+            rect->height = 123123;
+            rect->width = 123123;
+        }
+        _ { printf("unknown type.\n"); }
+    }
+}
+```
 ## Usage 
 > [!WARNING]
 > requires C23 to compile with gcc or clang.
