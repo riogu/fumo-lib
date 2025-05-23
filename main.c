@@ -66,6 +66,7 @@ int main() {
     // then the match wont trigger  _Ok() or _Err().
     // (warnings can be added if necessary by changing the implementation).
     match(get_input()) {
+
         _Ok(Position, somepos) printf("_Ok: stored position.x as: %d.\n", somepos->x);
         _Err(char*, errval) {
             // if scanf() fails, we go in here and get our string
@@ -73,7 +74,6 @@ int main() {
         }
     }
 
-    // matches must be scoped with ({}); for them to work
     match(var) {
         case(int, someint) {(*someint)++;}
             // you can indent as many match statements as you want

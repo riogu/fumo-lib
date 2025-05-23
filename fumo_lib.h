@@ -99,7 +99,7 @@ all_user_types_v(typedefs_user_types_ptr);
 #define _UNDERLYING_VALUE(T, Variant)                   \
 case T_id_##T: {                                        \
     (void)0;                                            \
-    let _varname = (T*) &_value_->value;          \
+    let _varname = (T*) &_value_->value;                \
     result = &_varname;                                 \
     break;                                              \
 }
@@ -129,26 +129,25 @@ case T_id_##T: {                                        \
     bool temp = _value_->___inner_cookie___;            \
     if(get_type_id((T){}) == _value_->type_id) {        \
         _value_->___inner_cookie___ = true;             \
-    }\
+    }                                                   \
     if (!temp && _value_->___inner_cookie___)
 
-#define _                                                \
-}                                                      \
+#define _                                               \
+}                                                       \
     if(!_value_->___inner_cookie___)
 
-#define _Ok(T, _varname)                                        \
-}                                                             \
-{                                                              \
-    let _varname = (T*) &_value_->value;                  \
-    if (!_value_->was_err                                 \
+#define _Ok(T, _varname)                                \
+}                                                       \
+{                                                       \
+    let _varname = (T*) &_value_->value;                \
+    if (!_value_->was_err                               \
         && (get_type_id((T){}) == _value_->type_id))
 
-// FIXME: add error checking if the user gives wrong types on Result match
 
-#define _Err(T, _varname)                                       \
-}                                                             \
-    let _varname = (T*) &_value_->value;                  \
-    if (_value_->was_err                                  \
+#define _Err(T, _varname)                               \
+}                                                       \
+    let _varname = (T*) &_value_->value;                \
+    if (_value_->was_err                                \
         && (get_type_id((T){}) == _value_->type_id))
 
 //---------------------------------------------------------
