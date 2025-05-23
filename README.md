@@ -8,7 +8,8 @@ the goal is to experiment around what kind of typesafety you can obtain with mod
 - [x] compile-time type safe unions (like std::variant in C++)
 - [x] compile-time safe Result types (inspired by Rust's Result)
 - [x] match() statement syntax to access contents of Result and Variant in a type safe way.
-- [x] get_if() statement for type safe access to contents of Variant.  
+- [x] get_if() statement for type safe access to contents of Variant.
+- [x] macro system that resembles generics from other languages (like C++) 
 ## Quick example
 ```c
 Result get_input();
