@@ -31,7 +31,7 @@ it also provides a match() and get_if() statement API to access the inner values
 > [!NOTE]
 > hasnt been implemented yet, but the idea is to add a macro for users to register their own variants, so you can have different variants using the same macro like:
 ```c
-register_variant(Position, Rectangle, SomeStruct, ...etc) // generates all relevant code
+register_variant(NewVariantTypeName, Position, Rectangle, SomeStruct, ...etc) // generates all relevant code
 ```
 
 ## Example main.c
