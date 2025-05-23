@@ -1,4 +1,5 @@
 #include "helper_macros/map_macro.h"
+#include <cmath>
 
 // clang-format off
 // ----------------------------------------------------------------
@@ -16,8 +17,11 @@ typedef struct Board {} Board;
 // ----------------------------------------------------------------
 // write your user made structs here in the macro, in this format
 #define user_types Position, Shape, Body, Rectangle
+
 // ----------------------------------------------------------------
 // ----------------------------------------------------------------
+// creating pointer typedefs for all user structs.
+// also creates a single macro that all the code uses for getting the user types.
 
 #define make_ptr(T) T##_ptr
 #define make_ptr_ptr(T) T##_ptr_ptr
@@ -27,35 +31,87 @@ typedef struct Board {} Board;
     MAP_UD(F, __VA_ARGS__,                        \
            user_types,                            \
            MAP_LIST(make_ptr, user_types),        \
-           MAP_LIST(make_ptr_ptr, user_types)     \
+           MAP_LIST(make_ptr_ptr, user_types),    \
+           MAP_LIST(make_ptr, standard_c_types)   \
            )
 
-#define typedefs_user_types_ptr(T, ...) typedef T* T##_ptr;
-map_to_all_user_types(typedefs_user_types_ptr);
-#undef typedefs_user_types_ptr
-
+// ----------------------------------------------------------------
+// handle all the c data types
 #include <stdbool.h>
 #include <wchar.h>
-
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
 
-typedef  signed char        signed_char        ;
-typedef  unsigned char      unsigned_char      ;
-typedef  long long          long_long          ; 
-typedef  unsigned short     unsigned_short     ; 
-typedef  unsigned int       unsigned_int       ; 
-typedef  unsigned long      unsigned_long      ; 
-typedef  unsigned long long unsigned_long_long ; 
-typedef  long double        long_double        ; 
-typedef  char*              char_ptr           ; 
-typedef  char const*        char_const_ptr     ; 
-typedef  wchar_t*           wchar_t_ptr        ; 
-typedef  wchar_t const*     wchar_t_const_ptr  ; 
-typedef  void*              void_ptr           ; 
-typedef  void const*        void_const_ptr     ;
+#define standard_c_types            \
+    _Bool             ,             \
+    char              ,             \
+    signed_char       ,             \
+    unsigned_char     ,             \
+    short             ,             \
+    int               ,             \
+    long              ,             \
+    long_long         ,             \
+    unsigned_short    ,             \
+    unsigned_int      ,             \
+    unsigned_long     ,             \
+    unsigned_long_long,             \
+    float             ,             \
+    double            ,             \
+    long_double       ,             \
+    char_ptr          ,             \
+    char_const_ptr    ,             \
+    wchar_t_ptr       ,             \
+    wchar_t_const_ptr ,             \
+    void_ptr          ,             \
+    void_const_ptr    ,             \
+    bool_ptr          ,             \
+    signed_char_ptr   ,             \
+    unsigned_char_ptr ,             \
+    short_ptr         ,             \
+    int_ptr           ,             \
+    long_ptr                       
 
-#define map_to_all_data_types(F, ...)         \
+
+typedef  signed char        signed_char             ;
+typedef  unsigned char      unsigned_char           ;
+typedef  long long          long_long               ; 
+typedef  unsigned short     unsigned_short          ; 
+typedef  unsigned int       unsigned_int            ; 
+typedef  unsigned long      unsigned_long           ; 
+typedef  unsigned long long unsigned_long_long      ; 
+typedef  long double        long_double             ; 
+
+typedef  _Bool              *bool_ptr               ; 
+typedef  signed_char        *signed_char_ptr        ; 
+typedef  unsigned_char      *unsigned_char_ptr      ; 
+typedef  short              *short_ptr              ; 
+typedef  int                *int_ptr                ; 
+typedef  long               *long_ptr               ;
+typedef  long_long          *long_long_ptr          ;
+typedef  unsigned_short     *unsigned_short_ptr     ;
+typedef  unsigned_int       *unsigned_int_ptr       ;
+typedef  unsigned_long      *unsigned_long_ptr      ;
+typedef  unsigned_long_long *unsigned_long_long_ptr ;
+typedef  long_double        *long_double_ptr ;
+typedef  float              *float_ptr;
+typedef  double             *double_ptr;
+typedef  long_double        *long_double_ptr;
+
+typedef  char*              char_ptr                ; 
+typedef  char const*        char_const_ptr          ; 
+typedef  wchar_t*           wchar_t_ptr             ; 
+typedef  wchar_t const*     wchar_t_const_ptr       ; 
+typedef  void*              void_ptr                ; 
+typedef  void const*        void_const_ptr          ;
+
+// clang-format on
+#define typedefs_user_types_ptr(T, ...) typedef T* T##_ptr;
+
+map_to_all_user_types(typedefs_user_types_ptr)
+
+#undef typedefs_user_types_ptr
+
+#define map_to_all_data_types(F, ...)    \
     F(_Bool             , __VA_ARGS__)   \
     F(char              , __VA_ARGS__)   \
     F(signed_char       , __VA_ARGS__)   \
@@ -78,7 +134,6 @@ typedef  void const*        void_const_ptr     ;
     F(void_ptr          , __VA_ARGS__)   \
     F(void_const_ptr    , __VA_ARGS__)
 // ----------------------------------------------------------------
-
 
 //---------------------------------------------------------
 #define T_UNREGISTERED -420
@@ -135,7 +190,6 @@ case T_id_##T: {                                        \
     if (!_value_->was_err                               \
         && (get_type_id((T){}) == _value_->type_id))
 
-
 #define _Err(T, _varname)                               \
 }                                                       \
     let _varname = (T*) &_value_->value;                \
@@ -176,18 +230,16 @@ case T_id_##T: {                                        \
 // fumo primitive data types for type safety
 #define XMACRO(Type, ...) T_id_##Type,
 
-typedef enum T_id {
-    map_to_all_user_types(XMACRO)
-    map_to_all_data_types(XMACRO)
-} T_id;
+    typedef enum T_id {
+        map_to_all_user_types(XMACRO) map_to_all_data_types(XMACRO)
+    } T_id;
 
 #undef XMACRO
 
 #define XMACRO(Type, ...) Type _##Type;
 
 typedef union T_value {
-    map_to_all_user_types(XMACRO) 
-    map_to_all_data_types(XMACRO)
+    map_to_all_user_types(XMACRO) map_to_all_data_types(XMACRO)
 } T_value;
 
 #undef XMACRO
@@ -267,9 +319,10 @@ static inline const char* ___type_name_Result(Result result) {
 static inline const char* ___type_name_##T(T t){ \
 return all_type_names[T_id_##T];                 \
 }
+
 map_to_all_user_types(___each_type_name_)
 
-map_to_all_data_types(___each_type_name_)
+    map_to_all_data_types(___each_type_name_)
 
 #undef ___each_type_name_
 
@@ -277,9 +330,12 @@ map_to_all_data_types(___each_type_name_)
 static inline const T_id ___type_id_##T(T t){   \
     return T_id_##T;                            \
 }
-map_to_all_user_types(___each_type_id_) map_to_all_data_types(___each_type_id_)
+        map_to_all_user_types(___each_type_id_)
+            map_to_all_data_types(___each_type_id_)
 
-static inline const T_id __type_unregistered_id(void) {return (T_id)T_UNREGISTERED;}
+                static inline const T_id __type_unregistered_id(void) {
+    return (T_id)T_UNREGISTERED;
+}
 
 #undef ___each_type_id_
 
@@ -331,4 +387,3 @@ static inline const T_id __type_unregistered_id(void) {return (T_id)T_UNREGISTER
 printf("%s", fmt);              \
 printf( PRINTF_FORMAT( X ), X );\
 printf("\n");
-
