@@ -118,13 +118,13 @@ case T_id_##T: {                                        \
 //---------------------------------------------------------
 
 #define match(Variant)                                  \
-({                                                      \
+{                                                      \
     let __inner_ = Variant;                             \
     let _value_ = &__inner_;
 
 #define case(T, varname)                                 \
-(void)0;});                                              \
-({                                                       \
+}                                              \
+{                                                       \
     let varname = (T*)&_value_->value;             \
     bool temp = _value_->___inner_cookie___;       \
     if(get_type_id((T){}) == _value_->type_id) {   \
@@ -133,12 +133,12 @@ case T_id_##T: {                                        \
     if (!temp && _value_->___inner_cookie___)
 
 #define _                                                \
-});                                                      \
+}                                                      \
     if(!_value_->___inner_cookie___)
 
 #define _Ok(T, _varname)                                        \
-});                                                             \
-({                                                              \
+}                                                             \
+{                                                              \
     let _varname = (T*) &_value_->value;                  \
     if (!_value_->was_err                                 \
         && (get_type_id((T){}) == _value_->type_id))
@@ -146,7 +146,7 @@ case T_id_##T: {                                        \
 // FIXME: add error checking if the user gives wrong types on Result match
 
 #define _Err(T, _varname)                                       \
-});                                                             \
+}                                                             \
     let _varname = (T*) &_value_->value;                  \
     if (_value_->was_err                                  \
         && (get_type_id((T){}) == _value_->type_id))

@@ -1,12 +1,15 @@
-// clang-format off
+//clang-format off
 #include "fumo_lib.h"
 
 Result get_input();
 
 int main() {
+    // NOTE: all accesses to contents of Variant or Result
+    // must go through the match() or get_if() methods to be safe.
+    // the user isn't meant to ever directly access the members of these classes.
 
     int x = 123;
-    print("this is x: ", x); 
+    print("this is x: ", x); // printf helpful utility
 
     Rectangle rect = {.width = 123, .height = 1231};
     Variant var = Variant(rect); // variant takes any registered type
@@ -15,7 +18,8 @@ int main() {
         // only enters this scope if we held a Shape type
         // the type is checked at compile time and store in inner_value
         inner_value->shape_id = 123123;
-    } else {
+    }
+    else {
         // default scope for failure
         // inner_value is set to NULL if Shape was not inside the variant.
         printf("failed, type: %s\n", type_name(var));
@@ -32,7 +36,7 @@ int main() {
     // you can only make a case label if the type is registered.
     // failing to do so is a compile time error.
     // all type checking is done at compile time
-    match(var) ({
+    match(var) {
         case(Shape, var) var->shape_id = 213;
 
         case(Rectangle, rect) {
@@ -55,31 +59,32 @@ int main() {
             // this is the default case label.
             // triggered if none of the types the user added was valid
         }
-    });
+    }
 
     // match also supports Result type
     // if the user doesnt specify the types they gave the Result they returned,
-    // then the match wont go into _Ok() or _Err()
+    // then the match wont trigger  _Ok() or _Err().
     // (warnings can be added if necessary by changing the implementation).
-    match(get_input())({
+    match(get_input()) {
         _Ok(Position, somepos) printf("_Ok: stored position.x as: %d.\n", somepos->x);
+
         _Err(char*, errval) {
             // if scanf() fails, we go in here and get our string
             printf("error message: %s", *errval);
         }
-    });
+    }
 
     // matches must be scoped with ({}); for them to work
-    match(var) ({
+    match(var) {
         case(int, someint) {(*someint)++;}
             // you can indent as many match statements as you want
-            match(var1) ({
+            match(var1) {
                 case(char*, str) {
                 // continue indenting....
                     printf("had a string %s", *str);
                 }
                 _ {} // you can do nothing on default
-            });
+            }
 
         case(Position**, pos_ptr_ptr) {
             // double pointers are automatically declared for you
@@ -89,7 +94,7 @@ int main() {
             printf("position's x: %d", (*(*pos_ptr_ptr))->x);
         }
         _  printf("had nothing."); 
-    });
+    }
 
     return 0;
 }
