@@ -1,5 +1,4 @@
 #include "helper_macros/map_macro.h"
-#include <cmath>
 
 // clang-format off
 // ----------------------------------------------------------------
@@ -33,7 +32,7 @@ typedef struct Board {} Board;
            MAP_LIST(make_ptr, user_types),              \
            MAP_LIST(make_ptr_ptr, user_types),          \
            standard_c_types,                            \
-           MAP_LIST(make_ptr_ptr, standard_c_types)     \
+           MAP_LIST(make_ptr, standard_c_types)         \
            )
 
 // ----------------------------------------------------------------
@@ -60,8 +59,6 @@ typedef struct Board {} Board;
     double                 ,            \
     long_double            ,            \
     char_const_ptr         ,            \
-    wchar_t_ptr            ,            \
-    wchar_t_const_ptr      ,            \
     void_ptr               ,            \
     void_const_ptr                     
 
@@ -114,7 +111,7 @@ map_to_all_user_types(typedefs_user_types_ptr)
 //---------------------------------------------------------
 // NOTE: fumo_c syntax and useful operator definitions
 
-#define _UNDERLYING_VALUE(T, Variant)                   \
+#define UNDERLYING_VALUE(T, Variant)                   \
 case T_id_##T: {                                        \
     (void)0;                                            \
     let _varname = (T*) &_value_->value;                \
@@ -127,8 +124,7 @@ case T_id_##T: {                                        \
     let __inner_ = Variant;                             \
     let _value_ = &__inner_;                            \
     switch (Variant.type_id) {                          \
-        map_to_all_user_types(_UNDERLYING_VALUE, Variant)    \
-        map_to_all_data_types(_UNDERLYING_VALUE, Variant)    \
+        map_to_all_user_types(UNDERLYING_VALUE, Variant)\
     }                                                   \
     _value_;                                            \
 }); if ((get_type_id((T){}) == Variant.type_id))
@@ -171,12 +167,11 @@ case T_id_##T: {                                        \
 //---------------------------------------------------------
 // type comparison macro
 
-#define get_type_id_same(var) (enum T_id)                       \
-    _Generic(var,                                               \
-             Variant: ___type_id_Variant,                       \
-             Result: ___type_id_Result                          \
-             map_to_all_user_types(__get_function_of_type_id)        \
-             map_to_all_data_types(__get_function_of_type_id))(var)
+#define get_type_id_same(var) (T_id)                                \
+    _Generic(var,                                                   \
+             Variant: ___type_id_Variant,                           \
+             Result: ___type_id_Result                              \
+             map_to_all_user_types(__get_function_of_type_id))(var) \
 
 #define _IS_SAME_TYPE(T, U) _Generic((typeof(T)*)0, typeof(U)*: 1, default: 0)
 
@@ -265,7 +260,7 @@ typedef struct Result {
     F(void const*        )
 
 #define TypeName(Type, ...) #Type,
-static const char* all_type_names[] = {map_to_all_user_types(TypeName)}
+static const char* all_type_names[] = { map_to_all_user_types(TypeName) };
 #undef TypeName
 
 static inline T_id ___type_id_Variant(Variant variant) {
@@ -290,7 +285,6 @@ return all_type_names[T_id_##T];                 \
 }
 map_to_all_user_types(___each_type_name_)
 
-map_to_all_data_types(___each_type_name_)
 
 #undef ___each_type_name_
 
@@ -298,7 +292,7 @@ map_to_all_data_types(___each_type_name_)
 static inline const T_id ___type_id_##T(T t){   \
     return T_id_##T;                            \
 }
-map_to_all_user_types(___each_type_id_) map_to_all_data_types(___each_type_id_)
+map_to_all_user_types(___each_type_id_) 
 
 static inline const T_id __type_unregistered_id(void) {return (T_id)T_UNREGISTERED;}
 
@@ -310,15 +304,13 @@ static inline const T_id __type_unregistered_id(void) {return (T_id)T_UNREGISTER
     _Generic(typeof(_v),                                            \
                 Variant: ___type_name_Variant,                      \
                 Result: ___type_name_Result                         \
-                map_to_all_data_types(__get_function_of_type_name)       \
                 map_to_all_user_types(__get_function_of_type_name))(_v)
 
 #define __get_function_of_type_id(T, ...), T : ___type_id_##T
 
 #define get_type_id(var) (enum T_id)                             \
     _Generic(var                                                 \
-             map_to_all_user_types(__get_function_of_type_id)         \
-             map_to_all_data_types(__get_function_of_type_id))(var)
+             map_to_all_user_types(__get_function_of_type_id))(var)
 
 //---------------------------------------------------------
 #include <stdio.h> // IWYU pragma: export
