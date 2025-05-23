@@ -24,8 +24,8 @@ int main() {
     is_same_t((Position) {}, var) ? printf("true\n") : printf("false\n");
 
     match(get_input()) {
-        _Ok(Position, somepos) printf("_Ok: stored position.x as: %d.\n", somepos->x);
-        _Err(char*, errval) printf("error message: %s", *errval);
+        _Ok(Position, somepos) print("_Ok: stored position.x as: ", somepos->x);
+        _Err(char*, errval) print("error message: ", *errval);
     }
 
     match(var) {
