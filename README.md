@@ -42,7 +42,7 @@ int main() {
             rect->height = 123123;
             rect->width = 123123;
         }
-        _ { printf("unknown type.\n"); }
+        _default { printf("unknown type.\n"); }
     }
 }
 ```
@@ -120,7 +120,7 @@ int main() {
             pos->y = 123;
             printf("%d sucessfully updated pos.\n", pos->y);
         }
-        _ {
+        _default {
             printf("unknown type.\n");
             // this is the default case label.
             // triggered if none of the types the user added was valid
@@ -148,7 +148,7 @@ int main() {
                 // continue indenting....
                     printf("had a string %s", *str);
                 }
-                _ {} // you can do nothing on default
+                _default {} // you can do nothing on default
             }
 
         case(Position**, pos_ptr_ptr) {
@@ -158,7 +158,7 @@ int main() {
             // gets a Position***
             printf("position's x: %d", (*(*pos_ptr_ptr))->x);
         }
-        _  printf("had nothing."); 
+        _default  printf("had nothing."); 
     }
 
     return 0;

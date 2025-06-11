@@ -92,7 +92,7 @@ case T_id_##T: {                                        \
     }                                                   \
     if (!temp && _value_->___inner_cookie___)
 
-#define _                                               \
+#define _default                                        \
 }                                                       \
     if(!_value_->___inner_cookie___)
 
@@ -221,4 +221,3 @@ map_to_all_types(___each_type_id_)
 #define get_type_id(var) (enum T_id)                             \
     _Generic(var                                                 \
              map_to_all_types(__get_function_of_type_id))(var)
-
