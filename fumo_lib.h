@@ -92,7 +92,7 @@ case T_id_##T: {                                        \
     }                                                   \
     if (!temp && _value_->___inner_cookie___)
 
-#define _default                                        \
+#define _                                        \
 }                                                       \
     if(!_value_->___inner_cookie___)
 
