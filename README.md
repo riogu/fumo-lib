@@ -19,7 +19,7 @@ the goal of fumo-lib is to experiment around what kind of typesafety you can obt
 ```c
 Result get_input();
 int main() {
-    Rectangle rect = (Rectangle) {.width = 123, .height = 1231};
+    Rectangle rect = {.width = 123, .height = 1231};
     Variant var = Variant(rect);
 
     let inner_value = get_if(Shape, var) {
