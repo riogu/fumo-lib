@@ -175,7 +175,7 @@ Result get_input() {
     printf("please input a value for position.x:\n");
     if (scanf("%d", &n)) {
         pos.x = n;
-        // Ok type, stores an int
+        // Ok type, stores a Position
         return Ok(pos);
     }
     // Err type, stores a char*
