@@ -106,7 +106,7 @@ Result get_input() {
 
     let result = Ok(&pos); // valid code, stores Position*
     // can take any user type or standard type
-
+    
     printf("please input a value for position.x:\n");
     if (scanf("%d", &n)) {
         pos.x = n;
