@@ -82,7 +82,7 @@ case T_id_##T: {                                        \
     let __inner_ = Variant;                             \
     let _value_ = &__inner_;
 
-#define case(T, varname)                                \
+#define holds(T, varname)                               \
 }                                                       \
 {                                                       \
     let varname = (T*)&_value_->value;                  \
@@ -92,7 +92,7 @@ case T_id_##T: {                                        \
     }                                                   \
     if (!temp && _value_->___inner_cookie___)
 
-#define _                                        \
+#define _                                               \
 }                                                       \
     if(!_value_->___inner_cookie___)
 

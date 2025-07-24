@@ -32,20 +32,20 @@ int main() {
     Shape s = {.shape_id = 123123};
     Variant var1 = Variant(s);
 
-    // match case picks case based on the held type of the variant
-    // you can only make a case label if the type is registered.
+    // match holds picks case based on the held type of the variant
+    // you can only make a holds label if the type is registered.
     // failing to do so is a compile time error.
     // all type checking is done at compile time
     match(var) {
-        case(Shape, var) var->shape_id = 213;
+        holds(Shape, var) var->shape_id = 213;
 
-        case(Rectangle, rect) {
+        holds(Rectangle, rect) {
             // user specifies the name of the variable returned by the match
             // the variable is always a *pointer* to the variable stored in
             // the variant struct
             rect->height = 123; // code will go here since its a Rectangle type
         }
-        case(Position, pos) {
+        holds(Position, pos) {
             // all variables only exist on each label scope.
             // that means you can only use "pos" inside of this label
             // (to guarantee more type safety)
@@ -56,7 +56,7 @@ int main() {
         }
         _ {
             printf("unknown type.\n");
-            // this is the default case label.
+            // this is the default holds label.
             // triggered if none of the types the user added was valid
         }
     }
@@ -76,17 +76,17 @@ int main() {
     }
 
     match(var) {
-        case(int, someint) {(*someint)++;}
+        holds(int, someint) {(*someint)++;}
             // you can indent as many match statements as you want
             match(var1) {
-                case(char*, str) {
+                holds(char*, str) {
                 // continue indenting....
                     printf("had a string %s", *str);
                 }
                 _ {} // you can do nothing on default
             }
 
-        case(Position**, pos_ptr_ptr) {
+        holds(Position**, pos_ptr_ptr) {
             // double pointers are automatically declared for you
             // when you register a user type
             // (more than this needs implementation changes)
