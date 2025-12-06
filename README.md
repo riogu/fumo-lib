@@ -104,7 +104,6 @@ int main() {
     // all type checking is done at compile time
     match(var) {
         holds(Shape, var) var->shape_id = 213;
-
         holds(Rectangle, rect) {
             // user specifies the name of the variable returned by the match
             // the variable is always a *pointer* to the variable stored in
@@ -132,6 +131,7 @@ int main() {
     // then the match wont trigger  _Ok() or _Err().
     // (warnings can be added if necessary by changing the implementation).
     match(get_input()) {
+
         _Ok(Position, somepos) printf("_Ok: stored position.x as: %d.\n", somepos->x);
 
         _Err(char*, errval) {
@@ -141,15 +141,18 @@ int main() {
     }
 
     match(var) {
-        holds(int, someint) {(*someint)++;}
+        holds(int, someint) {
+            (*someint)++;
+
             // you can indent as many match statements as you want
             match(var1) {
                 holds(char*, str) {
-                // continue indenting....
+                    // continue indenting....
                     printf("had a string %s", *str);
                 }
                 _ {} // you can do nothing on default
             }
+        }
 
         holds(Position**, pos_ptr_ptr) {
             // double pointers are automatically declared for you
@@ -171,7 +174,7 @@ Result get_input() {
 
     let result = Ok(&pos); // valid code, stores Position*
     // can take any user type or standard type
-
+    
     printf("please input a value for position.x:\n");
     if (scanf("%d", &n)) {
         pos.x = n;

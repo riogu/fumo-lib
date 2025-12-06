@@ -1,4 +1,3 @@
-//clang-format off
 #include "fumo_lib.h"
 
 Result get_input();
@@ -38,7 +37,6 @@ int main() {
     // all type checking is done at compile time
     match(var) {
         holds(Shape, var) var->shape_id = 213;
-
         holds(Rectangle, rect) {
             // user specifies the name of the variable returned by the match
             // the variable is always a *pointer* to the variable stored in
@@ -76,15 +74,18 @@ int main() {
     }
 
     match(var) {
-        holds(int, someint) {(*someint)++;}
+        holds(int, someint) {
+            (*someint)++;
+
             // you can indent as many match statements as you want
             match(var1) {
                 holds(char*, str) {
-                // continue indenting....
+                    // continue indenting....
                     printf("had a string %s", *str);
                 }
                 _ {} // you can do nothing on default
             }
+        }
 
         holds(Position**, pos_ptr_ptr) {
             // double pointers are automatically declared for you
