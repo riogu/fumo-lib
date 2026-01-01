@@ -1,15 +1,170 @@
-#pragma once
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// example structs for testing, unnecessary for usage
+// structs should be included before the macros.
+typedef struct Position {int x;int y;} Position;
+typedef struct Shape {int shape_id;} Shape;
+typedef struct Body {Position position;float radius;} Body;
+typedef struct Rectangle {int width;int height;} Rectangle;
+typedef struct Circle {float radius;} Circle;
+typedef struct Piece {} Piece;
+typedef struct Camera {} Camera;
+typedef struct Board {} Board;
+// NOTE: structs should be typedef'd. we want them in the global namespace for this lib.
+// implementation can be changed to allow for using the struct keyword too.
 
-#include "example_structs.h"
 // ----------------------------------------------------------------
 // write your user made structs here in the macro, in this format
-// #define user_types Position, Shape, Body, Rectangle, etc...
+#define user_types Position, Shape, Body, Rectangle
 // ----------------------------------------------------------------
 
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+
+#include <stdbool.h>
+#include <wchar.h>
+// map-macro implementation is from:
+// https://github.com/swansontec/map-macro
+
+/*
+ * map-macro by William R Swanson is marked with CC0 1.0 Universal.
+ *
+ * To view a copy of this license,
+ * visit https://creativecommons.org/publicdomain/zero/1.0/
+ */
+
+#define EVAL0(...) __VA_ARGS__
+#define EVAL1(...) EVAL0(EVAL0(EVAL0(__VA_ARGS__)))
+#define EVAL2(...) EVAL1(EVAL1(EVAL1(__VA_ARGS__)))
+#define EVAL3(...) EVAL2(EVAL2(EVAL2(__VA_ARGS__)))
+#define EVAL4(...) EVAL3(EVAL3(EVAL3(__VA_ARGS__)))
+#define EVAL5(...) EVAL4(EVAL4(EVAL4(__VA_ARGS__)))
+#define EVAL(...)  EVAL5(__VA_ARGS__)
+#define MAP_END(...)
+#define MAP_OUT
+#define EMPTY() 
+#define DEFER(id) id EMPTY()
+#define MAP_GET_END2() 0, MAP_END
+#define MAP_GET_END1(...) MAP_GET_END2
+#define MAP_GET_END(...) MAP_GET_END1
+#define MAP_NEXT0(test, next, ...) next MAP_OUT
+#define MAP_NEXT1(test, next) DEFER ( MAP_NEXT0 ) ( test, next, 0)
+#define MAP_NEXT(test, next)  MAP_NEXT1(MAP_GET_END test, next)
+#define MAP_INC(X) MAP_INC_ ## X
+#define MAP0(f, x, peek, ...) f(x) DEFER ( MAP_NEXT(peek, MAP1) ) ( f, peek, __VA_ARGS__ ) 
+#define MAP1(f, x, peek, ...) f(x) DEFER ( MAP_NEXT(peek, MAP0) ) ( f, peek, __VA_ARGS__ )
+#define MAP0_UD(f, userdata, x, peek, ...) f(x,userdata) DEFER ( MAP_NEXT(peek, MAP1_UD) ) ( f, userdata, peek, __VA_ARGS__ ) 
+#define MAP1_UD(f, userdata, x, peek, ...) f(x,userdata) DEFER ( MAP_NEXT(peek, MAP0_UD) ) ( f, userdata, peek, __VA_ARGS__ ) 
+#define MAP0_UD_I(f, userdata, index, x, peek, ...) f(x,userdata,index) DEFER ( MAP_NEXT(peek, MAP1_UD_I) ) ( f, userdata, MAP_INC(index), peek, __VA_ARGS__ ) 
+#define MAP1_UD_I(f, userdata, index, x, peek, ...) f(x,userdata,index) DEFER ( MAP_NEXT(peek, MAP0_UD_I) ) ( f, userdata, MAP_INC(index), peek, __VA_ARGS__ ) 
+#define MAP_LIST0(f, x, peek, ...) , f(x) DEFER ( MAP_NEXT(peek, MAP_LIST1) ) ( f, peek, __VA_ARGS__ ) 
+#define MAP_LIST1(f, x, peek, ...) , f(x) DEFER ( MAP_NEXT(peek, MAP_LIST0) ) ( f, peek, __VA_ARGS__ ) 
+#define MAP_LIST2(f, x, peek, ...)   f(x) DEFER ( MAP_NEXT(peek, MAP_LIST1) ) ( f, peek, __VA_ARGS__ ) 
+
+#define MAP(f, ...) EVAL(MAP1(f, __VA_ARGS__, ()()(), ()()(), ()()(), 0))
+#define MAP_LIST(f, ...) EVAL(MAP_LIST2(f, __VA_ARGS__, ()()(), ()()(), ()()(), 0))
+#define MAP_UD(f, userdata, ...) EVAL(MAP1_UD(f, userdata, __VA_ARGS__, ()()(), ()()(), ()()(), 0))
+
+#define standard_c_types                \
+    _Bool                  ,            \
+    char                   ,            \
+    signed_char            ,            \
+    unsigned_char          ,            \
+    short                  ,            \
+    int                    ,            \
+    long                   ,            \
+    long_long              ,            \
+    unsigned_short         ,            \
+    unsigned_int           ,            \
+    unsigned_long          ,            \
+    unsigned_long_long     ,            \
+    float                  ,            \
+    double                 ,            \
+    long_double            ,            \
+    char_const_ptr         ,            \
+    void_ptr               ,            \
+    void_const_ptr                     
+
+// we must typedef standard c types as a single identifier for internal usage.
+// it is theoretically possible to not provide special handling for these,
+// but the main issue lies with the fact that these types have more than one identifier.
+// for example "long long" is hard to distinguish from 2 separate calls to a long.
+// for this reason, these types have special handling so we can add them
+// in a generic way to the fumo type system.
+typedef  signed char         signed_char            ;
+typedef  unsigned char       unsigned_char          ;
+typedef  long long           long_long              ; 
+typedef  unsigned short      unsigned_short         ; 
+typedef  unsigned int        unsigned_int           ; 
+typedef  unsigned long       unsigned_long          ; 
+typedef  unsigned long long  unsigned_long_long     ; 
+typedef  long double         long_double            ; 
+
+typedef  _Bool              *bool_ptr               ; 
+typedef  signed_char        *signed_char_ptr        ; 
+typedef  unsigned_char      *unsigned_char_ptr      ; 
+typedef  short              *short_ptr              ; 
+typedef  int                *int_ptr                ; 
+typedef  long               *long_ptr               ;
+typedef  long_long          *long_long_ptr          ;
+typedef  unsigned_short     *unsigned_short_ptr     ;
+typedef  unsigned_int       *unsigned_int_ptr       ;
+typedef  unsigned_long      *unsigned_long_ptr      ;
+typedef  unsigned_long_long *unsigned_long_long_ptr ;
+typedef  long_double        *long_double_ptr        ;
+typedef  float              *float_ptr              ;
+typedef  double             *double_ptr             ;
+typedef  long_double        *long_double_ptr        ;
+
+typedef  char*              char_ptr                ; 
+typedef  char const*        char_const_ptr          ; 
+typedef  wchar_t*           wchar_t_ptr             ; 
+typedef  wchar_t const*     wchar_t_const_ptr       ; 
+typedef  void*              void_ptr                ; 
+typedef  void const*        void_const_ptr          ;
+
+// NOTE: due to conversions between wchar and char and other reasons
+// they arent included in some of the pointer definitions
+
+//---------------------------------------------------------
+// small helpful printf utility macro
+#include <stdio.h> // IWYU pragma: export
+#define PRINTF_FORMAT(T)                       \
+  _Generic( T,                                 \
+    _Bool             : "%d",                  \
+    char              : "%c",                  \
+    signed char       : "%hhd",                \
+    unsigned char     : "%hhu",                \
+    short             : "%hd",                 \
+    int               : "%d",                  \
+    long              : "%ld",                 \
+    long long         : "%lld",                \
+    unsigned short    : "%hu",                 \
+    unsigned int      : "%u",                  \
+    unsigned long     : "%lu",                 \
+    unsigned long long: "%llu",                \
+    float             : "%f",                  \
+    double            : "%f",                  \
+    long double       : "%Lf",                 \
+    char*             : "%s",                  \
+    char const*       : "%s",                  \
+    wchar_t*          : "%ls",                 \
+    wchar_t const*    : "%ls",                 \
+    void*             : "%p",                  \
+    void const*       : "%p",                  \
+    default           : "Type not defined. %p" \
+  )
+
+#define print(fmt, X)           \
+printf("%s", fmt);              \
+printf( PRINTF_FORMAT( X ), X );\
+printf("\n");
+
+// ----------------------------------------------------------------
 // fumo_lib implementation starts here
 // ----------------------------------------------------------------
-#include "helper_macros/map_macro.h"
-#include "helper_macros/standard_c_definitions.h"
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
 // creating pointer typedefs for all user structs.
@@ -58,7 +213,7 @@ case T_id_##T: {                                        \
         map_to_all_types(UNDERLYING_VALUE, Variant)     \
     }                                                   \
     _value_;                                            \
-}); if ((get_type_id((T){}) == Variant.type_id))
+}); if ((get_type_id((T){0}) == Variant.type_id))
 
 //---------------------------------------------------------
 
@@ -72,7 +227,7 @@ case T_id_##T: {                                        \
 {                                                       \
     let varname = (T*)&_value_->value;                  \
     bool temp = _value_->___inner_cookie___;            \
-    if(get_type_id((T){}) == _value_->type_id) {        \
+    if(get_type_id((T){0}) == _value_->type_id) {        \
         _value_->___inner_cookie___ = true;             \
     }                                                   \
     if (!temp && _value_->___inner_cookie___)
@@ -86,13 +241,13 @@ case T_id_##T: {                                        \
 {                                                       \
     let _varname = (T*) &_value_->value;                \
     if (!_value_->was_err                               \
-        && (get_type_id((T){}) == _value_->type_id))
+        && (get_type_id((T){0}) == _value_->type_id))
 
 #define _Err(T, _varname)                               \
 }                                                       \
     let _varname = (T*) &_value_->value;                \
     if (_value_->was_err                                \
-        && (get_type_id((T){}) == _value_->type_id))
+        && (get_type_id((T){0}) == _value_->type_id))
 
 //---------------------------------------------------------
 //---------------------------------------------------------
@@ -143,8 +298,7 @@ typedef union T_value {
 typedef struct Variant {
     T_value value;
     T_id type_id;
-    bool ___inner_cookie___; // not needed
-    // only used in the case of changing the type the variant held inside of a case label while matching on that variant.
+    bool ___inner_cookie___; 
 } Variant;
 
 #define Variant(var) (Variant) {     \
